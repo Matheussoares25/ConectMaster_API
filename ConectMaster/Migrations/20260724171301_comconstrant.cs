@@ -1,0 +1,48 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace ConectMaster.Migrations
+{
+    /// <inheritdoc />
+    public partial class comconstrant : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<int>(
+                name: "idUsuario",
+                table: "Servicos",
+                type: "int",
+                nullable: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Servicos_idUsuario",
+                table: "Servicos",
+                column: "idUsuario");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Servicos_Usuarios_idUsuario",
+                table: "Servicos",
+                column: "idUsuario",
+                principalTable: "Usuarios",
+                principalColumn: "Id");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Servicos_Usuarios_idUsuario",
+                table: "Servicos");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Servicos_idUsuario",
+                table: "Servicos");
+
+            migrationBuilder.DropColumn(
+                name: "idUsuario",
+                table: "Servicos");
+        }
+    }
+}
