@@ -130,6 +130,8 @@ namespace ConectMaster.Controllers
                     })
                 });
 
+                Notificar.EnviarNotificacao(_context, model.idUsuario, 1, $"Novo chamado criado: {model.Titulo}");
+
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction(nameof(Get), new { id = model.Id }, model);

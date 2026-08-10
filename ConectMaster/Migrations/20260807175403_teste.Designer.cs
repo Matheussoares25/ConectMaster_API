@@ -4,6 +4,7 @@ using ConectMaster.Bancodedados;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConectMaster.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260807175403_teste")]
+    partial class teste
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,40 +92,6 @@ namespace ConectMaster.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LogsAuditoria");
-                });
-
-            modelBuilder.Entity("ConectMaster.Models.Notificacao", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("Lida")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Mensagem")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("varchar(2000)");
-
-                    b.Property<int>("TipoNotificacaoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TipoNotificacaoId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Notificacoes");
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Perfil", b =>
@@ -621,36 +590,6 @@ namespace ConectMaster.Migrations
                     b.ToTable("Servicos");
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.TipoNotificacao", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TipoNotificacoes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Nome = "Novo chamado"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Nome = "Novo serviço"
-                        });
-                });
-
             modelBuilder.Entity("ConectMaster.Models.UsuarioView", b =>
                 {
                     b.Property<int>("Id")
@@ -672,74 +611,6 @@ namespace ConectMaster.Migrations
                     b.HasIndex("ViewId");
 
                     b.ToTable("UsuarioView");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            UsuarioId = 1,
-                            ViewId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            UsuarioId = 1,
-                            ViewId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            UsuarioId = 1,
-                            ViewId = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            UsuarioId = 1,
-                            ViewId = 4
-                        },
-                        new
-                        {
-                            Id = 5,
-                            UsuarioId = 1,
-                            ViewId = 5
-                        },
-                        new
-                        {
-                            Id = 6,
-                            UsuarioId = 1,
-                            ViewId = 6
-                        },
-                        new
-                        {
-                            Id = 7,
-                            UsuarioId = 1,
-                            ViewId = 7
-                        },
-                        new
-                        {
-                            Id = 8,
-                            UsuarioId = 1,
-                            ViewId = 8
-                        },
-                        new
-                        {
-                            Id = 9,
-                            UsuarioId = 1,
-                            ViewId = 9
-                        },
-                        new
-                        {
-                            Id = 10,
-                            UsuarioId = 1,
-                            ViewId = 10
-                        },
-                        new
-                        {
-                            Id = 11,
-                            UsuarioId = 1,
-                            ViewId = 11
-                        });
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Usuarios", b =>
@@ -783,16 +654,6 @@ namespace ConectMaster.Migrations
                     b.HasIndex("PerfilId");
 
                     b.ToTable("Usuarios");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "t@t",
-                            Nome = "Administrador",
-                            PerfilId = 1,
-                            Senha = "123"
-                        });
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Views", b =>
@@ -934,25 +795,6 @@ namespace ConectMaster.Migrations
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("ConectMaster.Models.Notificacao", b =>
-                {
-                    b.HasOne("ConectMaster.Models.TipoNotificacao", "Tipo")
-                        .WithMany()
-                        .HasForeignKey("TipoNotificacaoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tipo");
 
                     b.Navigation("Usuario");
                 });

@@ -23,6 +23,8 @@ namespace ConectMaster.Bancodedados
         public DbSet<LogAuditoria> LogsAuditoria { get; set; }
         public DbSet<Views> Views { get; set; }
         public DbSet<UsuarioView> UsuarioView { get; set; }
+        public DbSet<TipoNotificacao> TipoNotificacoes { get; set; }
+        public DbSet<Notificacao> Notificacoes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -114,6 +116,31 @@ namespace ConectMaster.Bancodedados
                 new PerfilPermissao { Id = 25, PerfilId = 1, PermissaoId = 25 },
                 new PerfilPermissao { Id = 26, PerfilId = 1, PermissaoId = 26 },
                 new PerfilPermissao { Id = 27, PerfilId = 1, PermissaoId = 27 }
+            );
+
+            // Seed tipos de notificação
+            modelBuilder.Entity<TipoNotificacao>().HasData(
+                new TipoNotificacao { Id = 1, Nome = "Novo chamado" },
+                new TipoNotificacao { Id = 2, Nome = "Novo serviço" }
+            );
+
+            // Seed usuário inicial e vinculação a todas as views
+            modelBuilder.Entity<Usuarios>().HasData(
+                new Usuarios { Id = 1, Nome = "Administrador", Email = "t@t", Senha = "123", PerfilId = 1 }
+            );
+
+            modelBuilder.Entity<UsuarioView>().HasData(
+                new UsuarioView { Id = 1, ViewId = 1, UsuarioId = 1 },
+                new UsuarioView { Id = 2, ViewId = 2, UsuarioId = 1 },
+                new UsuarioView { Id = 3, ViewId = 3, UsuarioId = 1 },
+                new UsuarioView { Id = 4, ViewId = 4, UsuarioId = 1 },
+                new UsuarioView { Id = 5, ViewId = 5, UsuarioId = 1 },
+                new UsuarioView { Id = 6, ViewId = 6, UsuarioId = 1 },
+                new UsuarioView { Id = 7, ViewId = 7, UsuarioId = 1 },
+                new UsuarioView { Id = 8, ViewId = 8, UsuarioId = 1 },
+                new UsuarioView { Id = 9, ViewId = 9, UsuarioId = 1 },
+                new UsuarioView { Id = 10, ViewId = 10, UsuarioId = 1 },
+                new UsuarioView { Id = 11, ViewId = 11, UsuarioId = 1 }
             );
 
         }

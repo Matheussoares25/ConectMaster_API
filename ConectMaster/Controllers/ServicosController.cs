@@ -113,6 +113,8 @@ namespace ConectMaster.Controllers
                 })
             });
 
+            Notificar.EnviarNotificacao(_context, User.GetId(), 2, $"Nova ordem de serivço gerada: {servico.Titulo}");
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(Get), new { id = servico.Id }, servico);
