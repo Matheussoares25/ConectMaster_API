@@ -1158,7 +1158,7 @@ namespace ConectMaster.Migrations
                         new
                         {
                             Id = 13,
-                            Name = "visual. estoqueTi"
+                            Name = "visual.estoqueTi"
                         });
                 });
 
