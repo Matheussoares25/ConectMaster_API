@@ -117,7 +117,6 @@ namespace ConectMaster.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "administrador")]
         public async Task<IActionResult> Delete(int id)
         {
             if (!User.TemPermissao("Apagar historicos"))

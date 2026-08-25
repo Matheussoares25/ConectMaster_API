@@ -147,6 +147,11 @@ namespace ConectMaster.Migrations
                         {
                             Id = 1,
                             Name = "Administrador"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Lider"
                         });
                 });
 
@@ -334,6 +339,180 @@ namespace ConectMaster.Migrations
                             Id = 27,
                             PerfilId = 1,
                             PermissaoId = 27
+                        },
+                        new
+                        {
+                            Id = 28,
+                            PerfilId = 1,
+                            PermissaoId = 28
+                        },
+                        new
+                        {
+                            Id = 29,
+                            PerfilId = 2,
+                            PermissaoId = 1
+                        },
+                        new
+                        {
+                            Id = 30,
+                            PerfilId = 2,
+                            PermissaoId = 2
+                        },
+                        new
+                        {
+                            Id = 31,
+                            PerfilId = 2,
+                            PermissaoId = 3
+                        },
+                        new
+                        {
+                            Id = 32,
+                            PerfilId = 2,
+                            PermissaoId = 4
+                        },
+                        new
+                        {
+                            Id = 33,
+                            PerfilId = 2,
+                            PermissaoId = 5
+                        },
+                        new
+                        {
+                            Id = 34,
+                            PerfilId = 2,
+                            PermissaoId = 6
+                        },
+                        new
+                        {
+                            Id = 35,
+                            PerfilId = 2,
+                            PermissaoId = 7
+                        },
+                        new
+                        {
+                            Id = 36,
+                            PerfilId = 2,
+                            PermissaoId = 8
+                        },
+                        new
+                        {
+                            Id = 37,
+                            PerfilId = 2,
+                            PermissaoId = 9
+                        },
+                        new
+                        {
+                            Id = 38,
+                            PerfilId = 2,
+                            PermissaoId = 10
+                        },
+                        new
+                        {
+                            Id = 39,
+                            PerfilId = 2,
+                            PermissaoId = 11
+                        },
+                        new
+                        {
+                            Id = 40,
+                            PerfilId = 2,
+                            PermissaoId = 12
+                        },
+                        new
+                        {
+                            Id = 41,
+                            PerfilId = 2,
+                            PermissaoId = 13
+                        },
+                        new
+                        {
+                            Id = 42,
+                            PerfilId = 2,
+                            PermissaoId = 14
+                        },
+                        new
+                        {
+                            Id = 43,
+                            PerfilId = 2,
+                            PermissaoId = 15
+                        },
+                        new
+                        {
+                            Id = 44,
+                            PerfilId = 2,
+                            PermissaoId = 16
+                        },
+                        new
+                        {
+                            Id = 45,
+                            PerfilId = 2,
+                            PermissaoId = 17
+                        },
+                        new
+                        {
+                            Id = 46,
+                            PerfilId = 2,
+                            PermissaoId = 18
+                        },
+                        new
+                        {
+                            Id = 47,
+                            PerfilId = 2,
+                            PermissaoId = 19
+                        },
+                        new
+                        {
+                            Id = 48,
+                            PerfilId = 2,
+                            PermissaoId = 20
+                        },
+                        new
+                        {
+                            Id = 49,
+                            PerfilId = 2,
+                            PermissaoId = 21
+                        },
+                        new
+                        {
+                            Id = 50,
+                            PerfilId = 2,
+                            PermissaoId = 22
+                        },
+                        new
+                        {
+                            Id = 51,
+                            PerfilId = 2,
+                            PermissaoId = 23
+                        },
+                        new
+                        {
+                            Id = 52,
+                            PerfilId = 2,
+                            PermissaoId = 24
+                        },
+                        new
+                        {
+                            Id = 53,
+                            PerfilId = 2,
+                            PermissaoId = 25
+                        },
+                        new
+                        {
+                            Id = 54,
+                            PerfilId = 2,
+                            PermissaoId = 26
+                        },
+                        new
+                        {
+                            Id = 55,
+                            PerfilId = 2,
+                            PermissaoId = 27
+                        },
+                        new
+                        {
+                            Id = 56,
+                            PerfilId = 2,
+                            PermissaoId = 28
                         });
                 });
 
@@ -489,6 +668,11 @@ namespace ConectMaster.Migrations
                         {
                             Id = 27,
                             Name = "Autorizar ou Negar OS"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Name = "Visualizar estoques"
                         });
                 });
 
@@ -739,6 +923,96 @@ namespace ConectMaster.Migrations
                             Id = 11,
                             UsuarioId = 1,
                             ViewId = 11
+                        },
+                        new
+                        {
+                            Id = 12,
+                            UsuarioId = 1,
+                            ViewId = 12
+                        },
+                        new
+                        {
+                            Id = 13,
+                            UsuarioId = 1,
+                            ViewId = 13
+                        },
+                        new
+                        {
+                            Id = 14,
+                            UsuarioId = 2,
+                            ViewId = 1
+                        },
+                        new
+                        {
+                            Id = 15,
+                            UsuarioId = 2,
+                            ViewId = 2
+                        },
+                        new
+                        {
+                            Id = 16,
+                            UsuarioId = 2,
+                            ViewId = 3
+                        },
+                        new
+                        {
+                            Id = 17,
+                            UsuarioId = 2,
+                            ViewId = 4
+                        },
+                        new
+                        {
+                            Id = 18,
+                            UsuarioId = 2,
+                            ViewId = 5
+                        },
+                        new
+                        {
+                            Id = 19,
+                            UsuarioId = 2,
+                            ViewId = 6
+                        },
+                        new
+                        {
+                            Id = 20,
+                            UsuarioId = 2,
+                            ViewId = 7
+                        },
+                        new
+                        {
+                            Id = 21,
+                            UsuarioId = 2,
+                            ViewId = 8
+                        },
+                        new
+                        {
+                            Id = 22,
+                            UsuarioId = 2,
+                            ViewId = 9
+                        },
+                        new
+                        {
+                            Id = 23,
+                            UsuarioId = 2,
+                            ViewId = 10
+                        },
+                        new
+                        {
+                            Id = 24,
+                            UsuarioId = 2,
+                            ViewId = 11
+                        },
+                        new
+                        {
+                            Id = 25,
+                            UsuarioId = 2,
+                            ViewId = 12
+                        },
+                        new
+                        {
+                            Id = 26,
+                            UsuarioId = 2,
+                            ViewId = 13
                         });
                 });
 
@@ -791,6 +1065,14 @@ namespace ConectMaster.Migrations
                             Email = "t@t",
                             Nome = "Administrador",
                             PerfilId = 1,
+                            Senha = "123"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Email = "f@f",
+                            Nome = "Cargo Lider",
+                            PerfilId = 2,
                             Senha = "123"
                         });
                 });
@@ -867,6 +1149,16 @@ namespace ConectMaster.Migrations
                         {
                             Id = 11,
                             Name = "visual.servicosgeral"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "visual.portaria"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "visual. estoqueTi"
                         });
                 });
 
@@ -887,6 +1179,9 @@ namespace ConectMaster.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DataAlteracao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DataFechamento")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Descricao")

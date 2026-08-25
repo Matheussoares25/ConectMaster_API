@@ -41,7 +41,9 @@ namespace ConectMaster.Bancodedados
                 new Views { Id = 8, Name = "visual.relatorios" },
                 new Views { Id = 9, Name = "visual.logs" },
                 new Views { Id = 10, Name = "visual.configuracoes" },
-                new Views { Id = 11 , Name = "visual.servicosgeral"}
+                new Views { Id = 11 , Name = "visual.servicosgeral"},
+                new Views { Id = 12, Name = "visual.portaria"},
+                new Views { Id = 13, Name = "visual.estoqueTi"}
             );
 
 
@@ -79,12 +81,15 @@ namespace ConectMaster.Bancodedados
                 new Permissao { Id = 24, Name = "Visualizar views" },
                 new Permissao { Id = 25, Name = "Criar servico"},
                 new Permissao { Id = 26, Name = "Visualizar servicos" },
-                new Permissao { Id = 27, Name = "Autorizar ou Negar OS" }
+                new Permissao { Id = 27, Name = "Autorizar ou Negar OS" },
+
+                new Permissao { Id = 28, Name = "Visualizar estoques"}
             );
 
             // Seed perfil Administrador
             modelBuilder.Entity<Perfil>().HasData(
-                new Perfil { Id = 1, Name = "Administrador" }
+                new Perfil { Id = 1, Name = "Administrador" },
+                new Perfil { Id = 2, Name = "Lider"}
             );
 
             // Atribui todas as permissões ao perfil Administrador
@@ -115,7 +120,39 @@ namespace ConectMaster.Bancodedados
                 new PerfilPermissao { Id = 24, PerfilId = 1, PermissaoId = 24 },
                 new PerfilPermissao { Id = 25, PerfilId = 1, PermissaoId = 25 },
                 new PerfilPermissao { Id = 26, PerfilId = 1, PermissaoId = 26 },
-                new PerfilPermissao { Id = 27, PerfilId = 1, PermissaoId = 27 }
+                new PerfilPermissao { Id = 27, PerfilId = 1, PermissaoId = 27 },
+                new PerfilPermissao { Id = 28, PerfilId = 1, PermissaoId = 28 },
+
+                new PerfilPermissao { Id = 29, PerfilId = 2, PermissaoId = 1 },
+                new PerfilPermissao { Id = 30, PerfilId = 2, PermissaoId = 2 },
+                new PerfilPermissao { Id = 31, PerfilId = 2, PermissaoId = 3 },
+                new PerfilPermissao { Id = 32, PerfilId = 2, PermissaoId = 4 },
+                new PerfilPermissao { Id = 33, PerfilId = 2, PermissaoId = 5 },
+                new PerfilPermissao { Id = 34, PerfilId = 2, PermissaoId = 6 },
+                new PerfilPermissao { Id = 35, PerfilId = 2, PermissaoId = 7 },
+                new PerfilPermissao { Id = 36, PerfilId = 2, PermissaoId = 8 },
+                new PerfilPermissao { Id = 37, PerfilId = 2, PermissaoId = 9 },
+                new PerfilPermissao { Id = 38, PerfilId = 2, PermissaoId = 10 },
+                new PerfilPermissao { Id = 39, PerfilId = 2, PermissaoId = 11 },
+                new PerfilPermissao { Id = 40, PerfilId = 2, PermissaoId = 12 },
+                new PerfilPermissao { Id = 41, PerfilId = 2, PermissaoId = 13 },
+                new PerfilPermissao { Id = 42, PerfilId = 2, PermissaoId = 14 },
+                new PerfilPermissao { Id = 43, PerfilId = 2, PermissaoId = 15 },
+                new PerfilPermissao { Id = 44, PerfilId = 2, PermissaoId = 16 },
+                new PerfilPermissao { Id = 45, PerfilId = 2, PermissaoId = 17 },
+                new PerfilPermissao { Id = 46, PerfilId = 2, PermissaoId = 18 },
+                new PerfilPermissao { Id = 47, PerfilId = 2, PermissaoId = 19 },
+                new PerfilPermissao { Id = 48, PerfilId = 2, PermissaoId = 20 },
+                new PerfilPermissao { Id = 49, PerfilId = 2, PermissaoId = 21 },
+                new PerfilPermissao { Id = 50, PerfilId = 2, PermissaoId = 22 },
+                new PerfilPermissao { Id = 51, PerfilId = 2, PermissaoId = 23 },
+                new PerfilPermissao { Id = 52, PerfilId = 2, PermissaoId = 24 },
+                new PerfilPermissao { Id = 53, PerfilId = 2, PermissaoId = 25 },
+                new PerfilPermissao { Id = 54, PerfilId = 2, PermissaoId = 26 },
+                new PerfilPermissao { Id = 55, PerfilId = 2, PermissaoId = 27 },
+                new PerfilPermissao { Id = 56, PerfilId = 2, PermissaoId = 28 }
+
+
             );
 
             // Seed tipos de notificação
@@ -126,7 +163,8 @@ namespace ConectMaster.Bancodedados
 
             // Seed usuário inicial e vinculação a todas as views
             modelBuilder.Entity<Usuarios>().HasData(
-                new Usuarios { Id = 1, Nome = "Administrador", Email = "t@t", Senha = "123", PerfilId = 1 }
+                new Usuarios { Id = 1, Nome = "Administrador", Email = "t@t", Senha = "123", PerfilId = 1 },
+                new Usuarios { Id = 2, Nome = "Cargo Lider", Email = "f@f", Senha = "123", PerfilId = 2}
             );
 
             modelBuilder.Entity<UsuarioView>().HasData(
@@ -140,7 +178,23 @@ namespace ConectMaster.Bancodedados
                 new UsuarioView { Id = 8, ViewId = 8, UsuarioId = 1 },
                 new UsuarioView { Id = 9, ViewId = 9, UsuarioId = 1 },
                 new UsuarioView { Id = 10, ViewId = 10, UsuarioId = 1 },
-                new UsuarioView { Id = 11, ViewId = 11, UsuarioId = 1 }
+                new UsuarioView { Id = 11, ViewId = 11, UsuarioId = 1 },
+                new UsuarioView { Id = 12, ViewId = 12, UsuarioId = 1 },
+                new UsuarioView { Id = 13, ViewId = 13, UsuarioId = 1 },
+
+                new UsuarioView { Id = 14, ViewId = 1, UsuarioId = 2 },
+                new UsuarioView { Id = 15, ViewId = 2, UsuarioId = 2 },
+                new UsuarioView { Id = 16, ViewId = 3, UsuarioId = 2 },
+                new UsuarioView { Id = 17, ViewId = 4, UsuarioId = 2 },
+                new UsuarioView { Id = 18, ViewId = 5, UsuarioId = 2 },
+                new UsuarioView { Id = 19, ViewId = 6, UsuarioId = 2 },
+                new UsuarioView { Id = 20, ViewId = 7, UsuarioId = 2 },
+                new UsuarioView { Id = 21, ViewId = 8, UsuarioId = 2 },
+                new UsuarioView { Id = 22, ViewId = 9, UsuarioId = 2 },
+                new UsuarioView { Id = 23, ViewId = 10, UsuarioId = 2 },
+                new UsuarioView { Id = 24, ViewId = 11, UsuarioId = 2 },
+                new UsuarioView { Id = 25, ViewId = 12, UsuarioId = 2 },
+                new UsuarioView { Id = 26, ViewId = 13, UsuarioId = 2 }
             );
 
         }

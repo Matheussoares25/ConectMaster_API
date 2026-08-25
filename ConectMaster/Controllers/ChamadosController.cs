@@ -36,6 +36,7 @@ namespace ConectMaster.Controllers
                     c.Status,
                     c.DataAbertura,
                     c.DataAlteracao,
+                    c.DataFechamento,
                     c.Categoria,
                     c.Prioridade,
                     usuario = new UsuarioDTO
@@ -85,6 +86,7 @@ namespace ConectMaster.Controllers
                         c.Descricao,
                         c.Status,
                         c.DataAbertura,
+                        c.DataFechamento,
                         Usuario = new UsuarioDTO
                         {
                             Id = c.Usuario.Id,
@@ -95,6 +97,60 @@ namespace ConectMaster.Controllers
                     .ToListAsync();
 
                 return Ok(chamados);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}/fechar")]
+        public async Task<IActionResult> Fechar(int id, ChamadoDTO chamadoDTO)
+        {
+            if (!User.TemPermissao("Editar chamados"))
+                return Forbid();
+
+            try
+            {
+                var chamado = await _context.Chamados.FirstOrDefaultAsync(x => x.Id == id);
+                if (chamado == null) return NotFound();
+
+                var statusAnterior = chamado.Status;
+
+                chamado.Status = chamadoDTO.Status;
+                chamado.DataFechamento = DateTime.Now;
+                chamado.DataAlteracao = DateTime.Now;
+
+                _context.Chamados.Update(chamado);
+                await _context.SaveChangesAsync();
+
+                try
+                {
+                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    {
+                        UsuarioId = User.GetId(),
+                        UsuarioName = User.GetName(),
+                        Acao = "Fechar",
+                        Entidade = "Chamado",
+                        EntidadeId = chamado.Id,
+                        Detalhes = System.Text.Json.JsonSerializer.Serialize(new
+                        {
+                            usuario = User.GetName(),
+                            Antes = statusAnterior,
+                            Depois = chamado.Status
+                        })
+                    });
+
+                    Notificar.EnviarNotificacao(_context, chamado.idUsuario, 1, $"Chamado fechado: {chamado.Titulo}");
+
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, new { error = ex.Message });
+                }
+
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -150,11 +206,8 @@ namespace ConectMaster.Controllers
 
             try
             {
-                var chamado = await _context.Chamados
-                    .FirstOrDefaultAsync(x => x.Id == id);
-
-                if (chamado == null)
-                    return NotFound();
+                var chamado = await _context.Chamados.FirstOrDefaultAsync(x => x.Id == id);
+                if (chamado == null) return NotFound();
 
                 var statusAnterior = chamado.Status;
 

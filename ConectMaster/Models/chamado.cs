@@ -21,6 +21,9 @@ namespace ConectMaster.Models
     
         public DateTime DataAlteracao { get; set; }
 
+        // Data de fechamento do chamado. Pode ser nula enquanto o chamado estiver aberto.
+        public DateTime? DataFechamento { get; set; }
+
         public int Prioridade { get; set; } = 1;
 
         [MaxLength(100)]
