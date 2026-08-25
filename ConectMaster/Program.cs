@@ -4,24 +4,16 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-Console.WriteLine("CONNECTION STRING:");
-Console.WriteLine(connectionString);
-
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
- 
-        options.UseMySql(
-    connectionString,
-    new MySqlServerVersion(new Version(8, 0, 36))
-        );
-    
-
+    options.UseMySql(
+        connectionString,
+        new MySqlServerVersion(new Version(8, 0, 36))
+    );
 });
 
 builder.Services.AddCors(options =>
@@ -36,6 +28,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+
 // Authentication / JWT
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "CHANGE_THIS_SECRET_KEY_1234567890";
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
@@ -46,9 +39,6 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-
-
-
 .AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;
@@ -65,49 +55,34 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization();
+builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// ---- só agora o build ----
 var app = builder.Build();
 
 // Executa migrations pendentes
 //using (var scope = app.Services.CreateScope())
 //{
 //    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
 //    db.Database.Migrate();
 //}
 
-//// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.MapOpenApi();
-//}
-
-
-
-builder.Services.AddAuthorization();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-//swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
 app.UseCors("ReactPolicy");
-//swagger
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
-
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 app.Run();
