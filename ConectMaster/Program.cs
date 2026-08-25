@@ -12,17 +12,13 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    try
-    {
+ 
         options.UseMySql(
             connectionString,
             ServerVersion.AutoDetect(connectionString)
         );
-    } 
-    catch (Exception ex)
-    {
-        throw new InvalidOperationException("Ocorreu um erro ao configurar o banco de dados: ");
-    }
+    
+
 });
 
 builder.Services.AddCors(options =>
