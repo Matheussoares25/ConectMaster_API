@@ -10,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+Console.WriteLine("CONNECTION STRING:");
+Console.WriteLine(connectionString);
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
  
