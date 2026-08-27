@@ -1,4 +1,5 @@
 using ConectMaster.Bancodedados;
+using ConectMaster.DTOS;
 using ConectMaster.Helpers;
 using ConectMaster.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -151,19 +152,28 @@ namespace ConectMaster.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] Usuarios usuario)
+        public async Task<IActionResult> Put(int id, UsuarioDTO usuario)
         {
             if (!User.TemPermissao("Editar usuarios"))
                 return Forbid();
 
             try
             {
-                if (!await _context.Usuarios.AnyAsync(x => x.Id == id))
-                    return NotFound();
+                var usuarioBanco = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id == id);
 
-                usuario.Id = id;
+                if (usuarioBanco == null) return NotFound();
 
-                _context.Entry(usuario).State = EntityState.Modified;
+                var usuarioExistente = await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == usuario.Email && x.Id != id);
+
+                if (usuarioExistente != null) return BadRequest(new { error = "Email já cadastrado" });
+
+                usuarioBanco.Nome = usuario.Nome;
+                usuarioBanco.Email = usuario.Email;
+                usuarioBanco.Ramal = usuario.Ramal;
+                usuarioBanco.Telefone = usuario.Telefone;
+                usuarioBanco.Setor = usuario.Setor;
+                usuarioBanco.PerfilId = usuario.PerfilId;
+
 
                 await _context.SaveChangesAsync();
 

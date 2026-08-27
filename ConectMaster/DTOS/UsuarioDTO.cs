@@ -13,5 +13,7 @@
             
             public string Setor { get; set; }
 
+            public int? PerfilId { get; set; }
+
     }
 }
