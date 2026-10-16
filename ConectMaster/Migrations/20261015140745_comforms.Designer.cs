@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConectMaster.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260723182320_comdatafechamento2")]
-    partial class comdatafechamento2
+    [Migration("20261015140745_comforms")]
+    partial class comforms
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -86,11 +86,46 @@ namespace ConectMaster.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UsuarioName")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
                     b.ToTable("LogsAuditoria");
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.Notificacao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("Lida")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Mensagem")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<int>("TipoNotificacaoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TipoNotificacaoId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Notificacoes");
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Perfil", b =>
@@ -115,6 +150,11 @@ namespace ConectMaster.Migrations
                         {
                             Id = 1,
                             Name = "Administrador"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Lider"
                         });
                 });
 
@@ -284,6 +324,198 @@ namespace ConectMaster.Migrations
                             Id = 24,
                             PerfilId = 1,
                             PermissaoId = 24
+                        },
+                        new
+                        {
+                            Id = 25,
+                            PerfilId = 1,
+                            PermissaoId = 25
+                        },
+                        new
+                        {
+                            Id = 26,
+                            PerfilId = 1,
+                            PermissaoId = 26
+                        },
+                        new
+                        {
+                            Id = 27,
+                            PerfilId = 1,
+                            PermissaoId = 27
+                        },
+                        new
+                        {
+                            Id = 28,
+                            PerfilId = 1,
+                            PermissaoId = 28
+                        },
+                        new
+                        {
+                            Id = 29,
+                            PerfilId = 2,
+                            PermissaoId = 1
+                        },
+                        new
+                        {
+                            Id = 30,
+                            PerfilId = 2,
+                            PermissaoId = 2
+                        },
+                        new
+                        {
+                            Id = 31,
+                            PerfilId = 2,
+                            PermissaoId = 3
+                        },
+                        new
+                        {
+                            Id = 32,
+                            PerfilId = 2,
+                            PermissaoId = 4
+                        },
+                        new
+                        {
+                            Id = 33,
+                            PerfilId = 2,
+                            PermissaoId = 5
+                        },
+                        new
+                        {
+                            Id = 34,
+                            PerfilId = 2,
+                            PermissaoId = 6
+                        },
+                        new
+                        {
+                            Id = 35,
+                            PerfilId = 2,
+                            PermissaoId = 7
+                        },
+                        new
+                        {
+                            Id = 36,
+                            PerfilId = 2,
+                            PermissaoId = 8
+                        },
+                        new
+                        {
+                            Id = 37,
+                            PerfilId = 2,
+                            PermissaoId = 9
+                        },
+                        new
+                        {
+                            Id = 38,
+                            PerfilId = 2,
+                            PermissaoId = 10
+                        },
+                        new
+                        {
+                            Id = 39,
+                            PerfilId = 2,
+                            PermissaoId = 11
+                        },
+                        new
+                        {
+                            Id = 40,
+                            PerfilId = 2,
+                            PermissaoId = 12
+                        },
+                        new
+                        {
+                            Id = 41,
+                            PerfilId = 2,
+                            PermissaoId = 13
+                        },
+                        new
+                        {
+                            Id = 42,
+                            PerfilId = 2,
+                            PermissaoId = 14
+                        },
+                        new
+                        {
+                            Id = 43,
+                            PerfilId = 2,
+                            PermissaoId = 15
+                        },
+                        new
+                        {
+                            Id = 44,
+                            PerfilId = 2,
+                            PermissaoId = 16
+                        },
+                        new
+                        {
+                            Id = 45,
+                            PerfilId = 2,
+                            PermissaoId = 17
+                        },
+                        new
+                        {
+                            Id = 46,
+                            PerfilId = 2,
+                            PermissaoId = 18
+                        },
+                        new
+                        {
+                            Id = 47,
+                            PerfilId = 2,
+                            PermissaoId = 19
+                        },
+                        new
+                        {
+                            Id = 48,
+                            PerfilId = 2,
+                            PermissaoId = 20
+                        },
+                        new
+                        {
+                            Id = 49,
+                            PerfilId = 2,
+                            PermissaoId = 21
+                        },
+                        new
+                        {
+                            Id = 50,
+                            PerfilId = 2,
+                            PermissaoId = 22
+                        },
+                        new
+                        {
+                            Id = 51,
+                            PerfilId = 2,
+                            PermissaoId = 23
+                        },
+                        new
+                        {
+                            Id = 52,
+                            PerfilId = 2,
+                            PermissaoId = 24
+                        },
+                        new
+                        {
+                            Id = 53,
+                            PerfilId = 2,
+                            PermissaoId = 25
+                        },
+                        new
+                        {
+                            Id = 54,
+                            PerfilId = 2,
+                            PermissaoId = 26
+                        },
+                        new
+                        {
+                            Id = 55,
+                            PerfilId = 2,
+                            PermissaoId = 27
+                        },
+                        new
+                        {
+                            Id = 56,
+                            PerfilId = 2,
+                            PermissaoId = 28
                         });
                 });
 
@@ -297,7 +529,8 @@ namespace ConectMaster.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -433,6 +666,16 @@ namespace ConectMaster.Migrations
                         {
                             Id = 26,
                             Name = "Visualizar servicos"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Name = "Autorizar ou Negar OS"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Name = "Visualizar estoques"
                         });
                 });
 
@@ -445,24 +688,24 @@ namespace ConectMaster.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Categoria")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("ClienteContato")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("ClienteDocumento")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("ClienteNome")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("ClienteTelefone")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<DateTime>("DataAbertura")
                         .HasColumnType("datetime(6)");
@@ -474,55 +717,55 @@ namespace ConectMaster.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
 
                     b.Property<string>("DescricaoCarga")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("EnderecoColeta")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("EnderecoEntrega")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("FormaPagamento")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("MotoristaNome")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("MotoristaTelefone")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("NaturezaCarga")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("NumeroCte")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("NumeroNfe")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<decimal?>("PesoBruto")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("PlacaVeiculo")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<int>("Prioridade")
                         .HasColumnType("int");
@@ -531,23 +774,23 @@ namespace ConectMaster.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Setor")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("SolicitanteId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("TipoVeiculo")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Titulo")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<decimal?>("ValorFrete")
                         .HasColumnType("decimal(65,30)");
@@ -560,7 +803,39 @@ namespace ConectMaster.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SolicitanteId");
+
                     b.ToTable("Servicos");
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.TipoNotificacao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TipoNotificacoes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nome = "Novo chamado"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nome = "Novo serviço"
+                        });
                 });
 
             modelBuilder.Entity("ConectMaster.Models.UsuarioView", b =>
@@ -584,6 +859,176 @@ namespace ConectMaster.Migrations
                     b.HasIndex("ViewId");
 
                     b.ToTable("UsuarioView");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            UsuarioId = 1,
+                            ViewId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            UsuarioId = 1,
+                            ViewId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            UsuarioId = 1,
+                            ViewId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            UsuarioId = 1,
+                            ViewId = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            UsuarioId = 1,
+                            ViewId = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            UsuarioId = 1,
+                            ViewId = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            UsuarioId = 1,
+                            ViewId = 7
+                        },
+                        new
+                        {
+                            Id = 8,
+                            UsuarioId = 1,
+                            ViewId = 8
+                        },
+                        new
+                        {
+                            Id = 9,
+                            UsuarioId = 1,
+                            ViewId = 9
+                        },
+                        new
+                        {
+                            Id = 10,
+                            UsuarioId = 1,
+                            ViewId = 10
+                        },
+                        new
+                        {
+                            Id = 11,
+                            UsuarioId = 1,
+                            ViewId = 11
+                        },
+                        new
+                        {
+                            Id = 12,
+                            UsuarioId = 1,
+                            ViewId = 12
+                        },
+                        new
+                        {
+                            Id = 13,
+                            UsuarioId = 1,
+                            ViewId = 13
+                        },
+                        new
+                        {
+                            Id = 14,
+                            UsuarioId = 1,
+                            ViewId = 14
+                        },
+                        new
+                        {
+                            Id = 15,
+                            UsuarioId = 2,
+                            ViewId = 1
+                        },
+                        new
+                        {
+                            Id = 16,
+                            UsuarioId = 2,
+                            ViewId = 2
+                        },
+                        new
+                        {
+                            Id = 17,
+                            UsuarioId = 2,
+                            ViewId = 3
+                        },
+                        new
+                        {
+                            Id = 18,
+                            UsuarioId = 2,
+                            ViewId = 4
+                        },
+                        new
+                        {
+                            Id = 19,
+                            UsuarioId = 2,
+                            ViewId = 5
+                        },
+                        new
+                        {
+                            Id = 20,
+                            UsuarioId = 2,
+                            ViewId = 6
+                        },
+                        new
+                        {
+                            Id = 21,
+                            UsuarioId = 2,
+                            ViewId = 7
+                        },
+                        new
+                        {
+                            Id = 22,
+                            UsuarioId = 2,
+                            ViewId = 8
+                        },
+                        new
+                        {
+                            Id = 23,
+                            UsuarioId = 2,
+                            ViewId = 9
+                        },
+                        new
+                        {
+                            Id = 24,
+                            UsuarioId = 2,
+                            ViewId = 10
+                        },
+                        new
+                        {
+                            Id = 25,
+                            UsuarioId = 2,
+                            ViewId = 11
+                        },
+                        new
+                        {
+                            Id = 26,
+                            UsuarioId = 2,
+                            ViewId = 12
+                        },
+                        new
+                        {
+                            Id = 27,
+                            UsuarioId = 2,
+                            ViewId = 13
+                        },
+                        new
+                        {
+                            Id = 28,
+                            UsuarioId = 2,
+                            ViewId = 14
+                        });
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Usuarios", b =>
@@ -627,6 +1072,24 @@ namespace ConectMaster.Migrations
                     b.HasIndex("PerfilId");
 
                     b.ToTable("Usuarios");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "t@t",
+                            Nome = "Administrador",
+                            PerfilId = 1,
+                            Senha = "123"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Email = "f@f",
+                            Nome = "Cargo Lider",
+                            PerfilId = 2,
+                            Senha = "123"
+                        });
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Views", b =>
@@ -639,7 +1102,8 @@ namespace ConectMaster.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -700,6 +1164,21 @@ namespace ConectMaster.Migrations
                         {
                             Id = 11,
                             Name = "visual.servicosgeral"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "visual.portaria"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "visual.formularios"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "visual.estoqueTi"
                         });
                 });
 
@@ -713,7 +1192,8 @@ namespace ConectMaster.Migrations
 
                     b.Property<string>("Categoria")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime>("DataAbertura")
                         .HasColumnType("datetime(6)");
@@ -721,25 +1201,31 @@ namespace ConectMaster.Migrations
                     b.Property<DateTime>("DataAlteracao")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("DataFechamento")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
 
                     b.Property<int>("Prioridade")
                         .HasColumnType("int");
 
                     b.Property<string>("Setor")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
@@ -767,6 +1253,25 @@ namespace ConectMaster.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("ConectMaster.Models.Notificacao", b =>
+                {
+                    b.HasOne("ConectMaster.Models.TipoNotificacao", "Tipo")
+                        .WithMany()
+                        .HasForeignKey("TipoNotificacaoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tipo");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("ConectMaster.Models.PerfilPermissao", b =>
                 {
                     b.HasOne("ConectMaster.Models.Perfil", "Perfil")
@@ -784,6 +1289,17 @@ namespace ConectMaster.Migrations
                     b.Navigation("Perfil");
 
                     b.Navigation("Permissao");
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.Servico", b =>
+                {
+                    b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("SolicitanteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("ConectMaster.Models.UsuarioView", b =>

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ConectMaster.Migrations
 {
     /// <inheritdoc />
-    public partial class dadoservico : Migration
+    public partial class comforms : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,6 +24,8 @@ namespace ConectMaster.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    UsuarioName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Acao = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Entidade = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
@@ -60,7 +62,7 @@ namespace ConectMaster.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -70,67 +72,17 @@ namespace ConectMaster.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Servicos",
+                name: "TipoNotificacoes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Titulo = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Setor = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Categoria = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Prioridade = table.Column<int>(type: "int", nullable: false),
-                    ClienteNome = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ClienteDocumento = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ClienteTelefone = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ClienteContato = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DescricaoCarga = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    PesoBruto = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
-                    Volume = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
-                    QtdVolumes = table.Column<int>(type: "int", nullable: true),
-                    ValorMercadoria = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
-                    NaturezaCarga = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    EnderecoColeta = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    EnderecoEntrega = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DataColeta = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DataEntrega = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    PlacaVeiculo = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TipoVeiculo = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    MotoristaNome = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    MotoristaTelefone = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NumeroNfe = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NumeroCte = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ValorFrete = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
-                    FormaPagamento = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descricao = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Status = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    SolicitanteId = table.Column<int>(type: "int", nullable: false),
-                    DataAbertura = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Nome = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Servicos", x => x.Id);
+                    table.PrimaryKey("PK_TipoNotificacoes", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -140,7 +92,7 @@ namespace ConectMaster.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -216,17 +168,19 @@ namespace ConectMaster.Migrations
                     idUsuario = table.Column<int>(type: "int", nullable: false),
                     Titulo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descricao = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
+                    Descricao = table.Column<string>(type: "varchar(2000)", maxLength: 2000, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DataAbertura = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataFechamento = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Prioridade = table.Column<int>(type: "int", nullable: false),
-                    Categoria = table.Column<string>(type: "longtext", nullable: false)
+                    Categoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Setor = table.Column<string>(type: "longtext", nullable: false)
+                    Setor = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "longtext", nullable: false)
+                    Email = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    status = table.Column<string>(type: "longtext", nullable: false)
+                    Status = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -266,6 +220,108 @@ namespace ConectMaster.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Notificacoes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    TipoNotificacaoId = table.Column<int>(type: "int", nullable: false),
+                    Mensagem = table.Column<string>(type: "varchar(2000)", maxLength: 2000, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Lida = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notificacoes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notificacoes_TipoNotificacoes_TipoNotificacaoId",
+                        column: x => x.TipoNotificacaoId,
+                        principalTable: "TipoNotificacoes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Notificacoes_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Servicos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Titulo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Setor = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Categoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Prioridade = table.Column<int>(type: "int", nullable: false),
+                    ClienteNome = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ClienteDocumento = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ClienteTelefone = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ClienteContato = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DescricaoCarga = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PesoBruto = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    Volume = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    QtdVolumes = table.Column<int>(type: "int", nullable: true),
+                    ValorMercadoria = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    NaturezaCarga = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EnderecoColeta = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EnderecoEntrega = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DataColeta = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DataEntrega = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    PlacaVeiculo = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TipoVeiculo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    MotoristaNome = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    MotoristaTelefone = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NumeroNfe = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NumeroCte = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ValorFrete = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    FormaPagamento = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Descricao = table.Column<string>(type: "varchar(2000)", maxLength: 2000, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Status = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SolicitanteId = table.Column<int>(type: "int", nullable: false),
+                    DataAbertura = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Servicos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Servicos_Usuarios_SolicitanteId",
+                        column: x => x.SolicitanteId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "UsuarioView",
                 columns: table => new
                 {
@@ -295,7 +351,11 @@ namespace ConectMaster.Migrations
             migrationBuilder.InsertData(
                 table: "Perfis",
                 columns: new[] { "Id", "Name" },
-                values: new object[] { 1, "Administrador" });
+                values: new object[,]
+                {
+                    { 1, "Administrador" },
+                    { 2, "Lider" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Permissoes",
@@ -325,7 +385,20 @@ namespace ConectMaster.Migrations
                     { 21, "Criar usuarioviews" },
                     { 22, "Apagar perfilviews" },
                     { 23, "Apagar usuarioviws" },
-                    { 24, "Visualizar views" }
+                    { 24, "Visualizar views" },
+                    { 25, "Criar servico" },
+                    { 26, "Visualizar servicos" },
+                    { 27, "Autorizar ou Negar OS" },
+                    { 28, "Visualizar estoques" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TipoNotificacoes",
+                columns: new[] { "Id", "Nome" },
+                values: new object[,]
+                {
+                    { 1, "Novo chamado" },
+                    { 2, "Novo serviço" }
                 });
 
             migrationBuilder.InsertData(
@@ -342,7 +415,11 @@ namespace ConectMaster.Migrations
                     { 7, "visual.permissoes" },
                     { 8, "visual.relatorios" },
                     { 9, "visual.logs" },
-                    { 10, "visual.configuracoes" }
+                    { 10, "visual.configuracoes" },
+                    { 11, "visual.servicosgeral" },
+                    { 12, "visual.portaria" },
+                    { 13, "visual.formularios" },
+                    { 14, "visual.estoqueTi" }
                 });
 
             migrationBuilder.InsertData(
@@ -373,7 +450,83 @@ namespace ConectMaster.Migrations
                     { 21, 1, 21 },
                     { 22, 1, 22 },
                     { 23, 1, 23 },
-                    { 24, 1, 24 }
+                    { 24, 1, 24 },
+                    { 25, 1, 25 },
+                    { 26, 1, 26 },
+                    { 27, 1, 27 },
+                    { 28, 1, 28 },
+                    { 29, 2, 1 },
+                    { 30, 2, 2 },
+                    { 31, 2, 3 },
+                    { 32, 2, 4 },
+                    { 33, 2, 5 },
+                    { 34, 2, 6 },
+                    { 35, 2, 7 },
+                    { 36, 2, 8 },
+                    { 37, 2, 9 },
+                    { 38, 2, 10 },
+                    { 39, 2, 11 },
+                    { 40, 2, 12 },
+                    { 41, 2, 13 },
+                    { 42, 2, 14 },
+                    { 43, 2, 15 },
+                    { 44, 2, 16 },
+                    { 45, 2, 17 },
+                    { 46, 2, 18 },
+                    { 47, 2, 19 },
+                    { 48, 2, 20 },
+                    { 49, 2, 21 },
+                    { 50, 2, 22 },
+                    { 51, 2, 23 },
+                    { 52, 2, 24 },
+                    { 53, 2, 25 },
+                    { 54, 2, 26 },
+                    { 55, 2, 27 },
+                    { 56, 2, 28 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Usuarios",
+                columns: new[] { "Id", "Email", "Nome", "PerfilId", "Ramal", "Senha", "Setor", "Telefone" },
+                values: new object[,]
+                {
+                    { 1, "t@t", "Administrador", 1, null, "123", null, null },
+                    { 2, "f@f", "Cargo Lider", 2, null, "123", null, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UsuarioView",
+                columns: new[] { "Id", "UsuarioId", "ViewId" },
+                values: new object[,]
+                {
+                    { 1, 1, 1 },
+                    { 2, 1, 2 },
+                    { 3, 1, 3 },
+                    { 4, 1, 4 },
+                    { 5, 1, 5 },
+                    { 6, 1, 6 },
+                    { 7, 1, 7 },
+                    { 8, 1, 8 },
+                    { 9, 1, 9 },
+                    { 10, 1, 10 },
+                    { 11, 1, 11 },
+                    { 12, 1, 12 },
+                    { 13, 1, 13 },
+                    { 14, 1, 14 },
+                    { 15, 2, 1 },
+                    { 16, 2, 2 },
+                    { 17, 2, 3 },
+                    { 18, 2, 4 },
+                    { 19, 2, 5 },
+                    { 20, 2, 6 },
+                    { 21, 2, 7 },
+                    { 22, 2, 8 },
+                    { 23, 2, 9 },
+                    { 24, 2, 10 },
+                    { 25, 2, 11 },
+                    { 26, 2, 12 },
+                    { 27, 2, 13 },
+                    { 28, 2, 14 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -387,6 +540,16 @@ namespace ConectMaster.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Notificacoes_TipoNotificacaoId",
+                table: "Notificacoes",
+                column: "TipoNotificacaoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notificacoes_UsuarioId",
+                table: "Notificacoes",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PerfilPermissoes_PerfilId",
                 table: "PerfilPermissoes",
                 column: "PerfilId");
@@ -395,6 +558,11 @@ namespace ConectMaster.Migrations
                 name: "IX_PerfilPermissoes_PermissaoId",
                 table: "PerfilPermissoes",
                 column: "PermissaoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Servicos_SolicitanteId",
+                table: "Servicos",
+                column: "SolicitanteId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_PerfilId",
@@ -425,6 +593,9 @@ namespace ConectMaster.Migrations
                 name: "LogsAuditoria");
 
             migrationBuilder.DropTable(
+                name: "Notificacoes");
+
+            migrationBuilder.DropTable(
                 name: "PerfilPermissoes");
 
             migrationBuilder.DropTable(
@@ -432,6 +603,9 @@ namespace ConectMaster.Migrations
 
             migrationBuilder.DropTable(
                 name: "UsuarioView");
+
+            migrationBuilder.DropTable(
+                name: "TipoNotificacoes");
 
             migrationBuilder.DropTable(
                 name: "Permissoes");

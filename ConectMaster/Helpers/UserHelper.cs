@@ -13,6 +13,7 @@ namespace ConectMaster.Helpers
             return 0;
         }
 
+
         public static string GetName(this ClaimsPrincipal user)
         {
             if (user == null)

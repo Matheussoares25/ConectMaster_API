@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConectMaster.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260724171301_comconstrant")]
-    partial class comconstrant
+    [Migration("20261016131758_SeedEstoquesEPermissoes")]
+    partial class SeedEstoquesEPermissoes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,76 @@ namespace ConectMaster.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("ConectMaster.Models.Estoque", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Estoques");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Ativo = true,
+                            Nome = "TI"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Ativo = true,
+                            Nome = "Compras"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Ativo = true,
+                            Nome = "Expedicao"
+                        });
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.EstoqueItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descricao")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<int>("EstoqueId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<decimal>("Quantidade")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstoqueId");
+
+                    b.ToTable("EstoqueItens");
+                });
 
             modelBuilder.Entity("ConectMaster.Models.Historico", b =>
                 {
@@ -94,6 +164,40 @@ namespace ConectMaster.Migrations
                     b.ToTable("LogsAuditoria");
                 });
 
+            modelBuilder.Entity("ConectMaster.Models.Notificacao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("Lida")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Mensagem")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<int>("TipoNotificacaoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TipoNotificacaoId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Notificacoes");
+                });
+
             modelBuilder.Entity("ConectMaster.Models.Perfil", b =>
                 {
                     b.Property<int>("Id")
@@ -116,6 +220,11 @@ namespace ConectMaster.Migrations
                         {
                             Id = 1,
                             Name = "Administrador"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Lider"
                         });
                 });
 
@@ -303,6 +412,180 @@ namespace ConectMaster.Migrations
                             Id = 27,
                             PerfilId = 1,
                             PermissaoId = 27
+                        },
+                        new
+                        {
+                            Id = 28,
+                            PerfilId = 1,
+                            PermissaoId = 28
+                        },
+                        new
+                        {
+                            Id = 29,
+                            PerfilId = 2,
+                            PermissaoId = 1
+                        },
+                        new
+                        {
+                            Id = 30,
+                            PerfilId = 2,
+                            PermissaoId = 2
+                        },
+                        new
+                        {
+                            Id = 31,
+                            PerfilId = 2,
+                            PermissaoId = 3
+                        },
+                        new
+                        {
+                            Id = 32,
+                            PerfilId = 2,
+                            PermissaoId = 4
+                        },
+                        new
+                        {
+                            Id = 33,
+                            PerfilId = 2,
+                            PermissaoId = 5
+                        },
+                        new
+                        {
+                            Id = 34,
+                            PerfilId = 2,
+                            PermissaoId = 6
+                        },
+                        new
+                        {
+                            Id = 35,
+                            PerfilId = 2,
+                            PermissaoId = 7
+                        },
+                        new
+                        {
+                            Id = 36,
+                            PerfilId = 2,
+                            PermissaoId = 8
+                        },
+                        new
+                        {
+                            Id = 37,
+                            PerfilId = 2,
+                            PermissaoId = 9
+                        },
+                        new
+                        {
+                            Id = 38,
+                            PerfilId = 2,
+                            PermissaoId = 10
+                        },
+                        new
+                        {
+                            Id = 39,
+                            PerfilId = 2,
+                            PermissaoId = 11
+                        },
+                        new
+                        {
+                            Id = 40,
+                            PerfilId = 2,
+                            PermissaoId = 12
+                        },
+                        new
+                        {
+                            Id = 41,
+                            PerfilId = 2,
+                            PermissaoId = 13
+                        },
+                        new
+                        {
+                            Id = 42,
+                            PerfilId = 2,
+                            PermissaoId = 14
+                        },
+                        new
+                        {
+                            Id = 43,
+                            PerfilId = 2,
+                            PermissaoId = 15
+                        },
+                        new
+                        {
+                            Id = 44,
+                            PerfilId = 2,
+                            PermissaoId = 16
+                        },
+                        new
+                        {
+                            Id = 45,
+                            PerfilId = 2,
+                            PermissaoId = 17
+                        },
+                        new
+                        {
+                            Id = 46,
+                            PerfilId = 2,
+                            PermissaoId = 18
+                        },
+                        new
+                        {
+                            Id = 47,
+                            PerfilId = 2,
+                            PermissaoId = 19
+                        },
+                        new
+                        {
+                            Id = 48,
+                            PerfilId = 2,
+                            PermissaoId = 20
+                        },
+                        new
+                        {
+                            Id = 49,
+                            PerfilId = 2,
+                            PermissaoId = 21
+                        },
+                        new
+                        {
+                            Id = 50,
+                            PerfilId = 2,
+                            PermissaoId = 22
+                        },
+                        new
+                        {
+                            Id = 51,
+                            PerfilId = 2,
+                            PermissaoId = 23
+                        },
+                        new
+                        {
+                            Id = 52,
+                            PerfilId = 2,
+                            PermissaoId = 24
+                        },
+                        new
+                        {
+                            Id = 53,
+                            PerfilId = 2,
+                            PermissaoId = 25
+                        },
+                        new
+                        {
+                            Id = 54,
+                            PerfilId = 2,
+                            PermissaoId = 26
+                        },
+                        new
+                        {
+                            Id = 55,
+                            PerfilId = 2,
+                            PermissaoId = 27
+                        },
+                        new
+                        {
+                            Id = 56,
+                            PerfilId = 2,
+                            PermissaoId = 28
                         });
                 });
 
@@ -458,6 +741,108 @@ namespace ConectMaster.Migrations
                         {
                             Id = 27,
                             Name = "Autorizar ou Negar OS"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Name = "Visualizar estoques"
+                        });
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.PermissaoEstoque", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EstoqueId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PerfilId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("PodeApagar")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PodeCriar")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PodeEditar")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PodeVisualizar")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstoqueId");
+
+                    b.HasIndex("PerfilId");
+
+                    b.ToTable("PermissoesEstoques");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            EstoqueId = 1,
+                            PerfilId = 1,
+                            PodeApagar = true,
+                            PodeCriar = true,
+                            PodeEditar = true,
+                            PodeVisualizar = true
+                        },
+                        new
+                        {
+                            Id = 2,
+                            EstoqueId = 2,
+                            PerfilId = 1,
+                            PodeApagar = true,
+                            PodeCriar = true,
+                            PodeEditar = true,
+                            PodeVisualizar = true
+                        },
+                        new
+                        {
+                            Id = 3,
+                            EstoqueId = 3,
+                            PerfilId = 1,
+                            PodeApagar = true,
+                            PodeCriar = true,
+                            PodeEditar = true,
+                            PodeVisualizar = true
+                        },
+                        new
+                        {
+                            Id = 4,
+                            EstoqueId = 1,
+                            PerfilId = 2,
+                            PodeApagar = true,
+                            PodeCriar = true,
+                            PodeEditar = true,
+                            PodeVisualizar = true
+                        },
+                        new
+                        {
+                            Id = 5,
+                            EstoqueId = 2,
+                            PerfilId = 2,
+                            PodeApagar = true,
+                            PodeCriar = true,
+                            PodeEditar = true,
+                            PodeVisualizar = true
+                        },
+                        new
+                        {
+                            Id = 6,
+                            EstoqueId = 3,
+                            PerfilId = 2,
+                            PodeApagar = true,
+                            PodeCriar = true,
+                            PodeEditar = true,
+                            PodeVisualizar = true
                         });
                 });
 
@@ -583,14 +968,41 @@ namespace ConectMaster.Migrations
                     b.Property<decimal?>("Volume")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<int?>("idUsuario")
+                    b.HasKey("Id");
+
+                    b.HasIndex("SolicitanteId");
+
+                    b.ToTable("Servicos");
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.TipoNotificacao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("idUsuario");
+                    b.ToTable("TipoNotificacoes");
 
-                    b.ToTable("Servicos");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nome = "Novo chamado"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nome = "Novo serviço"
+                        });
                 });
 
             modelBuilder.Entity("ConectMaster.Models.UsuarioView", b =>
@@ -614,6 +1026,176 @@ namespace ConectMaster.Migrations
                     b.HasIndex("ViewId");
 
                     b.ToTable("UsuarioView");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            UsuarioId = 1,
+                            ViewId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            UsuarioId = 1,
+                            ViewId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            UsuarioId = 1,
+                            ViewId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            UsuarioId = 1,
+                            ViewId = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            UsuarioId = 1,
+                            ViewId = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            UsuarioId = 1,
+                            ViewId = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            UsuarioId = 1,
+                            ViewId = 7
+                        },
+                        new
+                        {
+                            Id = 8,
+                            UsuarioId = 1,
+                            ViewId = 8
+                        },
+                        new
+                        {
+                            Id = 9,
+                            UsuarioId = 1,
+                            ViewId = 9
+                        },
+                        new
+                        {
+                            Id = 10,
+                            UsuarioId = 1,
+                            ViewId = 10
+                        },
+                        new
+                        {
+                            Id = 11,
+                            UsuarioId = 1,
+                            ViewId = 11
+                        },
+                        new
+                        {
+                            Id = 12,
+                            UsuarioId = 1,
+                            ViewId = 12
+                        },
+                        new
+                        {
+                            Id = 13,
+                            UsuarioId = 1,
+                            ViewId = 13
+                        },
+                        new
+                        {
+                            Id = 14,
+                            UsuarioId = 1,
+                            ViewId = 14
+                        },
+                        new
+                        {
+                            Id = 15,
+                            UsuarioId = 2,
+                            ViewId = 1
+                        },
+                        new
+                        {
+                            Id = 16,
+                            UsuarioId = 2,
+                            ViewId = 2
+                        },
+                        new
+                        {
+                            Id = 17,
+                            UsuarioId = 2,
+                            ViewId = 3
+                        },
+                        new
+                        {
+                            Id = 18,
+                            UsuarioId = 2,
+                            ViewId = 4
+                        },
+                        new
+                        {
+                            Id = 19,
+                            UsuarioId = 2,
+                            ViewId = 5
+                        },
+                        new
+                        {
+                            Id = 20,
+                            UsuarioId = 2,
+                            ViewId = 6
+                        },
+                        new
+                        {
+                            Id = 21,
+                            UsuarioId = 2,
+                            ViewId = 7
+                        },
+                        new
+                        {
+                            Id = 22,
+                            UsuarioId = 2,
+                            ViewId = 8
+                        },
+                        new
+                        {
+                            Id = 23,
+                            UsuarioId = 2,
+                            ViewId = 9
+                        },
+                        new
+                        {
+                            Id = 24,
+                            UsuarioId = 2,
+                            ViewId = 10
+                        },
+                        new
+                        {
+                            Id = 25,
+                            UsuarioId = 2,
+                            ViewId = 11
+                        },
+                        new
+                        {
+                            Id = 26,
+                            UsuarioId = 2,
+                            ViewId = 12
+                        },
+                        new
+                        {
+                            Id = 27,
+                            UsuarioId = 2,
+                            ViewId = 13
+                        },
+                        new
+                        {
+                            Id = 28,
+                            UsuarioId = 2,
+                            ViewId = 14
+                        });
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Usuarios", b =>
@@ -657,6 +1239,24 @@ namespace ConectMaster.Migrations
                     b.HasIndex("PerfilId");
 
                     b.ToTable("Usuarios");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "t@t",
+                            Nome = "Administrador",
+                            PerfilId = 1,
+                            Senha = "123"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Email = "f@f",
+                            Nome = "Cargo Lider",
+                            PerfilId = 2,
+                            Senha = "123"
+                        });
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Views", b =>
@@ -731,6 +1331,21 @@ namespace ConectMaster.Migrations
                         {
                             Id = 11,
                             Name = "visual.servicosgeral"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "visual.portaria"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "visual.formularios"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "visual.estoques"
                         });
                 });
 
@@ -751,6 +1366,9 @@ namespace ConectMaster.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DataAlteracao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DataFechamento")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Descricao")
@@ -791,6 +1409,17 @@ namespace ConectMaster.Migrations
                     b.ToTable("Chamados");
                 });
 
+            modelBuilder.Entity("ConectMaster.Models.EstoqueItem", b =>
+                {
+                    b.HasOne("ConectMaster.Models.Estoque", "Estoque")
+                        .WithMany()
+                        .HasForeignKey("EstoqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estoque");
+                });
+
             modelBuilder.Entity("ConectMaster.Models.Historico", b =>
                 {
                     b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
@@ -798,6 +1427,25 @@ namespace ConectMaster.Migrations
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.Notificacao", b =>
+                {
+                    b.HasOne("ConectMaster.Models.TipoNotificacao", "Tipo")
+                        .WithMany()
+                        .HasForeignKey("TipoNotificacaoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tipo");
 
                     b.Navigation("Usuario");
                 });
@@ -821,11 +1469,32 @@ namespace ConectMaster.Migrations
                     b.Navigation("Permissao");
                 });
 
+            modelBuilder.Entity("ConectMaster.Models.PermissaoEstoque", b =>
+                {
+                    b.HasOne("ConectMaster.Models.Estoque", "Estoque")
+                        .WithMany()
+                        .HasForeignKey("EstoqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConectMaster.Models.Perfil", "Perfil")
+                        .WithMany()
+                        .HasForeignKey("PerfilId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estoque");
+
+                    b.Navigation("Perfil");
+                });
+
             modelBuilder.Entity("ConectMaster.Models.Servico", b =>
                 {
                     b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
                         .WithMany()
-                        .HasForeignKey("idUsuario");
+                        .HasForeignKey("SolicitanteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Usuario");
                 });

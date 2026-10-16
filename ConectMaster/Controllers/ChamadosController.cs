@@ -84,6 +84,8 @@ namespace ConectMaster.Controllers
                         c.Id,
                         c.Titulo,
                         c.Descricao,
+                        c.Categoria,
+                        c.Prioridade,
                         c.Status,
                         c.DataAbertura,
                         c.DataFechamento,

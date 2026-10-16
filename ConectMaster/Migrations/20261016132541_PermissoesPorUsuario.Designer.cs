@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConectMaster.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260825180729_RailwayFix")]
-    partial class RailwayFix
+    [Migration("20261016132541_PermissoesPorUsuario")]
+    partial class PermissoesPorUsuario
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,76 @@ namespace ConectMaster.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("ConectMaster.Models.Estoque", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Estoques");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Ativo = true,
+                            Nome = "TI"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Ativo = true,
+                            Nome = "Compras"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Ativo = true,
+                            Nome = "Expedicao"
+                        });
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.EstoqueItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descricao")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<int>("EstoqueId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<decimal>("Quantidade")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstoqueId");
+
+                    b.ToTable("EstoqueItens");
+                });
 
             modelBuilder.Entity("ConectMaster.Models.Historico", b =>
                 {
@@ -679,6 +749,104 @@ namespace ConectMaster.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ConectMaster.Models.PermissaoEstoque", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EstoqueId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("PodeApagar")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PodeCriar")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PodeEditar")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PodeVisualizar")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstoqueId");
+
+                    b.HasIndex("UsuarioId", "EstoqueId")
+                        .IsUnique();
+
+                    b.ToTable("PermissoesEstoques");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            EstoqueId = 1,
+                            PodeApagar = true,
+                            PodeCriar = true,
+                            PodeEditar = true,
+                            PodeVisualizar = true,
+                            UsuarioId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            EstoqueId = 2,
+                            PodeApagar = true,
+                            PodeCriar = true,
+                            PodeEditar = true,
+                            PodeVisualizar = true,
+                            UsuarioId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            EstoqueId = 3,
+                            PodeApagar = true,
+                            PodeCriar = true,
+                            PodeEditar = true,
+                            PodeVisualizar = true,
+                            UsuarioId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            EstoqueId = 1,
+                            PodeApagar = true,
+                            PodeCriar = true,
+                            PodeEditar = true,
+                            PodeVisualizar = true,
+                            UsuarioId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            EstoqueId = 2,
+                            PodeApagar = true,
+                            PodeCriar = true,
+                            PodeEditar = true,
+                            PodeVisualizar = true,
+                            UsuarioId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            EstoqueId = 3,
+                            PodeApagar = true,
+                            PodeCriar = true,
+                            PodeEditar = true,
+                            PodeVisualizar = true,
+                            UsuarioId = 2
+                        });
+                });
+
             modelBuilder.Entity("ConectMaster.Models.Servico", b =>
                 {
                     b.Property<int>("Id")
@@ -942,80 +1110,92 @@ namespace ConectMaster.Migrations
                         new
                         {
                             Id = 14,
-                            UsuarioId = 2,
-                            ViewId = 1
+                            UsuarioId = 1,
+                            ViewId = 14
                         },
                         new
                         {
                             Id = 15,
                             UsuarioId = 2,
-                            ViewId = 2
+                            ViewId = 1
                         },
                         new
                         {
                             Id = 16,
                             UsuarioId = 2,
-                            ViewId = 3
+                            ViewId = 2
                         },
                         new
                         {
                             Id = 17,
                             UsuarioId = 2,
-                            ViewId = 4
+                            ViewId = 3
                         },
                         new
                         {
                             Id = 18,
                             UsuarioId = 2,
-                            ViewId = 5
+                            ViewId = 4
                         },
                         new
                         {
                             Id = 19,
                             UsuarioId = 2,
-                            ViewId = 6
+                            ViewId = 5
                         },
                         new
                         {
                             Id = 20,
                             UsuarioId = 2,
-                            ViewId = 7
+                            ViewId = 6
                         },
                         new
                         {
                             Id = 21,
                             UsuarioId = 2,
-                            ViewId = 8
+                            ViewId = 7
                         },
                         new
                         {
                             Id = 22,
                             UsuarioId = 2,
-                            ViewId = 9
+                            ViewId = 8
                         },
                         new
                         {
                             Id = 23,
                             UsuarioId = 2,
-                            ViewId = 10
+                            ViewId = 9
                         },
                         new
                         {
                             Id = 24,
                             UsuarioId = 2,
-                            ViewId = 11
+                            ViewId = 10
                         },
                         new
                         {
                             Id = 25,
                             UsuarioId = 2,
-                            ViewId = 12
+                            ViewId = 11
                         },
                         new
                         {
                             Id = 26,
                             UsuarioId = 2,
+                            ViewId = 12
+                        },
+                        new
+                        {
+                            Id = 27,
+                            UsuarioId = 2,
                             ViewId = 13
+                        },
+                        new
+                        {
+                            Id = 28,
+                            UsuarioId = 2,
+                            ViewId = 14
                         });
                 });
 
@@ -1161,7 +1341,12 @@ namespace ConectMaster.Migrations
                         new
                         {
                             Id = 13,
-                            Name = "visual.estoqueTi"
+                            Name = "visual.formularios"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "visual.estoques"
                         });
                 });
 
@@ -1225,6 +1410,17 @@ namespace ConectMaster.Migrations
                     b.ToTable("Chamados");
                 });
 
+            modelBuilder.Entity("ConectMaster.Models.EstoqueItem", b =>
+                {
+                    b.HasOne("ConectMaster.Models.Estoque", "Estoque")
+                        .WithMany()
+                        .HasForeignKey("EstoqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estoque");
+                });
+
             modelBuilder.Entity("ConectMaster.Models.Historico", b =>
                 {
                     b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
@@ -1272,6 +1468,25 @@ namespace ConectMaster.Migrations
                     b.Navigation("Perfil");
 
                     b.Navigation("Permissao");
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.PermissaoEstoque", b =>
+                {
+                    b.HasOne("ConectMaster.Models.Estoque", "Estoque")
+                        .WithMany()
+                        .HasForeignKey("EstoqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estoque");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Servico", b =>

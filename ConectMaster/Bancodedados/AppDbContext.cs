@@ -25,6 +25,9 @@ namespace ConectMaster.Bancodedados
         public DbSet<UsuarioView> UsuarioView { get; set; }
         public DbSet<TipoNotificacao> TipoNotificacoes { get; set; }
         public DbSet<Notificacao> Notificacoes { get; set; }
+        public DbSet<Estoque> Estoques { get; set; }
+        public DbSet<PermissaoEstoque> PermissoesEstoques { get; set; }
+        public DbSet<EstoqueItem> EstoqueItens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,7 +46,8 @@ namespace ConectMaster.Bancodedados
                 new Views { Id = 10, Name = "visual.configuracoes" },
                 new Views { Id = 11 , Name = "visual.servicosgeral"},
                 new Views { Id = 12, Name = "visual.portaria"},
-                new Views { Id = 13, Name = "visual.estoqueTi"}
+                new Views { Id = 13, Name = "visual.formularios"},
+                new Views { Id = 14, Name = "visual.estoques"}
             );
 
 
@@ -90,6 +94,25 @@ namespace ConectMaster.Bancodedados
             modelBuilder.Entity<Perfil>().HasData(
                 new Perfil { Id = 1, Name = "Administrador" },
                 new Perfil { Id = 2, Name = "Lider"}
+            );
+
+            modelBuilder.Entity<Estoque>().HasData(
+                new Estoque { Id = 1, Nome = "TI", Ativo = true },
+                new Estoque { Id = 2, Nome = "Compras", Ativo = true },
+                new Estoque { Id = 3, Nome = "Expedicao", Ativo = true }
+            );
+
+            modelBuilder.Entity<PermissaoEstoque>()
+                .HasIndex(p => new { p.UsuarioId, p.EstoqueId })
+                .IsUnique();
+
+            modelBuilder.Entity<PermissaoEstoque>().HasData(
+                new PermissaoEstoque { Id = 1, UsuarioId = 1, EstoqueId = 1, PodeVisualizar = true, PodeCriar = true, PodeEditar = true, PodeApagar = true },
+                new PermissaoEstoque { Id = 2, UsuarioId = 1, EstoqueId = 2, PodeVisualizar = true, PodeCriar = true, PodeEditar = true, PodeApagar = true },
+                new PermissaoEstoque { Id = 3, UsuarioId = 1, EstoqueId = 3, PodeVisualizar = true, PodeCriar = true, PodeEditar = true, PodeApagar = true },
+                new PermissaoEstoque { Id = 4, UsuarioId = 2, EstoqueId = 1, PodeVisualizar = true, PodeCriar = true, PodeEditar = true, PodeApagar = true },
+                new PermissaoEstoque { Id = 5, UsuarioId = 2, EstoqueId = 2, PodeVisualizar = true, PodeCriar = true, PodeEditar = true, PodeApagar = true },
+                new PermissaoEstoque { Id = 6, UsuarioId = 2, EstoqueId = 3, PodeVisualizar = true, PodeCriar = true, PodeEditar = true, PodeApagar = true }
             );
 
             // Atribui todas as permissões ao perfil Administrador
@@ -181,20 +204,22 @@ namespace ConectMaster.Bancodedados
                 new UsuarioView { Id = 11, ViewId = 11, UsuarioId = 1 },
                 new UsuarioView { Id = 12, ViewId = 12, UsuarioId = 1 },
                 new UsuarioView { Id = 13, ViewId = 13, UsuarioId = 1 },
+                new UsuarioView { Id = 14, ViewId = 14, UsuarioId = 1 },
 
-                new UsuarioView { Id = 14, ViewId = 1, UsuarioId = 2 },
-                new UsuarioView { Id = 15, ViewId = 2, UsuarioId = 2 },
-                new UsuarioView { Id = 16, ViewId = 3, UsuarioId = 2 },
-                new UsuarioView { Id = 17, ViewId = 4, UsuarioId = 2 },
-                new UsuarioView { Id = 18, ViewId = 5, UsuarioId = 2 },
-                new UsuarioView { Id = 19, ViewId = 6, UsuarioId = 2 },
-                new UsuarioView { Id = 20, ViewId = 7, UsuarioId = 2 },
-                new UsuarioView { Id = 21, ViewId = 8, UsuarioId = 2 },
-                new UsuarioView { Id = 22, ViewId = 9, UsuarioId = 2 },
-                new UsuarioView { Id = 23, ViewId = 10, UsuarioId = 2 },
-                new UsuarioView { Id = 24, ViewId = 11, UsuarioId = 2 },
-                new UsuarioView { Id = 25, ViewId = 12, UsuarioId = 2 },
-                new UsuarioView { Id = 26, ViewId = 13, UsuarioId = 2 }
+                new UsuarioView { Id = 15, ViewId = 1, UsuarioId = 2 },
+                new UsuarioView { Id = 16, ViewId = 2, UsuarioId = 2 },
+                new UsuarioView { Id = 17, ViewId = 3, UsuarioId = 2 },
+                new UsuarioView { Id = 18, ViewId = 4, UsuarioId = 2 },
+                new UsuarioView { Id = 19, ViewId = 5, UsuarioId = 2 },
+                new UsuarioView { Id = 20, ViewId = 6, UsuarioId = 2 },
+                new UsuarioView { Id = 21, ViewId = 7, UsuarioId = 2 },
+                new UsuarioView { Id = 22, ViewId = 8, UsuarioId = 2 },
+                new UsuarioView { Id = 23, ViewId = 9, UsuarioId = 2 },
+                new UsuarioView { Id = 24, ViewId = 10, UsuarioId = 2 },
+                new UsuarioView { Id = 25, ViewId = 11, UsuarioId = 2 },
+                new UsuarioView { Id = 26, ViewId = 12, UsuarioId = 2 },
+                new UsuarioView { Id = 27, ViewId = 13, UsuarioId = 2 },
+                new UsuarioView { Id = 28, ViewId = 14, UsuarioId = 2 }
             );
 
         }
