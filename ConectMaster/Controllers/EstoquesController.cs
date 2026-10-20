@@ -52,9 +52,11 @@ namespace ConectMaster.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
         public async Task<ActionResult<Estoque>> Post([FromBody] EstoqueDto dto)
         {
+            if (!User.TemPermissao("Criar formularios"))
+                return Forbid();
+
             var nome = dto.Nome.Trim();
             if (string.IsNullOrWhiteSpace(nome))
                 return BadRequest(new { error = "O nome do estoque é obrigatório." });
@@ -135,11 +137,15 @@ namespace ConectMaster.Controllers
         }
 
         [HttpGet("{id:int}/permissoes")]
-        [Authorize(Roles = "Administrador")]
         public async Task<ActionResult<IEnumerable<PermissaoEstoque>>> GetPermissoes(int id)
         {
-            if (!await _context.Estoques.AnyAsync(e => e.Id == id))
-                return NotFound();
+            if (!await User.TemPermissaoEstoqueAsync(_context, id, p => p.PodeVisualizar))
+            {
+                if (!await _context.Estoques.AnyAsync(e => e.Id == id))
+                    return NotFound();
+
+                return Forbid();
+            }
 
             var permissoes = await _context.PermissoesEstoques
                 .AsNoTracking()
@@ -151,11 +157,15 @@ namespace ConectMaster.Controllers
         }
 
         [HttpPut("{id:int}/permissoes/{usuarioId:int}")]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> PutPermissao(int id, int usuarioId, [FromBody] PermissaoEstoqueDto dto)
         {
-            if (!await _context.Estoques.AnyAsync(e => e.Id == id))
-                return NotFound(new { error = "Estoque não encontrado." });
+            if (!await User.TemPermissaoEstoqueAsync(_context, id, p => p.PodeEditar))
+            {
+                if (!await _context.Estoques.AnyAsync(e => e.Id == id))
+                    return NotFound(new { error = "Estoque não encontrado." });
+
+                return Forbid();
+            }
 
             if (!await _context.Usuarios.AnyAsync(u => u.Id == usuarioId))
                 return NotFound(new { error = "Usuário não encontrado." });

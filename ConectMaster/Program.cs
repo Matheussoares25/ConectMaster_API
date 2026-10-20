@@ -10,10 +10,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseMySql(
-        connectionString,
-        new MySqlServerVersion(new Version(8, 0, 36))
-    );
+    options.UseNpgsql(connectionString);
 });
 
 builder.Services.AddCors(options =>

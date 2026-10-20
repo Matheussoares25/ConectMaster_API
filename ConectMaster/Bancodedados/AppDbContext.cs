@@ -28,6 +28,7 @@ namespace ConectMaster.Bancodedados
         public DbSet<Estoque> Estoques { get; set; }
         public DbSet<PermissaoEstoque> PermissoesEstoques { get; set; }
         public DbSet<EstoqueItem> EstoqueItens { get; set; }
+        public DbSet<Formulario> Formularios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -87,7 +88,12 @@ namespace ConectMaster.Bancodedados
                 new Permissao { Id = 26, Name = "Visualizar servicos" },
                 new Permissao { Id = 27, Name = "Autorizar ou Negar OS" },
 
-                new Permissao { Id = 28, Name = "Visualizar estoques"}
+                new Permissao { Id = 28, Name = "Visualizar estoques"},
+                new Permissao { Id = 29, Name = "Visualizar formularios" },
+
+                new Permissao { Id = 30, Name = "Criar formularios" },
+                new Permissao { Id = 31, Name = "Editar formularios" },
+                new Permissao { Id = 32, Name = "Apagar formularios" }
             );
 
             // Seed perfil Administrador
@@ -145,6 +151,10 @@ namespace ConectMaster.Bancodedados
                 new PerfilPermissao { Id = 26, PerfilId = 1, PermissaoId = 26 },
                 new PerfilPermissao { Id = 27, PerfilId = 1, PermissaoId = 27 },
                 new PerfilPermissao { Id = 28, PerfilId = 1, PermissaoId = 28 },
+                new PerfilPermissao { Id = 57, PerfilId = 1, PermissaoId = 29 },
+                new PerfilPermissao { Id = 58, PerfilId = 1, PermissaoId = 30 },
+                new PerfilPermissao { Id = 59, PerfilId = 1, PermissaoId = 31 },
+                new PerfilPermissao { Id = 60, PerfilId = 1, PermissaoId = 32 },
 
                 new PerfilPermissao { Id = 29, PerfilId = 2, PermissaoId = 1 },
                 new PerfilPermissao { Id = 30, PerfilId = 2, PermissaoId = 2 },
@@ -173,7 +183,11 @@ namespace ConectMaster.Bancodedados
                 new PerfilPermissao { Id = 53, PerfilId = 2, PermissaoId = 25 },
                 new PerfilPermissao { Id = 54, PerfilId = 2, PermissaoId = 26 },
                 new PerfilPermissao { Id = 55, PerfilId = 2, PermissaoId = 27 },
-                new PerfilPermissao { Id = 56, PerfilId = 2, PermissaoId = 28 }
+                new PerfilPermissao { Id = 56, PerfilId = 2, PermissaoId = 28 },
+                new PerfilPermissao { Id = 61, PerfilId = 2, PermissaoId = 29 },
+                new PerfilPermissao { Id = 62, PerfilId = 2, PermissaoId = 30 },
+                new PerfilPermissao { Id = 63, PerfilId = 2, PermissaoId = 31 },
+                new PerfilPermissao { Id = 64, PerfilId = 2, PermissaoId = 32 }
 
 
             );
