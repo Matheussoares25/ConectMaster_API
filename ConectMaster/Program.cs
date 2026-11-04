@@ -3,16 +3,19 @@ using ConectMaster.Bancodedados;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+//conexao com o banco de dados
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
 });
 
+// Configuração do CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactPolicy", policy =>
@@ -24,18 +27,23 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Adiciona os serviços do controlador
 builder.Services.AddControllers();
 
+
 // Authentication / JWT
-var jwtKey = builder.Configuration["Jwt:Key"] ?? "CHANGE_THIS_SECRET_KEY_1234567890";
+var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
+
 
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
+
+
 .AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;
@@ -52,10 +60,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Adiciona o serviço de autorização
 builder.Services.AddAuthorization();
+
+// Configuração do Swagger
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 
 // ---- só agora o build ----
 var app = builder.Build();
@@ -74,7 +87,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("ReactPolicy");
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.DocExpansion(DocExpansion.None);
+});
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
