@@ -1,6 +1,5 @@
 using ConectMaster.Bancodedados;
 using ConectMaster.DTOS;
-using ConectMaster.Helpers;
 using ConectMaster.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +19,6 @@ namespace ConectMaster.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EstoqueItem>>> Get(int estoqueId)
         {
-            if (!await User.TemPermissaoEstoqueAsync(_context, estoqueId, p => p.PodeVisualizar))
-                return Forbid();
-
             var itens = await _context.EstoqueItens
                 .AsNoTracking()
                 .Where(i => i.EstoqueId == estoqueId)
@@ -35,9 +31,6 @@ namespace ConectMaster.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<EstoqueItem>> GetById(int estoqueId, int id)
         {
-            if (!await User.TemPermissaoEstoqueAsync(_context, estoqueId, p => p.PodeVisualizar))
-                return Forbid();
-
             var item = await _context.EstoqueItens
                 .AsNoTracking()
                 .FirstOrDefaultAsync(i => i.Id == id && i.EstoqueId == estoqueId);
@@ -48,9 +41,6 @@ namespace ConectMaster.Controllers
         [HttpPost]
         public async Task<ActionResult<EstoqueItem>> Post(int estoqueId, [FromBody] EstoqueItemDto dto)
         {
-            if (!await User.TemPermissaoEstoqueAsync(_context, estoqueId, p => p.PodeCriar))
-                return Forbid();
-
             var item = new EstoqueItem
             {
                 Nome = dto.Nome,
@@ -68,9 +58,6 @@ namespace ConectMaster.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int estoqueId, int id, [FromBody] EstoqueItemDto dto)
         {
-            if (!await User.TemPermissaoEstoqueAsync(_context, estoqueId, p => p.PodeEditar))
-                return Forbid();
-
             var item = await _context.EstoqueItens
                 .FirstOrDefaultAsync(i => i.Id == id && i.EstoqueId == estoqueId);
 
@@ -88,9 +75,6 @@ namespace ConectMaster.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int estoqueId, int id)
         {
-            if (!await User.TemPermissaoEstoqueAsync(_context, estoqueId, p => p.PodeApagar))
-                return Forbid();
-
             var item = await _context.EstoqueItens
                 .FirstOrDefaultAsync(i => i.Id == id && i.EstoqueId == estoqueId);
 

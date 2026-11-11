@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ConectMaster.Migrations
 {
     /// <inheritdoc />
-    public partial class compost : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -89,19 +89,6 @@ namespace ConectMaster.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Permissoes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TipoNotificacoes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Nome = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TipoNotificacoes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -234,65 +221,6 @@ namespace ConectMaster.Migrations
                     table.PrimaryKey("PK_Historicos", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Historicos_Usuarios_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "Usuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Notificacoes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UsuarioId = table.Column<int>(type: "integer", nullable: false),
-                    TipoNotificacaoId = table.Column<int>(type: "integer", nullable: false),
-                    Mensagem = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
-                    Lida = table.Column<bool>(type: "boolean", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Notificacoes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Notificacoes_TipoNotificacoes_TipoNotificacaoId",
-                        column: x => x.TipoNotificacaoId,
-                        principalTable: "TipoNotificacoes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Notificacoes_Usuarios_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "Usuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PermissoesEstoques",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UsuarioId = table.Column<int>(type: "integer", nullable: false),
-                    EstoqueId = table.Column<int>(type: "integer", nullable: false),
-                    PodeVisualizar = table.Column<bool>(type: "boolean", nullable: false),
-                    PodeCriar = table.Column<bool>(type: "boolean", nullable: false),
-                    PodeEditar = table.Column<bool>(type: "boolean", nullable: false),
-                    PodeApagar = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PermissoesEstoques", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PermissoesEstoques_Estoques_EstoqueId",
-                        column: x => x.EstoqueId,
-                        principalTable: "Estoques",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PermissoesEstoques_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuarios",
                         principalColumn: "Id",
@@ -433,15 +361,6 @@ namespace ConectMaster.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "TipoNotificacoes",
-                columns: new[] { "Id", "Nome" },
-                values: new object[,]
-                {
-                    { 1, "Novo chamado" },
-                    { 2, "Novo serviço" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Views",
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
@@ -543,19 +462,6 @@ namespace ConectMaster.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "PermissoesEstoques",
-                columns: new[] { "Id", "EstoqueId", "PodeApagar", "PodeCriar", "PodeEditar", "PodeVisualizar", "UsuarioId" },
-                values: new object[,]
-                {
-                    { 1, 1, true, true, true, true, 1 },
-                    { 2, 2, true, true, true, true, 1 },
-                    { 3, 3, true, true, true, true, 1 },
-                    { 4, 1, true, true, true, true, 2 },
-                    { 5, 2, true, true, true, true, 2 },
-                    { 6, 3, true, true, true, true, 2 }
-                });
-
-            migrationBuilder.InsertData(
                 table: "UsuarioView",
                 columns: new[] { "Id", "UsuarioId", "ViewId" },
                 values: new object[,]
@@ -606,16 +512,6 @@ namespace ConectMaster.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notificacoes_TipoNotificacaoId",
-                table: "Notificacoes",
-                column: "TipoNotificacaoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Notificacoes_UsuarioId",
-                table: "Notificacoes",
-                column: "UsuarioId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PerfilPermissoes_PerfilId",
                 table: "PerfilPermissoes",
                 column: "PerfilId");
@@ -624,17 +520,6 @@ namespace ConectMaster.Migrations
                 name: "IX_PerfilPermissoes_PermissaoId",
                 table: "PerfilPermissoes",
                 column: "PermissaoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PermissoesEstoques_EstoqueId",
-                table: "PermissoesEstoques",
-                column: "EstoqueId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PermissoesEstoques_UsuarioId_EstoqueId",
-                table: "PermissoesEstoques",
-                columns: new[] { "UsuarioId", "EstoqueId" },
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Servicos_SolicitanteId",
@@ -676,13 +561,7 @@ namespace ConectMaster.Migrations
                 name: "LogsAuditoria");
 
             migrationBuilder.DropTable(
-                name: "Notificacoes");
-
-            migrationBuilder.DropTable(
                 name: "PerfilPermissoes");
-
-            migrationBuilder.DropTable(
-                name: "PermissoesEstoques");
 
             migrationBuilder.DropTable(
                 name: "Servicos");
@@ -691,13 +570,10 @@ namespace ConectMaster.Migrations
                 name: "UsuarioView");
 
             migrationBuilder.DropTable(
-                name: "TipoNotificacoes");
+                name: "Estoques");
 
             migrationBuilder.DropTable(
                 name: "Permissoes");
-
-            migrationBuilder.DropTable(
-                name: "Estoques");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ConectMaster.Bancodedados;
 using ConectMaster.Models;
 using ConectMaster.Helpers;
+using ConectMaster.DTOS;
 
 namespace ConectMaster.Controllers
 {
@@ -20,15 +21,16 @@ namespace ConectMaster.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Permissao>>> Get()
+        public async Task<ActionResult<IEnumerable<PermissaoResponse>>> Get()
         {
             if (!User.TemPermissao("Visualizar permissoes"))
                 return Forbid();
             try
             {
                 return await _context.Permissoes
-      .OrderBy(p => p.Name)
-      .ToListAsync();
+                    .OrderBy(p => p.Name)
+                    .Select(p => new PermissaoResponse { Id = p.Id, Name = p.Name })
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -37,7 +39,7 @@ namespace ConectMaster.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Permissao>> Get(int id)
+        public async Task<ActionResult<PermissaoResponse>> Get(int id)
         {
             if (!User.TemPermissao("Visualizar permissoes"))
                 return Forbid();
@@ -46,7 +48,8 @@ namespace ConectMaster.Controllers
             {
                 var item = await _context.Permissoes.FindAsync(id);
                 if (item == null) return NotFound();
-                return item;
+
+                return new PermissaoResponse { Id = item.Id, Name = item.Name };
             }
             catch (Exception ex)
             {
@@ -55,32 +58,33 @@ namespace ConectMaster.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Permissao>> Post(Permissao model)
+        public async Task<ActionResult<PermissaoResponse>> Post(PermissaoDto request)
         {
             if (!User.TemPermissao("Criar permissoes"))
                 return Forbid();
 
             try
             {
+                var model = new Permissao { Name = request.Name };
                 _context.Permissoes.Add(model);
                 await _context.SaveChangesAsync();
 
-                // Log de auditoria - Criar
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
                         UsuarioId = User.GetId(),
+                        UsuarioName = User.GetName(),
                         Acao = "Criar",
                         Entidade = "Permissao",
                         EntidadeId = model.Id,
-                        Detalhes = System.Text.Json.JsonSerializer.Serialize(model)
+                        Detalhes = System.Text.Json.JsonSerializer.Serialize(request)
                     });
                     await _context.SaveChangesAsync();
                 }
                 catch { }
 
-                return CreatedAtAction(nameof(Get), new { id = model.Id }, model);
+                return CreatedAtAction(nameof(Get), new { id = model.Id }, new PermissaoResponse { Id = model.Id, Name = model.Name });
             }
             catch (Exception ex)
             {
@@ -89,29 +93,30 @@ namespace ConectMaster.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Permissao model)
+        public async Task<IActionResult> Put(int id, PermissaoDto request)
         {
             if (!User.TemPermissao("Editar permissoes"))
                 return Forbid();
 
             try
             {
-                if (id != model.Id) return BadRequest();
-                if (!await _context.Permissoes.AnyAsync(x => x.Id == id)) return NotFound();
+                var item = await _context.Permissoes.FindAsync(id);
+                if (item == null) return NotFound();
 
-                _context.Entry(model).State = EntityState.Modified;
+                item.Name = request.Name;
+                _context.Permissoes.Update(item);
                 await _context.SaveChangesAsync();
 
-                // Log de auditoria - Editar
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
                         UsuarioId = User.GetId(),
+                        UsuarioName = User.GetName(),
                         Acao = "Editar",
                         Entidade = "Permissao",
-                        EntidadeId = model.Id,
-                        Detalhes = System.Text.Json.JsonSerializer.Serialize(model)
+                        EntidadeId = id,
+                        Detalhes = System.Text.Json.JsonSerializer.Serialize(request)
                     });
                     await _context.SaveChangesAsync();
                 }
@@ -126,7 +131,6 @@ namespace ConectMaster.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "administrador")]
         public async Task<IActionResult> Delete(int id)
         {
             if (!User.TemPermissao("Apagar permissoes"))
@@ -143,7 +147,7 @@ namespace ConectMaster.Controllers
 
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
                         UsuarioId = User.GetId(),
                         Acao = "Excluir",

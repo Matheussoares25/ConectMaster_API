@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ConectMaster.Bancodedados;
 using ConectMaster.Models;
 using ConectMaster.Helpers;
+using ConectMaster.DTOS;
 
 namespace ConectMaster.Controllers
 {
@@ -19,9 +20,8 @@ namespace ConectMaster.Controllers
             _context = context;
         }
 
-        // Lista permissões associadas a um perfil
         [HttpGet("perfil/{perfilId}")]
-        public async Task<ActionResult<IEnumerable<Permissao>>> GetPermissoesDoPerfil(int perfilId)
+        public async Task<ActionResult<IEnumerable<PerfilPermissaoResponse>>> GetPermissoesDoPerfil(int perfilId)
         {
             try
             {
@@ -31,7 +31,15 @@ namespace ConectMaster.Controllers
                 var permissoes = await _context.PerfilPermissoes
                     .Where(pp => pp.PerfilId == perfilId)
                     .Include(pp => pp.Permissao)
-                    .Select(pp => pp.Permissao)
+                    .Include(pp => pp.Perfil)
+                    .Select(pp => new PerfilPermissaoResponse
+                    {
+                        Id = pp.Id,
+                        PerfilId = pp.PerfilId,
+                        PermissaoId = pp.PermissaoId,
+                        PerfilNome = pp.Perfil.Name,
+                        PermissaoNome = pp.Permissao.Name
+                    })
                     .ToListAsync();
 
                 return permissoes;
@@ -42,46 +50,57 @@ namespace ConectMaster.Controllers
             }
         }
 
-        // Associa uma permissão a um perfil
         [HttpPost]
-        public async Task<ActionResult<PerfilPermissao>> Post(PerfilPermissao model)
+        public async Task<ActionResult<PerfilPermissaoResponse>> Post(PerfilPermissaoDto dto)
         {
-          
             if (!User.TemPermissao("Criar permissoes"))
                 return Forbid();
 
             try
             {
-                // valida perfis e permissões existentes
-                if (!await _context.Perfis.AnyAsync(p => p.Id == model.PerfilId))
+                if (!await _context.Perfis.AnyAsync(p => p.Id == dto.PerfilId))
                     return NotFound(new { error = "Perfil não encontrado" });
 
-                if (!await _context.Permissoes.AnyAsync(p => p.Id == model.PermissaoId))
+                if (!await _context.Permissoes.AnyAsync(p => p.Id == dto.PermissaoId))
                     return NotFound(new { error = "Permissão não encontrada" });
 
-                // evita duplicatas
-                var exists = await _context.PerfilPermissoes.AnyAsync(pp => pp.PerfilId == model.PerfilId && pp.PermissaoId == model.PermissaoId);
-                if (exists) return Conflict(new { error = "Associação já existe" }); 
+                var exists = await _context.PerfilPermissoes.AnyAsync(pp => pp.PerfilId == dto.PerfilId && pp.PermissaoId == dto.PermissaoId);
+                if (exists) return Conflict(new { error = "Associação já existe" });
+
+                var model = new PerfilPermissao
+                {
+                    PerfilId = dto.PerfilId,
+                    PermissaoId = dto.PermissaoId
+                };
 
                 _context.PerfilPermissoes.Add(model);
                 await _context.SaveChangesAsync();
 
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
-                        UsuarioId = User.GetId(),      
+                        UsuarioId = User.GetId(),
                         Acao = "Criar",
                         Entidade = "PerfilPermissao",
                         EntidadeId = model.Id,
-                        Detalhes = System.Text.Json.JsonSerializer.Serialize(model)
+                        Detalhes = System.Text.Json.JsonSerializer.Serialize(dto)
                     });
                     await _context.SaveChangesAsync();
                 }
                 catch { }
 
-                // retorna a associação criada
-                return CreatedAtAction(nameof(GetById), new { id = model.Id }, model);
+                var perfil = await _context.Perfis.FindAsync(model.PerfilId);
+                var permissao = await _context.Permissoes.FindAsync(model.PermissaoId);
+
+                return CreatedAtAction(nameof(GetById), new { id = model.Id }, new PerfilPermissaoResponse
+                {
+                    Id = model.Id,
+                    PerfilId = model.PerfilId,
+                    PermissaoId = model.PermissaoId,
+                    PerfilNome = perfil?.Name,
+                    PermissaoNome = permissao?.Name
+                });
             }
             catch (Exception ex)
             {
@@ -89,9 +108,8 @@ namespace ConectMaster.Controllers
             }
         }
 
-        // Recupera associação por id
         [HttpGet("{id}")]
-        public async Task<ActionResult<PerfilPermissao>> GetById(int id)
+        public async Task<ActionResult<PerfilPermissaoResponse>> GetById(int id)
         {
             try
             {
@@ -101,7 +119,15 @@ namespace ConectMaster.Controllers
                     .FirstOrDefaultAsync(pp => pp.Id == id);
 
                 if (item == null) return NotFound();
-                return item;
+
+                return new PerfilPermissaoResponse
+                {
+                    Id = item.Id,
+                    PerfilId = item.PerfilId,
+                    PermissaoId = item.PermissaoId,
+                    PerfilNome = item.Perfil?.Name,
+                    PermissaoNome = item.Permissao?.Name
+                };
             }
             catch (Exception ex)
             {
@@ -109,39 +135,45 @@ namespace ConectMaster.Controllers
             }
         }
 
-        // Remove associação por perfilId e permissaoId
-        [HttpDelete("{permissaoId}")]
-        public async Task<IActionResult> Delete( int permissaoId,[FromBody] int perfilId)
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromBody] PerfilPermissaoDto dto)
         {
-            var item = await _context.PerfilPermissoes
-                .FirstOrDefaultAsync(x =>
-                    x.PerfilId == perfilId &&
-                    x.PermissaoId == permissaoId);
-
-            if (item == null)
-                return NotFound();
-
-            var detalhes = System.Text.Json.JsonSerializer.Serialize(item);
-
-            _context.PerfilPermissoes.Remove(item);
-            await _context.SaveChangesAsync();
+            if (!User.TemPermissao("Apagar permissoes"))
+                return Forbid();
 
             try
             {
-                _context.LogsAuditoria.Add(new Models.LogAuditoria
-                {
-                    UsuarioId = User.GetId(),
-                    Acao = "Excluir",
-                    Entidade = "PerfilPermissao",
-                    EntidadeId = item.Id,
-                    Detalhes = detalhes
-                });
+                var item = await _context.PerfilPermissoes
+                    .FirstOrDefaultAsync(x => x.PerfilId == dto.PerfilId && x.PermissaoId == dto.PermissaoId);
+
+                if (item == null)
+                    return NotFound();
+
+                var detalhes = System.Text.Json.JsonSerializer.Serialize(dto);
+
+                _context.PerfilPermissoes.Remove(item);
                 await _context.SaveChangesAsync();
+
+                try
+                {
+                    _context.LogsAuditoria.Add(new LogAuditoria
+                    {
+                        UsuarioId = User.GetId(),
+                        Acao = "Excluir",
+                        Entidade = "PerfilPermissao",
+                        EntidadeId = item.Id,
+                        Detalhes = detalhes
+                    });
+                    await _context.SaveChangesAsync();
+                }
+                catch { }
+
+                return NoContent();
             }
-            catch { }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
         }
-
     }
 }

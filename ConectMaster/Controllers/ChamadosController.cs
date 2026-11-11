@@ -1,7 +1,6 @@
 using ConectMaster.Bancodedados;
 using ConectMaster.DTOS;
 using ConectMaster.Helpers;
-using ConectMaster.Migrations;
 using ConectMaster.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,31 +21,34 @@ namespace ConectMaster.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<chamado>>> Get()
+        public async Task<ActionResult<IEnumerable<ChamadoResponse>>> Get()
         {
             if (!User.TemPermissao("Visualizar chamados"))
                 return Forbid();
             try
             {
-                var chamados = await _context.Chamados.Select(c => new
-                {
-                    c.Id,
-                    c.Titulo,
-                    c.Descricao,
-                    c.Status,
-                    c.DataAbertura,
-                    c.DataAlteracao,
-                    c.DataFechamento,
-                    c.Categoria,
-                    c.Prioridade,
-                    usuario = new UsuarioDTO
+                var chamados = await _context.Chamados
+                    .Include(c => c.Usuario)
+                    .Select(c => new ChamadoResponse
                     {
-                        Id = c.Usuario.Id,
-                        Nome = c.Usuario.Nome,
-                        Email = c.Usuario.Email,
-                        Setor = c.Usuario.Setor
-                    }
-                }).ToListAsync();
+                        Id = c.Id,
+                        Titulo = c.Titulo,
+                        Descricao = c.Descricao,
+                        Status = c.Status,
+                        DataAbertura = c.DataAbertura,
+                        DataAlteracao = c.DataAlteracao,
+                        DataFechamento = c.DataFechamento,
+                        Categoria = c.Categoria,
+                        Prioridade = c.Prioridade.ToString(),
+                        Usuario = new UsuarioResponse
+                        {
+                            Id = c.Usuario.Id ?? 0,
+                            Nome = c.Usuario.Nome,
+                            Email = c.Usuario.Email,
+                            Setor = c.Usuario.Setor
+                        }
+                    })
+                    .ToListAsync();
 
                 return Ok(chamados);
             }
@@ -57,11 +59,34 @@ namespace ConectMaster.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<chamado>> Get(int id)
+        public async Task<ActionResult<ChamadoResponse>> Get(int id)
         {
             try
             {
-                var item = await _context.Chamados.Include(c => c.Usuario).FirstOrDefaultAsync(c => c.Id == id);
+                var item = await _context.Chamados
+                    .Include(c => c.Usuario)
+                    .Where(c => c.Id == id)
+                    .Select(c => new ChamadoResponse
+                    {
+                        Id = c.Id,
+                        Titulo = c.Titulo,
+                        Descricao = c.Descricao,
+                        Status = c.Status,
+                        DataAbertura = c.DataAbertura,
+                        DataAlteracao = c.DataAlteracao,
+                        DataFechamento = c.DataFechamento,
+                        Categoria = c.Categoria,
+                        Prioridade = c.Prioridade.ToString(),
+                        Usuario = new UsuarioResponse
+                        {
+                            Id = c.Usuario.Id ?? 0,
+                            Nome = c.Usuario.Nome,
+                            Email = c.Usuario.Email,
+                            Setor = c.Usuario.Setor
+                        }
+                    })
+                    .FirstOrDefaultAsync();
+
                 if (item == null) return NotFound();
                 return item;
             }
@@ -72,26 +97,28 @@ namespace ConectMaster.Controllers
         }
 
         [HttpGet("me")]
-        public async Task<ActionResult> Me()
+        public async Task<ActionResult<IEnumerable<ChamadoResponse>>> Me()
         {
             try
             {
                 var userId = User.GetId();
                 var chamados = await _context.Chamados
                     .Where(c => c.idUsuario == userId)
-                    .Select(c => new
+                    .Include(c => c.Usuario)
+                    .Select(c => new ChamadoResponse
                     {
-                        c.Id,
-                        c.Titulo,
-                        c.Descricao,
-                        c.Categoria,
-                        c.Prioridade,
-                        c.Status,
-                        c.DataAbertura,
-                        c.DataFechamento,
-                        Usuario = new UsuarioDTO
+                        Id = c.Id,
+                        Titulo = c.Titulo,
+                        Descricao = c.Descricao,
+                        Categoria = c.Categoria,
+                        Prioridade = c.Prioridade.ToString(),
+                        Status = c.Status,
+                        DataAbertura = c.DataAbertura,
+                        DataAlteracao = c.DataAlteracao,
+                        DataFechamento = c.DataFechamento,
+                        Usuario = new UsuarioResponse
                         {
-                            Id = c.Usuario.Id,
+                            Id = c.Usuario.Id ?? 0,
                             Nome = c.Usuario.Nome,
                             Email = c.Usuario.Email
                         }
@@ -128,7 +155,7 @@ namespace ConectMaster.Controllers
 
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
                         UsuarioId = User.GetId(),
                         UsuarioName = User.GetName(),
@@ -142,8 +169,6 @@ namespace ConectMaster.Controllers
                             Depois = chamado.Status
                         })
                     });
-
-                    Notificar.EnviarNotificacao(_context, chamado.idUsuario, 1, $"Chamado fechado: {chamado.Titulo}");
 
                     await _context.SaveChangesAsync();
                 }
@@ -161,38 +186,56 @@ namespace ConectMaster.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<chamado>> Post(chamado model)
+        public async Task<ActionResult<ChamadoResponse>> Post(ChamadoCriacaoDto dto)
         {
             if (!User.TemPermissao("Criar chamados"))
                 return Forbid();
 
             try
             {
-                model.idUsuario = User.GetId();
-                model.DataAbertura = DateTime.Now;
+                var chamado = new chamado
+                {
+                    Titulo = dto.Titulo,
+                    Descricao = dto.Descricao,
+                    Categoria = dto.Categoria,
+                    Prioridade = int.Parse(dto.Prioridade),
+                    Status = dto.Status,
+                    idUsuario = User.GetId(),
+                    DataAbertura = DateTime.Now
+                };
 
-                _context.Chamados.Add(model);
+                _context.Chamados.Add(chamado);
                 await _context.SaveChangesAsync();
 
-                _context.LogsAuditoria.Add(new Models.LogAuditoria
+                _context.LogsAuditoria.Add(new LogAuditoria
                 {
                     UsuarioId = User.GetId(),
                     UsuarioName = User.GetName(),
                     Acao = "Criar",
                     Entidade = "Chamado",
-                    EntidadeId = model.Id,
-                    Detalhes = System.Text.Json.JsonSerializer.Serialize(new
-                    {
-                        Usuario = User.GetName(), 
-                        criou = "novo chamado"
-                    })
+                    EntidadeId = chamado.Id,
+                    Detalhes = System.Text.Json.JsonSerializer.Serialize(dto)
                 });
-
-                Notificar.EnviarNotificacao(_context, model.idUsuario, 1, $"Novo chamado criado: {model.Titulo}");
 
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(Get), new { id = model.Id }, model);
+                var usuario = await _context.Usuarios.FindAsync(chamado.idUsuario);
+                return CreatedAtAction(nameof(Get), new { id = chamado.Id }, new ChamadoResponse
+                {
+                    Id = chamado.Id,
+                    Titulo = chamado.Titulo,
+                    Descricao = chamado.Descricao,
+                    Status = chamado.Status,
+                    Categoria = chamado.Categoria,
+                    Prioridade = chamado.Prioridade.ToString(),
+                    DataAbertura = chamado.DataAbertura,
+                    Usuario = usuario != null ? new UsuarioResponse
+                    {
+                        Id = usuario.Id ?? 0,
+                        Nome = usuario.Nome,
+                        Email = usuario.Email
+                    } : null
+                });
             }
             catch (Exception ex)
             {
@@ -213,7 +256,6 @@ namespace ConectMaster.Controllers
 
                 var statusAnterior = chamado.Status;
 
-                // Atualiza os campos permitidos
                 chamado.Status = chamadoDTO.Status;
                 chamado.DataAlteracao = DateTime.Now;
 
@@ -222,7 +264,7 @@ namespace ConectMaster.Controllers
 
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
                         UsuarioId = User.GetId(),
                         UsuarioName = User.GetName(),
@@ -236,13 +278,9 @@ namespace ConectMaster.Controllers
                             Depois = chamado.Status
                         })
                     });
-
                     await _context.SaveChangesAsync();
                 }
-                catch (Exception ex)
-                {
-                    return StatusCode(500, new { error = ex.Message });
-                }
+                catch { }
 
                 return NoContent();
             }
@@ -257,11 +295,11 @@ namespace ConectMaster.Controllers
         {
             if (!User.TemPermissao("Apagar chamados"))
                 return Forbid();
+
             try
             {
                 var item = await _context.Chamados.FindAsync(id);
                 if (item == null) return NotFound();
-
                 var detalhes = System.Text.Json.JsonSerializer.Serialize(item);
 
                 _context.Chamados.Remove(item);
@@ -269,20 +307,14 @@ namespace ConectMaster.Controllers
 
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
                         UsuarioId = User.GetId(),
+                        UsuarioName = User.GetName(),
                         Acao = "Excluir",
                         Entidade = "Chamado",
-                        EntidadeId = id,
-                        Detalhes = System.Text.Json.JsonSerializer.Serialize(new
-                        {
-                            Usuario = User.GetName(),
-                            Apagou = item.Titulo,
-                            categoria = item.Categoria,
-
-                        })
-
+                        EntidadeId = item.Id,
+                        Detalhes = detalhes
                     });
                     await _context.SaveChangesAsync();
                 }

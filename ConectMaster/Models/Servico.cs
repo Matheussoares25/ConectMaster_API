@@ -78,6 +78,8 @@ namespace ConectMaster.Models
         [ForeignKey("SolicitanteId")]
         public Usuarios? Usuario { get; set; }
         public DateTime DataAbertura { get; set; } = DateTime.UtcNow;
+        public DateTime? DataAlteracao { get; set; }
+        public DateTime? DataFechamento { get; set; }
 
 
     }

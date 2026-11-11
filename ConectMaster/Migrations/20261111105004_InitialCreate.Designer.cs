@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ConectMaster.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261020194533_compost")]
-    partial class compost
+    [Migration("20261111105004_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -197,40 +197,6 @@ namespace ConectMaster.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LogsAuditoria");
-                });
-
-            modelBuilder.Entity("ConectMaster.Models.Notificacao", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("Lida")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Mensagem")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<int>("TipoNotificacaoId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TipoNotificacaoId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Notificacoes");
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Perfil", b =>
@@ -852,104 +818,6 @@ namespace ConectMaster.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.PermissaoEstoque", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("EstoqueId")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("PodeApagar")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("PodeCriar")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("PodeEditar")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("PodeVisualizar")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EstoqueId");
-
-                    b.HasIndex("UsuarioId", "EstoqueId")
-                        .IsUnique();
-
-                    b.ToTable("PermissoesEstoques");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            EstoqueId = 1,
-                            PodeApagar = true,
-                            PodeCriar = true,
-                            PodeEditar = true,
-                            PodeVisualizar = true,
-                            UsuarioId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            EstoqueId = 2,
-                            PodeApagar = true,
-                            PodeCriar = true,
-                            PodeEditar = true,
-                            PodeVisualizar = true,
-                            UsuarioId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            EstoqueId = 3,
-                            PodeApagar = true,
-                            PodeCriar = true,
-                            PodeEditar = true,
-                            PodeVisualizar = true,
-                            UsuarioId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            EstoqueId = 1,
-                            PodeApagar = true,
-                            PodeCriar = true,
-                            PodeEditar = true,
-                            PodeVisualizar = true,
-                            UsuarioId = 2
-                        },
-                        new
-                        {
-                            Id = 5,
-                            EstoqueId = 2,
-                            PodeApagar = true,
-                            PodeCriar = true,
-                            PodeEditar = true,
-                            PodeVisualizar = true,
-                            UsuarioId = 2
-                        },
-                        new
-                        {
-                            Id = 6,
-                            EstoqueId = 3,
-                            PodeApagar = true,
-                            PodeCriar = true,
-                            PodeEditar = true,
-                            PodeVisualizar = true,
-                            UsuarioId = 2
-                        });
-                });
-
             modelBuilder.Entity("ConectMaster.Models.Servico", b =>
                 {
                     b.Property<int>("Id")
@@ -1077,36 +945,6 @@ namespace ConectMaster.Migrations
                     b.HasIndex("SolicitanteId");
 
                     b.ToTable("Servicos");
-                });
-
-            modelBuilder.Entity("ConectMaster.Models.TipoNotificacao", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TipoNotificacoes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Nome = "Novo chamado"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Nome = "Novo serviço"
-                        });
                 });
 
             modelBuilder.Entity("ConectMaster.Models.UsuarioView", b =>
@@ -1535,25 +1373,6 @@ namespace ConectMaster.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.Notificacao", b =>
-                {
-                    b.HasOne("ConectMaster.Models.TipoNotificacao", "Tipo")
-                        .WithMany()
-                        .HasForeignKey("TipoNotificacaoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tipo");
-
-                    b.Navigation("Usuario");
-                });
-
             modelBuilder.Entity("ConectMaster.Models.PerfilPermissao", b =>
                 {
                     b.HasOne("ConectMaster.Models.Perfil", "Perfil")
@@ -1571,25 +1390,6 @@ namespace ConectMaster.Migrations
                     b.Navigation("Perfil");
 
                     b.Navigation("Permissao");
-                });
-
-            modelBuilder.Entity("ConectMaster.Models.PermissaoEstoque", b =>
-                {
-                    b.HasOne("ConectMaster.Models.Estoque", "Estoque")
-                        .WithMany()
-                        .HasForeignKey("EstoqueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Estoque");
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Servico", b =>

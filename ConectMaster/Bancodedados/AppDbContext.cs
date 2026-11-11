@@ -23,10 +23,7 @@ namespace ConectMaster.Bancodedados
         public DbSet<LogAuditoria> LogsAuditoria { get; set; }
         public DbSet<Views> Views { get; set; }
         public DbSet<UsuarioView> UsuarioView { get; set; }
-        public DbSet<TipoNotificacao> TipoNotificacoes { get; set; }
-        public DbSet<Notificacao> Notificacoes { get; set; }
         public DbSet<Estoque> Estoques { get; set; }
-        public DbSet<PermissaoEstoque> PermissoesEstoques { get; set; }
         public DbSet<EstoqueItem> EstoqueItens { get; set; }
         public DbSet<Formulario> Formularios { get; set; }
 
@@ -108,19 +105,6 @@ namespace ConectMaster.Bancodedados
                 new Estoque { Id = 3, Nome = "Expedicao", Ativo = true }
             );
 
-            modelBuilder.Entity<PermissaoEstoque>()
-                .HasIndex(p => new { p.UsuarioId, p.EstoqueId })
-                .IsUnique();
-
-            modelBuilder.Entity<PermissaoEstoque>().HasData(
-                new PermissaoEstoque { Id = 1, UsuarioId = 1, EstoqueId = 1, PodeVisualizar = true, PodeCriar = true, PodeEditar = true, PodeApagar = true },
-                new PermissaoEstoque { Id = 2, UsuarioId = 1, EstoqueId = 2, PodeVisualizar = true, PodeCriar = true, PodeEditar = true, PodeApagar = true },
-                new PermissaoEstoque { Id = 3, UsuarioId = 1, EstoqueId = 3, PodeVisualizar = true, PodeCriar = true, PodeEditar = true, PodeApagar = true },
-                new PermissaoEstoque { Id = 4, UsuarioId = 2, EstoqueId = 1, PodeVisualizar = true, PodeCriar = true, PodeEditar = true, PodeApagar = true },
-                new PermissaoEstoque { Id = 5, UsuarioId = 2, EstoqueId = 2, PodeVisualizar = true, PodeCriar = true, PodeEditar = true, PodeApagar = true },
-                new PermissaoEstoque { Id = 6, UsuarioId = 2, EstoqueId = 3, PodeVisualizar = true, PodeCriar = true, PodeEditar = true, PodeApagar = true }
-            );
-
             // Atribui todas as permissões ao perfil Administrador
             modelBuilder.Entity<PerfilPermissao>().HasData(
                 new PerfilPermissao { Id = 1, PerfilId = 1, PermissaoId = 1 },
@@ -190,12 +174,6 @@ namespace ConectMaster.Bancodedados
                 new PerfilPermissao { Id = 64, PerfilId = 2, PermissaoId = 32 }
 
 
-            );
-
-            // Seed tipos de notificação
-            modelBuilder.Entity<TipoNotificacao>().HasData(
-                new TipoNotificacao { Id = 1, Nome = "Novo chamado" },
-                new TipoNotificacao { Id = 2, Nome = "Novo serviço" }
             );
 
             // Seed usuário inicial e vinculação a todas as views

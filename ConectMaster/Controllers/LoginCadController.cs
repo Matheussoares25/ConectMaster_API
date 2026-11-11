@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ConectMaster.Bancodedados;
 using ConectMaster.Models;
+using ConectMaster.DTOS;
 using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
@@ -23,16 +24,10 @@ namespace ConectMaster.Controllers
             _config = config;
         }
 
-        public class LoginRequest
-        {
-            public string Email { get; set; } = string.Empty;
-            public string Senha { get; set; } = string.Empty;
-        }
-
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<object>> Login([FromBody] LoginRequest req)
+        public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto req)
         {
             try
             {
@@ -54,23 +49,27 @@ namespace ConectMaster.Controllers
                     .Include(pv => pv.View)
                     .Select(pv => pv.View.Name)
                     .ToListAsync();
+
                 var token = GenerateToken(user, user.Perfil?.Name ?? string.Empty, permissoes);
 
-                // não retornar a senha
-                //não retorna id
-                var resultUser = new
+                var resultUser = new UsuarioRespostaDto
                 {
-                    user.Id,
-                    user.Nome,
-                    user.Email,
-                    user.Ramal,
-                    user.Telefone,
-                    user.Setor,
+                    Id = user.Id ?? 0,
+                    Nome = user.Nome,
+                    Email = user.Email,
+                    Ramal = user.Ramal,
+                    Telefone = user.Telefone,
+                    Setor = user.Setor,
                     Perfil = user.Perfil?.Name,
                     Views = views
                 };
 
-                return Ok(new { token, user = resultUser, message = "Login realizado com sucesso" });
+                return Ok(new LoginResponseDto
+                {
+                    Token = token,
+                    User = resultUser,
+                    Message = "Login realizado com sucesso"
+                });
             }
             catch (Exception ex)
             {
@@ -110,7 +109,7 @@ namespace ConectMaster.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(8),
+                Expires = DateTime.UtcNow.AddMinutes(60),
                 SigningCredentials = creds,
                 Issuer = issuer,
                 Audience = audience

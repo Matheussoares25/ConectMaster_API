@@ -5,7 +5,6 @@ using ConectMaster.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ConectMaster.DTOS;
 
 namespace ConectMaster.Controllers
 {
@@ -38,20 +37,32 @@ namespace ConectMaster.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult<IEnumerable<ServicosResponseDto>>> Get()
         {
             if (!User.TemPermissao("Visualizar servicos"))
                 return Forbid();
 
             var servicos = await _context.Servicos
                 .OrderByDescending(o => o.DataAbertura)
+                .Select(s => new ServicosResponseDto
+                {
+                    Id = s.Id,
+                    Titulo = s.Titulo,
+                    Email = s.Email,
+                    Setor = s.Setor,
+                    Categoria = s.Categoria,
+                    Prioridade = s.Prioridade,
+                    Status = s.Status,
+                    DataAbertura = s.DataAbertura,
+                    Descricao = s.Descricao
+                })
                 .ToListAsync();
 
             return Ok(servicos);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] OrdemServicoFreteDto dto)
+        public async Task<ActionResult<ServicosResponseDto>> Post([FromBody] OrdemServicoFreteDto dto)
         {
             if (!User.TemPermissao("Criar servico"))
                 return Forbid();
@@ -94,6 +105,8 @@ namespace ConectMaster.Controllers
 
                 Descricao = dto.Descricao,
                 SolicitanteId = User.GetId(),
+                Status = "Pendente",
+                DataAbertura = DateTime.Now
             };
 
             _context.Servicos.Add(servico);
@@ -106,18 +119,22 @@ namespace ConectMaster.Controllers
                 Acao = "Criar",
                 Entidade = "Servico",
                 EntidadeId = servico.Id,
-                Detalhes = System.Text.Json.JsonSerializer.Serialize(new
-                {
-                    Usuario = User.GetName(),
-                    criou = "solicitacao de servico"
-                })
+                Detalhes = System.Text.Json.JsonSerializer.Serialize(dto)
             });
-
-            Notificar.EnviarNotificacao(_context, User.GetId(), 2, $"Nova ordem de serivço gerada: {servico.Titulo}");
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(Get), new { id = servico.Id }, servico);
+            return CreatedAtAction(nameof(Get), new { id = servico.Id }, new ServicosResponseDto
+            {
+                Id = servico.Id,
+                Titulo = servico.Titulo,
+                Email = servico.Email,
+                Setor = servico.Setor,
+                Categoria = servico.Categoria,
+                Prioridade = servico.Prioridade,
+                Status = servico.Status,
+                DataAbertura = servico.DataAbertura
+            });
         }
 
         [HttpPut("{id}")]

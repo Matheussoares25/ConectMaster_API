@@ -21,96 +21,55 @@ namespace ConectMaster.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuarios>>> Get()
+        public async Task<ActionResult<IEnumerable<UsuarioResponse>>> Get()
         {
             if (!User.TemPermissao("Visualizar usuarios"))
                 return Forbid();
 
             try
             {
-                // Busca usuários com seus perfis
                 var usuariosComPerfis = await _context.Usuarios
                     .Include(u => u.Perfil)
+                    .Select(u => new UsuarioResponse
+                    {
+                        Id = u.Id ?? 0,
+                        Nome = u.Nome,
+                        Email = u.Email,
+                        Ramal = u.Ramal,
+                        Telefone = u.Telefone,
+                        Setor = u.Setor,
+                        PerfilId = u.PerfilId
+                    })
                     .ToListAsync();
 
-
-                // Pega os IDs dos usuários
-                var userIds = usuariosComPerfis
-                    .Where(u => u.Id != null)
-                    .Select(u => u.Id!.Value)
-                    .ToList();
-
-
-                // Busca os vínculos PerfilView junto com a View
-                var perfilViews = await _context.UsuarioView
-                    .Where(pv => userIds.Contains(pv.UsuarioId))
-                    .Include(pv => pv.View)
-                    .ToListAsync();
-
-
-                // Agrupa as views por usuário
-                var viewsMap = perfilViews
-                    .GroupBy(pv => pv.UsuarioId)
-                    .ToDictionary(
-                        g => g.Key,
-                        g => g.Select(pv => (object)new
-                        {
-                            Id = pv.Id, // ID DO VÍNCULO PerfilView
-                            ViewId = pv.ViewId,
-                            Name = pv.View != null ? pv.View.Name : ""
-                        })
-                        .ToList()
-                    );
-
-
-                // Monta a resposta final
-                var resposta = usuariosComPerfis.Select(u => new
-                {
-
-                    u.Id,
-                    u.Nome,
-                    u.Email,
-                    u.Ramal,
-                    u.Telefone,
-                    u.Setor,
-
-                    Perfil = u.Perfil != null
-                        ? new
-                        {
-                            u.Perfil.Id,
-                            u.Perfil.Name
-                        }
-                        : null,
-
-
-                    Views = viewsMap.ContainsKey(u.Id ?? 0)
-                        ? viewsMap[u.Id ?? 0]
-                        : new List<object>()
-                });
-
-
-                return Ok(new
-                {
-                    Usuarios = resposta
-                });
+                return Ok(usuariosComPerfis);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
-                {
-                    error = ex.Message
-                });
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Usuarios>> Get(int id)
+        public async Task<ActionResult<UsuarioResponse>> Get(int id)
         {
             try
             {
-                var item = await _context.Usuarios.FindAsync(id);
-                if (item == null) return NotFound();
-                return item;
+                var usuario = await _context.Usuarios
+                    .Where(u => u.Id == id)
+                    .Select(u => new UsuarioResponse
+                    {
+                        Id = u.Id ?? 0,
+                        Nome = u.Nome,
+                        Email = u.Email,
+                        Ramal = u.Ramal,
+                        Telefone = u.Telefone,
+                        Setor = u.Setor,
+                        PerfilId = u.PerfilId
+                    })
+                    .FirstOrDefaultAsync();
+                if (usuario == null) return NotFound();
+                return usuario;
             }
             catch (Exception ex)
             {
@@ -119,13 +78,27 @@ namespace ConectMaster.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Usuarios>> Post(Usuarios usuario)
+        public async Task<ActionResult<UsuarioResponse>> Post(UsuarioDTO request)
         {
             if (!User.TemPermissao("Criar Usuario"))
                 return Forbid();
 
             try
             {
+                var usuarioExistente = await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == request.Email);
+                if (usuarioExistente != null) 
+                    return BadRequest(new { error = "Email já cadastrado" });
+
+                var usuario = new Usuarios
+                {
+                    Nome = request.Nome,
+                    Email = request.Email,
+                    Ramal = request.Ramal,
+                    Telefone = request.Telefone,
+                    Setor = request.Setor,
+                    PerfilId = request.PerfilId
+                };
+
                 _context.Usuarios.Add(usuario);
                 await _context.SaveChangesAsync();
 
@@ -134,16 +107,26 @@ namespace ConectMaster.Controllers
                     _context.LogsAuditoria.Add(new Models.LogAuditoria
                     {
                         UsuarioId = User.GetId(),
+                        UsuarioName = User.GetName(),
                         Acao = "Criar",
                         Entidade = "Usuario",
                         EntidadeId = usuario.Id,
-                        Detalhes = System.Text.Json.JsonSerializer.Serialize(usuario)
+                        Detalhes = System.Text.Json.JsonSerializer.Serialize(request)
                     });
                     await _context.SaveChangesAsync();
                 }
                 catch { }
 
-                return CreatedAtAction(nameof(Get), new { id = usuario.Id }, usuario);
+                return CreatedAtAction(nameof(Get), new { id = usuario.Id }, new UsuarioResponse
+                {
+                    Id = usuario.Id ?? 0,
+                    Nome = usuario.Nome,
+                    Email = usuario.Email,
+                    Ramal = usuario.Ramal,
+                    Telefone = usuario.Telefone,
+                    Setor = usuario.Setor,
+                    PerfilId = usuario.PerfilId
+                });
             }
             catch (Exception ex)
             {
@@ -152,7 +135,7 @@ namespace ConectMaster.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, UsuarioDTO usuario)
+        public async Task<IActionResult> Put(int id, UsuarioDTO request)
         {
             if (!User.TemPermissao("Editar usuarios"))
                 return Forbid();
@@ -163,17 +146,16 @@ namespace ConectMaster.Controllers
 
                 if (usuarioBanco == null) return NotFound();
 
-                var usuarioExistente = await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == usuario.Email && x.Id != id);
+                var usuarioExistente = await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == request.Email && x.Id != id);
 
                 if (usuarioExistente != null) return BadRequest(new { error = "Email já cadastrado" });
 
-                usuarioBanco.Nome = usuario.Nome;
-                usuarioBanco.Email = usuario.Email;
-                usuarioBanco.Ramal = usuario.Ramal;
-                usuarioBanco.Telefone = usuario.Telefone;
-                usuarioBanco.Setor = usuario.Setor;
-                usuarioBanco.PerfilId = usuario.PerfilId;
-
+                usuarioBanco.Nome = request.Nome;
+                usuarioBanco.Email = request.Email;
+                usuarioBanco.Ramal = request.Ramal;
+                usuarioBanco.Telefone = request.Telefone;
+                usuarioBanco.Setor = request.Setor;
+                usuarioBanco.PerfilId = request.PerfilId;
 
                 await _context.SaveChangesAsync();
 
@@ -182,10 +164,11 @@ namespace ConectMaster.Controllers
                     _context.LogsAuditoria.Add(new Models.LogAuditoria
                     {
                         UsuarioId = User.GetId(),
+                        UsuarioName = User.GetName(),
                         Acao = "Editar",
                         Entidade = "Usuario",
                         EntidadeId = id,
-                        Detalhes = System.Text.Json.JsonSerializer.Serialize(usuario)
+                        Detalhes = System.Text.Json.JsonSerializer.Serialize(request)
                     });
                     await _context.SaveChangesAsync();
                 }
