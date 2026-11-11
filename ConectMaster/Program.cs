@@ -21,7 +21,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("ReactPolicy", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173")
+            .WithOrigins(
+                "http://localhost:5173",
+                "https://conect-master.vercel.app")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -74,11 +76,11 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Executa migrations pendentes
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-   db.Database.Migrate();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//   db.Database.Migrate();
+//}
 
 if (app.Environment.IsDevelopment())
 {

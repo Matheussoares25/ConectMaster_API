@@ -173,7 +173,6 @@ namespace ConectMaster.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "administrador")]
         public async Task<IActionResult> Delete(int id)
         {
             try

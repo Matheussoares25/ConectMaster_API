@@ -79,7 +79,7 @@ namespace ConectMaster.Controllers
 
         private string GenerateToken(Usuarios user, string perfilName, List<string> permissoes)
         {
-            var key = _config["Jwt:Key"] ?? "CHANGE_THIS_SECRET_KEY_1234567890";
+            var key = _config["Jwt:Key"];
             var issuer = _config["Jwt:Issuer"];
             var audience = _config["Jwt:Audience"];
 

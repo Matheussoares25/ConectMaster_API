@@ -39,7 +39,7 @@ namespace ConectMaster.Controllers
                         DataAlteracao = c.DataAlteracao,
                         DataFechamento = c.DataFechamento,
                         Categoria = c.Categoria,
-                        Prioridade = c.Prioridade.ToString(),
+                        Prioridade = c.Prioridade,
                         Usuario = new UsuarioResponse
                         {
                             Id = c.Usuario.Id ?? 0,
@@ -76,7 +76,7 @@ namespace ConectMaster.Controllers
                         DataAlteracao = c.DataAlteracao,
                         DataFechamento = c.DataFechamento,
                         Categoria = c.Categoria,
-                        Prioridade = c.Prioridade.ToString(),
+                        Prioridade = c.Prioridade,
                         Usuario = new UsuarioResponse
                         {
                             Id = c.Usuario.Id ?? 0,
@@ -111,7 +111,7 @@ namespace ConectMaster.Controllers
                         Titulo = c.Titulo,
                         Descricao = c.Descricao,
                         Categoria = c.Categoria,
-                        Prioridade = c.Prioridade.ToString(),
+                        Prioridade = c.Prioridade,
                         Status = c.Status,
                         DataAbertura = c.DataAbertura,
                         DataAlteracao = c.DataAlteracao,
@@ -198,10 +198,10 @@ namespace ConectMaster.Controllers
                     Titulo = dto.Titulo,
                     Descricao = dto.Descricao,
                     Categoria = dto.Categoria,
-                    Prioridade = int.Parse(dto.Prioridade),
+                    Prioridade = dto.Prioridade,
                     Status = dto.Status,
                     idUsuario = User.GetId(),
-                    DataAbertura = DateTime.Now
+                    DataAbertura = DateTime.UtcNow,
                 };
 
                 _context.Chamados.Add(chamado);
@@ -227,7 +227,7 @@ namespace ConectMaster.Controllers
                     Descricao = chamado.Descricao,
                     Status = chamado.Status,
                     Categoria = chamado.Categoria,
-                    Prioridade = chamado.Prioridade.ToString(),
+                    Prioridade = chamado.Prioridade,
                     DataAbertura = chamado.DataAbertura,
                     Usuario = usuario != null ? new UsuarioResponse
                     {
@@ -257,7 +257,7 @@ namespace ConectMaster.Controllers
                 var statusAnterior = chamado.Status;
 
                 chamado.Status = chamadoDTO.Status;
-                chamado.DataAlteracao = DateTime.Now;
+                chamado.DataAlteracao =  DateTime.UtcNow;
 
                 _context.Chamados.Update(chamado);
                 await _context.SaveChangesAsync();

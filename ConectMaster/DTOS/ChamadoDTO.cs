@@ -23,8 +23,7 @@ namespace ConectMaster.DTOS
         public string Categoria { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(50)]
-        public string Prioridade { get; set; } = string.Empty;
+        public int Prioridade { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -37,7 +36,7 @@ namespace ConectMaster.DTOS
         public string Titulo { get; set; } = string.Empty;
         public string? Descricao { get; set; }
         public string Categoria { get; set; } = string.Empty;
-        public string Prioridade { get; set; } = string.Empty;
+        public int Prioridade { get; set; }
         public string Status { get; set; } = string.Empty;
         public DateTime DataAbertura { get; set; }
         public DateTime? DataAlteracao { get; set; }
