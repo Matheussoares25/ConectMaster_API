@@ -1160,86 +1160,248 @@ namespace ConectMaster.Migrations
                         new
                         {
                             Id = 16,
-                            UsuarioId = 2,
-                            ViewId = 1
+                            UsuarioId = 1,
+                            ViewId = 16
                         },
                         new
                         {
                             Id = 17,
-                            UsuarioId = 2,
-                            ViewId = 2
+                            UsuarioId = 1,
+                            ViewId = 17
                         },
                         new
                         {
                             Id = 18,
-                            UsuarioId = 2,
-                            ViewId = 3
+                            UsuarioId = 1,
+                            ViewId = 18
                         },
                         new
                         {
                             Id = 19,
-                            UsuarioId = 2,
-                            ViewId = 4
+                            UsuarioId = 1,
+                            ViewId = 19
                         },
                         new
                         {
                             Id = 20,
-                            UsuarioId = 2,
-                            ViewId = 5
+                            UsuarioId = 1,
+                            ViewId = 20
                         },
                         new
                         {
                             Id = 21,
-                            UsuarioId = 2,
-                            ViewId = 6
+                            UsuarioId = 1,
+                            ViewId = 21
                         },
                         new
                         {
                             Id = 22,
-                            UsuarioId = 2,
-                            ViewId = 7
+                            UsuarioId = 1,
+                            ViewId = 22
                         },
                         new
                         {
                             Id = 23,
-                            UsuarioId = 2,
-                            ViewId = 8
+                            UsuarioId = 1,
+                            ViewId = 23
                         },
                         new
                         {
                             Id = 24,
-                            UsuarioId = 2,
-                            ViewId = 9
+                            UsuarioId = 1,
+                            ViewId = 24
                         },
                         new
                         {
                             Id = 25,
-                            UsuarioId = 2,
-                            ViewId = 10
+                            UsuarioId = 1,
+                            ViewId = 25
                         },
                         new
                         {
                             Id = 26,
-                            UsuarioId = 2,
-                            ViewId = 11
+                            UsuarioId = 1,
+                            ViewId = 26
                         },
                         new
                         {
                             Id = 27,
-                            UsuarioId = 2,
-                            ViewId = 12
+                            UsuarioId = 1,
+                            ViewId = 27
                         },
                         new
                         {
                             Id = 28,
-                            UsuarioId = 2,
-                            ViewId = 13
+                            UsuarioId = 1,
+                            ViewId = 28
                         },
                         new
                         {
                             Id = 29,
                             UsuarioId = 2,
+                            ViewId = 1
+                        },
+                        new
+                        {
+                            Id = 30,
+                            UsuarioId = 2,
+                            ViewId = 2
+                        },
+                        new
+                        {
+                            Id = 31,
+                            UsuarioId = 2,
+                            ViewId = 3
+                        },
+                        new
+                        {
+                            Id = 32,
+                            UsuarioId = 2,
+                            ViewId = 4
+                        },
+                        new
+                        {
+                            Id = 33,
+                            UsuarioId = 2,
+                            ViewId = 5
+                        },
+                        new
+                        {
+                            Id = 34,
+                            UsuarioId = 2,
+                            ViewId = 6
+                        },
+                        new
+                        {
+                            Id = 35,
+                            UsuarioId = 2,
+                            ViewId = 7
+                        },
+                        new
+                        {
+                            Id = 36,
+                            UsuarioId = 2,
+                            ViewId = 8
+                        },
+                        new
+                        {
+                            Id = 37,
+                            UsuarioId = 2,
+                            ViewId = 9
+                        },
+                        new
+                        {
+                            Id = 38,
+                            UsuarioId = 2,
+                            ViewId = 10
+                        },
+                        new
+                        {
+                            Id = 39,
+                            UsuarioId = 2,
+                            ViewId = 11
+                        },
+                        new
+                        {
+                            Id = 40,
+                            UsuarioId = 2,
+                            ViewId = 12
+                        },
+                        new
+                        {
+                            Id = 41,
+                            UsuarioId = 2,
+                            ViewId = 13
+                        },
+                        new
+                        {
+                            Id = 42,
+                            UsuarioId = 2,
                             ViewId = 14
+                        },
+                        new
+                        {
+                            Id = 43,
+                            UsuarioId = 2,
+                            ViewId = 15
+                        },
+                        new
+                        {
+                            Id = 44,
+                            UsuarioId = 2,
+                            ViewId = 16
+                        },
+                        new
+                        {
+                            Id = 45,
+                            UsuarioId = 2,
+                            ViewId = 17
+                        },
+                        new
+                        {
+                            Id = 46,
+                            UsuarioId = 2,
+                            ViewId = 18
+                        },
+                        new
+                        {
+                            Id = 47,
+                            UsuarioId = 2,
+                            ViewId = 19
+                        },
+                        new
+                        {
+                            Id = 48,
+                            UsuarioId = 2,
+                            ViewId = 20
+                        },
+                        new
+                        {
+                            Id = 49,
+                            UsuarioId = 2,
+                            ViewId = 21
+                        },
+                        new
+                        {
+                            Id = 50,
+                            UsuarioId = 2,
+                            ViewId = 22
+                        },
+                        new
+                        {
+                            Id = 51,
+                            UsuarioId = 2,
+                            ViewId = 23
+                        },
+                        new
+                        {
+                            Id = 52,
+                            UsuarioId = 2,
+                            ViewId = 24
+                        },
+                        new
+                        {
+                            Id = 53,
+                            UsuarioId = 2,
+                            ViewId = 25
+                        },
+                        new
+                        {
+                            Id = 54,
+                            UsuarioId = 2,
+                            ViewId = 26
+                        },
+                        new
+                        {
+                            Id = 55,
+                            UsuarioId = 2,
+                            ViewId = 27
+                        },
+                        new
+                        {
+                            Id = 56,
+                            UsuarioId = 2,
+                            ViewId = 28
                         });
                 });
 
@@ -1396,6 +1558,71 @@ namespace ConectMaster.Migrations
                         {
                             Id = 15,
                             Name = "visual.departamentos"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "visual.adm"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Name = "visual.compras"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Name = "visual.ti"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Name = "visual.sgdt"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Name = "visual.representantes"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Name = "visual.comercial"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Name = "visual.im"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Name = "visual.limpeza"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Name = "visual.qualidade"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Name = "visual.pcp"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Name = "visual.fatum"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Name = "visual.expedicao"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Name = "visual.etoque"
                         });
                 });
 

@@ -47,7 +47,23 @@ namespace ConectMaster.Bancodedados
                 new Views { Id = 12, Name = "visual.portaria"},
                 new Views { Id = 13, Name = "visual.formularios"},
                 new Views { Id = 14, Name = "visual.estoques"},
-                new Views { Id = 15, Name = "visual.departamentos" }
+                new Views { Id = 15, Name = "visual.departamentos" },
+                
+                new Views { Id = 16, Name = "visual.adm"},
+                new Views { Id = 17, Name = "visual.compras" },
+                new Views { Id = 18, Name = "visual.ti" },
+                new Views { Id = 19, Name = "visual.sgdt" },
+                new Views { Id = 20, Name = "visual.representantes" },
+                new Views { Id = 21, Name = "visual.comercial" },
+                new Views { Id = 22, Name = "visual.im" },
+                new Views { Id = 23, Name = "visual.limpeza" },
+                new Views { Id = 24, Name = "visual.qualidade" },
+                new Views { Id = 25, Name = "visual.pcp" },
+                new Views { Id = 26, Name = "visual.fatum" },
+                new Views { Id = 27, Name = "visual.expedicao" },
+                new Views { Id = 28, Name = "visual.etoque" }
+
+
             );
 
 
@@ -212,21 +228,50 @@ namespace ConectMaster.Bancodedados
                 new UsuarioView { Id = 13, ViewId = 13, UsuarioId = 1 },
                 new UsuarioView { Id = 14, ViewId = 14, UsuarioId = 1 },
                 new UsuarioView { Id = 15, ViewId = 15, UsuarioId = 1 },
+                new UsuarioView { Id = 16, ViewId = 16, UsuarioId = 1 },
+                new UsuarioView { Id = 17, ViewId = 17, UsuarioId = 1 },
+                new UsuarioView { Id = 18, ViewId = 18, UsuarioId = 1 },
 
-                new UsuarioView { Id = 16, ViewId = 1, UsuarioId = 2 },
-                new UsuarioView { Id = 17, ViewId = 2, UsuarioId = 2 },
-                new UsuarioView { Id = 18, ViewId = 3, UsuarioId = 2 },
-                new UsuarioView { Id = 19, ViewId = 4, UsuarioId = 2 },
-                new UsuarioView { Id = 20, ViewId = 5, UsuarioId = 2 },
-                new UsuarioView { Id = 21, ViewId = 6, UsuarioId = 2 },
-                new UsuarioView { Id = 22, ViewId = 7, UsuarioId = 2 },
-                new UsuarioView { Id = 23, ViewId = 8, UsuarioId = 2 },
-                new UsuarioView { Id = 24, ViewId = 9, UsuarioId = 2 },
-                new UsuarioView { Id = 25, ViewId = 10, UsuarioId = 2 },
-                new UsuarioView { Id = 26, ViewId = 11, UsuarioId = 2 },
-                new UsuarioView { Id = 27, ViewId = 12, UsuarioId = 2 },
-                new UsuarioView { Id = 28, ViewId = 13, UsuarioId = 2 },
-                new UsuarioView { Id = 29, ViewId = 14, UsuarioId = 2 }
+                new UsuarioView { Id = 19, ViewId = 19, UsuarioId = 1 },
+                new UsuarioView { Id = 20, ViewId = 20, UsuarioId = 1 },
+                new UsuarioView { Id = 21, ViewId = 21, UsuarioId = 1 },
+                new UsuarioView { Id = 22, ViewId = 22, UsuarioId = 1 },
+                new UsuarioView { Id = 23, ViewId = 23, UsuarioId = 1 },
+                new UsuarioView { Id = 24, ViewId = 24, UsuarioId = 1 },
+                new UsuarioView { Id = 25, ViewId = 25, UsuarioId = 1 },
+                new UsuarioView { Id = 26, ViewId = 26, UsuarioId = 1 },
+                new UsuarioView { Id = 27, ViewId = 27, UsuarioId = 1 },
+                new UsuarioView { Id = 28, ViewId = 28, UsuarioId = 1 },
+
+
+                new UsuarioView { Id = 29, ViewId = 1, UsuarioId = 2 },
+                new UsuarioView { Id = 30, ViewId = 2, UsuarioId = 2 },
+                new UsuarioView { Id = 31, ViewId = 3, UsuarioId = 2 },
+                new UsuarioView { Id = 32, ViewId = 4, UsuarioId = 2 },
+                new UsuarioView { Id = 33, ViewId = 5, UsuarioId = 2 },
+                new UsuarioView { Id = 34, ViewId = 6, UsuarioId = 2 },
+                new UsuarioView { Id = 35, ViewId = 7, UsuarioId = 2 },
+                new UsuarioView { Id = 36, ViewId = 8, UsuarioId = 2 },
+                new UsuarioView { Id = 37, ViewId = 9, UsuarioId = 2 },
+                new UsuarioView { Id = 38, ViewId = 10, UsuarioId = 2 },
+                new UsuarioView { Id = 39, ViewId = 11, UsuarioId = 2 },
+                new UsuarioView { Id = 40, ViewId = 12, UsuarioId = 2 },
+                new UsuarioView { Id = 41, ViewId = 13, UsuarioId = 2 },
+                new UsuarioView { Id = 42, ViewId = 14, UsuarioId = 2 },
+                new UsuarioView { Id = 43, ViewId = 15, UsuarioId = 2 },
+                new UsuarioView { Id = 44, ViewId = 16, UsuarioId = 2 },
+                new UsuarioView { Id = 45, ViewId = 17, UsuarioId = 2 },
+                new UsuarioView { Id = 46, ViewId = 18, UsuarioId = 2 },
+                new UsuarioView { Id = 47, ViewId = 19, UsuarioId = 2 },
+                new UsuarioView { Id = 48, ViewId = 20, UsuarioId = 2 },
+                new UsuarioView { Id = 49, ViewId = 21, UsuarioId = 2 },
+                new UsuarioView { Id = 50, ViewId = 22, UsuarioId = 2 },
+                new UsuarioView { Id = 51, ViewId = 23, UsuarioId = 2 },
+                new UsuarioView { Id = 52, ViewId = 24, UsuarioId = 2 },
+                new UsuarioView { Id = 53, ViewId = 25, UsuarioId = 2 },
+                new UsuarioView { Id = 54, ViewId = 26, UsuarioId = 2 },
+                new UsuarioView { Id = 55, ViewId = 27, UsuarioId = 2 },
+                new UsuarioView { Id = 56, ViewId = 28, UsuarioId = 2 }
             );
 
         }

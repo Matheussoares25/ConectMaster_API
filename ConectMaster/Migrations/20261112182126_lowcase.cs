@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ConectMaster.Migrations
 {
     /// <inheritdoc />
-    public partial class correct1 : Migration
+    public partial class lowcase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -400,7 +400,20 @@ namespace ConectMaster.Migrations
                     { 12, "visual.portaria" },
                     { 13, "visual.formularios" },
                     { 14, "visual.estoques" },
-                    { 15, "visual.departamentos" }
+                    { 15, "visual.departamentos" },
+                    { 16, "visual.adm" },
+                    { 17, "visual.compras" },
+                    { 18, "visual.ti" },
+                    { 19, "visual.sgdt" },
+                    { 20, "visual.representantes" },
+                    { 21, "visual.comercial" },
+                    { 22, "visual.im" },
+                    { 23, "visual.limpeza" },
+                    { 24, "visual.qualidade" },
+                    { 25, "visual.pcp" },
+                    { 26, "visual.fatum" },
+                    { 27, "visual.expedicao" },
+                    { 28, "visual.etoque" }
                 });
 
             migrationBuilder.InsertData(
@@ -511,20 +524,47 @@ namespace ConectMaster.Migrations
                     { 13, 1, 13 },
                     { 14, 1, 14 },
                     { 15, 1, 15 },
-                    { 16, 2, 1 },
-                    { 17, 2, 2 },
-                    { 18, 2, 3 },
-                    { 19, 2, 4 },
-                    { 20, 2, 5 },
-                    { 21, 2, 6 },
-                    { 22, 2, 7 },
-                    { 23, 2, 8 },
-                    { 24, 2, 9 },
-                    { 25, 2, 10 },
-                    { 26, 2, 11 },
-                    { 27, 2, 12 },
-                    { 28, 2, 13 },
-                    { 29, 2, 14 }
+                    { 16, 1, 16 },
+                    { 17, 1, 17 },
+                    { 18, 1, 18 },
+                    { 19, 1, 19 },
+                    { 20, 1, 20 },
+                    { 21, 1, 21 },
+                    { 22, 1, 22 },
+                    { 23, 1, 23 },
+                    { 24, 1, 24 },
+                    { 25, 1, 25 },
+                    { 26, 1, 26 },
+                    { 27, 1, 27 },
+                    { 28, 1, 28 },
+                    { 29, 2, 1 },
+                    { 30, 2, 2 },
+                    { 31, 2, 3 },
+                    { 32, 2, 4 },
+                    { 33, 2, 5 },
+                    { 34, 2, 6 },
+                    { 35, 2, 7 },
+                    { 36, 2, 8 },
+                    { 37, 2, 9 },
+                    { 38, 2, 10 },
+                    { 39, 2, 11 },
+                    { 40, 2, 12 },
+                    { 41, 2, 13 },
+                    { 42, 2, 14 },
+                    { 43, 2, 15 },
+                    { 44, 2, 16 },
+                    { 45, 2, 17 },
+                    { 46, 2, 18 },
+                    { 47, 2, 19 },
+                    { 48, 2, 20 },
+                    { 49, 2, 21 },
+                    { 50, 2, 22 },
+                    { 51, 2, 23 },
+                    { 52, 2, 24 },
+                    { 53, 2, 25 },
+                    { 54, 2, 26 },
+                    { 55, 2, 27 },
+                    { 56, 2, 28 }
                 });
 
             migrationBuilder.CreateIndex(
