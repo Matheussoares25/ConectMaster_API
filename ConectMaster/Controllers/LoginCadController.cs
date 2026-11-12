@@ -109,7 +109,7 @@ namespace ConectMaster.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(60),
+                Expires = DateTime.UtcNow.AddMinutes(10),
                 SigningCredentials = creds,
                 Issuer = issuer,
                 Audience = audience

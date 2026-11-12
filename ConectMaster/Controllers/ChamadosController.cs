@@ -147,8 +147,8 @@ namespace ConectMaster.Controllers
                 var statusAnterior = chamado.Status;
 
                 chamado.Status = chamadoDTO.Status;
-                chamado.DataFechamento = DateTime.Now;
-                chamado.DataAlteracao = DateTime.Now;
+                chamado.DataFechamento = DateTime.UtcNow;
+                chamado.DataAlteracao = DateTime.UtcNow;
 
                 _context.Chamados.Update(chamado);
                 await _context.SaveChangesAsync();
@@ -200,6 +200,8 @@ namespace ConectMaster.Controllers
                     Categoria = dto.Categoria,
                     Prioridade = dto.Prioridade,
                     Status = dto.Status,
+                    Setor = dto.Setor,
+                    Email = dto.Email,
                     idUsuario = User.GetId(),
                     DataAbertura = DateTime.UtcNow,
                 };
@@ -229,12 +231,7 @@ namespace ConectMaster.Controllers
                     Categoria = chamado.Categoria,
                     Prioridade = chamado.Prioridade,
                     DataAbertura = chamado.DataAbertura,
-                    Usuario = usuario != null ? new UsuarioResponse
-                    {
-                        Id = usuario.Id ?? 0,
-                        Nome = usuario.Nome,
-                        Email = usuario.Email
-                    } : null
+
                 });
             }
             catch (Exception ex)

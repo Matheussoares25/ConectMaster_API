@@ -106,7 +106,7 @@ namespace ConectMaster.Controllers
                 Descricao = dto.Descricao,
                 SolicitanteId = User.GetId(),
                 Status = "Pendente",
-                DataAbertura = DateTime.Now
+                DataAbertura = DateTime.UtcNow
             };
 
             _context.Servicos.Add(servico);

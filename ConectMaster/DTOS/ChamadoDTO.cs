@@ -25,9 +25,14 @@ namespace ConectMaster.DTOS
         [Required]
         public int Prioridade { get; set; }
 
+        public string Setor {  get; set; } = string.Empty;
+
         [Required]
         [MaxLength(50)]
         public string Status { get; set; } = "Aberto";
+
+        public string Email { get; set; }
+
     }
 
     public sealed class ChamadoResponse

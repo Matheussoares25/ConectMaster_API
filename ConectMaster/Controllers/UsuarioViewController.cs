@@ -1,4 +1,5 @@
 using ConectMaster.Bancodedados;
+using ConectMaster.DTOS;
 using ConectMaster.Helpers;
 using ConectMaster.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -18,18 +19,26 @@ namespace ConectMaster.Controllers
         {
             _context = context;
         }
-
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UsuarioView>>> Get()
+        public async Task<ActionResult<IEnumerable<UsuarioViewResponse>>> Get()
         {
             if (!User.TemPermissao("Visualizar perfilviews"))
                 return Forbid();
+
             try
             {
-                return await _context.UsuarioView
-                    .Include(pv => pv.View)
-                    .Include(pv => pv.Usuario)
+                var lista = await _context.UsuarioView
+                    .Select(uv => new UsuarioViewResponse
+                    {
+                        Id = uv.Id,
+                        UsuarioId = uv.UsuarioId,
+                        UsuarioNome = uv.Usuario!.Nome,
+                        ViewId = uv.ViewId,
+                        ViewNome = uv.View!.Name
+                    })
                     .ToListAsync();
+
+                return Ok(lista);
             }
             catch (Exception ex)
             {

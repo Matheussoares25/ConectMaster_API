@@ -42,6 +42,8 @@ namespace ConectMaster.Controllers
                     })
                     .ToListAsync();
 
+            
+
                 return Ok(usuariosComPerfis);
             }
             catch (Exception ex)
