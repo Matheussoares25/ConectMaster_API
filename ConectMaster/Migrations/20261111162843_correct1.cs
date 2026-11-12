@@ -9,11 +9,26 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ConectMaster.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class correct1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Departamentos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Descricao = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departamentos", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Estoques",
                 columns: table => new
@@ -263,7 +278,9 @@ namespace ConectMaster.Migrations
                     Descricao = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
                     Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     SolicitanteId = table.Column<int>(type: "integer", nullable: false),
-                    DataAbertura = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    DataAbertura = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    DataFechamento = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -357,7 +374,11 @@ namespace ConectMaster.Migrations
                     { 29, "Visualizar formularios" },
                     { 30, "Criar formularios" },
                     { 31, "Editar formularios" },
-                    { 32, "Apagar formularios" }
+                    { 32, "Apagar formularios" },
+                    { 33, "Visualizar departamentos" },
+                    { 34, "Criar departamentos" },
+                    { 35, "Editar departamentos" },
+                    { 36, "Apagar departamentos" }
                 });
 
             migrationBuilder.InsertData(
@@ -378,7 +399,8 @@ namespace ConectMaster.Migrations
                     { 11, "visual.servicosgeral" },
                     { 12, "visual.portaria" },
                     { 13, "visual.formularios" },
-                    { 14, "visual.estoques" }
+                    { 14, "visual.estoques" },
+                    { 15, "visual.departamentos" }
                 });
 
             migrationBuilder.InsertData(
@@ -449,7 +471,15 @@ namespace ConectMaster.Migrations
                     { 61, 2, 29 },
                     { 62, 2, 30 },
                     { 63, 2, 31 },
-                    { 64, 2, 32 }
+                    { 64, 2, 32 },
+                    { 69, 1, 33 },
+                    { 70, 1, 34 },
+                    { 71, 1, 35 },
+                    { 72, 1, 36 },
+                    { 73, 2, 33 },
+                    { 74, 2, 34 },
+                    { 75, 2, 35 },
+                    { 76, 2, 36 }
                 });
 
             migrationBuilder.InsertData(
@@ -480,20 +510,21 @@ namespace ConectMaster.Migrations
                     { 12, 1, 12 },
                     { 13, 1, 13 },
                     { 14, 1, 14 },
-                    { 15, 2, 1 },
-                    { 16, 2, 2 },
-                    { 17, 2, 3 },
-                    { 18, 2, 4 },
-                    { 19, 2, 5 },
-                    { 20, 2, 6 },
-                    { 21, 2, 7 },
-                    { 22, 2, 8 },
-                    { 23, 2, 9 },
-                    { 24, 2, 10 },
-                    { 25, 2, 11 },
-                    { 26, 2, 12 },
-                    { 27, 2, 13 },
-                    { 28, 2, 14 }
+                    { 15, 1, 15 },
+                    { 16, 2, 1 },
+                    { 17, 2, 2 },
+                    { 18, 2, 3 },
+                    { 19, 2, 4 },
+                    { 20, 2, 5 },
+                    { 21, 2, 6 },
+                    { 22, 2, 7 },
+                    { 23, 2, 8 },
+                    { 24, 2, 9 },
+                    { 25, 2, 10 },
+                    { 26, 2, 11 },
+                    { 27, 2, 12 },
+                    { 28, 2, 13 },
+                    { 29, 2, 14 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -547,6 +578,9 @@ namespace ConectMaster.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Chamados");
+
+            migrationBuilder.DropTable(
+                name: "Departamentos");
 
             migrationBuilder.DropTable(
                 name: "EstoqueItens");

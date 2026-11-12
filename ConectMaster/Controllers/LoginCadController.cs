@@ -79,7 +79,7 @@ namespace ConectMaster.Controllers
 
         private string GenerateToken(Usuarios user, string perfilName, List<string> permissoes)
         {
-            var key = _config["Jwt:Key"] ?? "CHANGE_THIS_SECRET_KEY_1234567890";
+            var key = _config["Jwt:Key"];
             var issuer = _config["Jwt:Issuer"];
             var audience = _config["Jwt:Audience"];
 
@@ -109,7 +109,7 @@ namespace ConectMaster.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(60),
+                Expires = DateTime.UtcNow.AddMinutes(10),
                 SigningCredentials = creds,
                 Issuer = issuer,
                 Audience = audience

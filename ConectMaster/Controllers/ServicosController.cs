@@ -106,7 +106,7 @@ namespace ConectMaster.Controllers
                 Descricao = dto.Descricao,
                 SolicitanteId = User.GetId(),
                 Status = "Pendente",
-                DataAbertura = DateTime.Now
+                DataAbertura = DateTime.UtcNow
             };
 
             _context.Servicos.Add(servico);
@@ -173,7 +173,6 @@ namespace ConectMaster.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "administrador")]
         public async Task<IActionResult> Delete(int id)
         {
             try

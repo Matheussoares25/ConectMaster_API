@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ConectMaster.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261111105004_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20261112102710_add-migration intdoprioridade")]
+    partial class addmigrationintdoprioridade
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,32 @@ namespace ConectMaster.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ConectMaster.Models.Departamento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Departamentos");
+                });
 
             modelBuilder.Entity("ConectMaster.Models.Estoque", b =>
                 {
@@ -446,6 +472,30 @@ namespace ConectMaster.Migrations
                         },
                         new
                         {
+                            Id = 69,
+                            PerfilId = 1,
+                            PermissaoId = 33
+                        },
+                        new
+                        {
+                            Id = 70,
+                            PerfilId = 1,
+                            PermissaoId = 34
+                        },
+                        new
+                        {
+                            Id = 71,
+                            PerfilId = 1,
+                            PermissaoId = 35
+                        },
+                        new
+                        {
+                            Id = 72,
+                            PerfilId = 1,
+                            PermissaoId = 36
+                        },
+                        new
+                        {
                             Id = 29,
                             PerfilId = 2,
                             PermissaoId = 1
@@ -635,6 +685,30 @@ namespace ConectMaster.Migrations
                             Id = 64,
                             PerfilId = 2,
                             PermissaoId = 32
+                        },
+                        new
+                        {
+                            Id = 73,
+                            PerfilId = 2,
+                            PermissaoId = 33
+                        },
+                        new
+                        {
+                            Id = 74,
+                            PerfilId = 2,
+                            PermissaoId = 34
+                        },
+                        new
+                        {
+                            Id = 75,
+                            PerfilId = 2,
+                            PermissaoId = 35
+                        },
+                        new
+                        {
+                            Id = 76,
+                            PerfilId = 2,
+                            PermissaoId = 36
                         });
                 });
 
@@ -815,6 +889,26 @@ namespace ConectMaster.Migrations
                         {
                             Id = 32,
                             Name = "Apagar formularios"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Name = "Visualizar departamentos"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Name = "Criar departamentos"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Name = "Editar departamentos"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Name = "Apagar departamentos"
                         });
                 });
 
@@ -849,10 +943,16 @@ namespace ConectMaster.Migrations
                     b.Property<DateTime>("DataAbertura")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime?>("DataColeta")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DataEntrega")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DataFechamento")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Descricao")
@@ -1057,84 +1157,90 @@ namespace ConectMaster.Migrations
                         new
                         {
                             Id = 15,
-                            UsuarioId = 2,
-                            ViewId = 1
+                            UsuarioId = 1,
+                            ViewId = 15
                         },
                         new
                         {
                             Id = 16,
                             UsuarioId = 2,
-                            ViewId = 2
+                            ViewId = 1
                         },
                         new
                         {
                             Id = 17,
                             UsuarioId = 2,
-                            ViewId = 3
+                            ViewId = 2
                         },
                         new
                         {
                             Id = 18,
                             UsuarioId = 2,
-                            ViewId = 4
+                            ViewId = 3
                         },
                         new
                         {
                             Id = 19,
                             UsuarioId = 2,
-                            ViewId = 5
+                            ViewId = 4
                         },
                         new
                         {
                             Id = 20,
                             UsuarioId = 2,
-                            ViewId = 6
+                            ViewId = 5
                         },
                         new
                         {
                             Id = 21,
                             UsuarioId = 2,
-                            ViewId = 7
+                            ViewId = 6
                         },
                         new
                         {
                             Id = 22,
                             UsuarioId = 2,
-                            ViewId = 8
+                            ViewId = 7
                         },
                         new
                         {
                             Id = 23,
                             UsuarioId = 2,
-                            ViewId = 9
+                            ViewId = 8
                         },
                         new
                         {
                             Id = 24,
                             UsuarioId = 2,
-                            ViewId = 10
+                            ViewId = 9
                         },
                         new
                         {
                             Id = 25,
                             UsuarioId = 2,
-                            ViewId = 11
+                            ViewId = 10
                         },
                         new
                         {
                             Id = 26,
                             UsuarioId = 2,
-                            ViewId = 12
+                            ViewId = 11
                         },
                         new
                         {
                             Id = 27,
                             UsuarioId = 2,
-                            ViewId = 13
+                            ViewId = 12
                         },
                         new
                         {
                             Id = 28,
+                            UsuarioId = 2,
+                            ViewId = 13
+                        },
+                        new
+                        {
+                            Id = 29,
                             UsuarioId = 2,
                             ViewId = 14
                         });
@@ -1288,6 +1394,11 @@ namespace ConectMaster.Migrations
                         {
                             Id = 14,
                             Name = "visual.estoques"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "visual.departamentos"
                         });
                 });
 

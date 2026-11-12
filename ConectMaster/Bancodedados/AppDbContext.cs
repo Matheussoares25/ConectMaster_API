@@ -26,6 +26,7 @@ namespace ConectMaster.Bancodedados
         public DbSet<Estoque> Estoques { get; set; }
         public DbSet<EstoqueItem> EstoqueItens { get; set; }
         public DbSet<Formulario> Formularios { get; set; }
+        public DbSet<Departamento> Departamentos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,7 +46,8 @@ namespace ConectMaster.Bancodedados
                 new Views { Id = 11 , Name = "visual.servicosgeral"},
                 new Views { Id = 12, Name = "visual.portaria"},
                 new Views { Id = 13, Name = "visual.formularios"},
-                new Views { Id = 14, Name = "visual.estoques"}
+                new Views { Id = 14, Name = "visual.estoques"},
+                new Views { Id = 15, Name = "visual.departamentos" }
             );
 
 
@@ -90,7 +92,12 @@ namespace ConectMaster.Bancodedados
 
                 new Permissao { Id = 30, Name = "Criar formularios" },
                 new Permissao { Id = 31, Name = "Editar formularios" },
-                new Permissao { Id = 32, Name = "Apagar formularios" }
+                new Permissao { Id = 32, Name = "Apagar formularios" },
+
+                new Permissao { Id = 33, Name = "Visualizar departamentos" },
+                new Permissao { Id = 34, Name = "Criar departamentos" },
+                new Permissao { Id = 35, Name = "Editar departamentos" },
+                new Permissao { Id = 36, Name = "Apagar departamentos" }
             );
 
             // Seed perfil Administrador
@@ -139,6 +146,10 @@ namespace ConectMaster.Bancodedados
                 new PerfilPermissao { Id = 58, PerfilId = 1, PermissaoId = 30 },
                 new PerfilPermissao { Id = 59, PerfilId = 1, PermissaoId = 31 },
                 new PerfilPermissao { Id = 60, PerfilId = 1, PermissaoId = 32 },
+                new PerfilPermissao { Id = 69, PerfilId = 1, PermissaoId = 33 },
+                new PerfilPermissao { Id = 70, PerfilId = 1, PermissaoId = 34 },
+                new PerfilPermissao { Id = 71, PerfilId = 1, PermissaoId = 35 },
+                new PerfilPermissao { Id = 72, PerfilId = 1, PermissaoId = 36 },
 
                 new PerfilPermissao { Id = 29, PerfilId = 2, PermissaoId = 1 },
                 new PerfilPermissao { Id = 30, PerfilId = 2, PermissaoId = 2 },
@@ -171,10 +182,13 @@ namespace ConectMaster.Bancodedados
                 new PerfilPermissao { Id = 61, PerfilId = 2, PermissaoId = 29 },
                 new PerfilPermissao { Id = 62, PerfilId = 2, PermissaoId = 30 },
                 new PerfilPermissao { Id = 63, PerfilId = 2, PermissaoId = 31 },
-                new PerfilPermissao { Id = 64, PerfilId = 2, PermissaoId = 32 }
-
-
+                new PerfilPermissao { Id = 64, PerfilId = 2, PermissaoId = 32 },
+                new PerfilPermissao { Id = 73, PerfilId = 2, PermissaoId = 33 },
+                new PerfilPermissao { Id = 74, PerfilId = 2, PermissaoId = 34 },
+                new PerfilPermissao { Id = 75, PerfilId = 2, PermissaoId = 35 },
+                new PerfilPermissao { Id = 76, PerfilId = 2, PermissaoId = 36 }
             );
+
 
             // Seed usuário inicial e vinculação a todas as views
             modelBuilder.Entity<Usuarios>().HasData(
@@ -197,21 +211,22 @@ namespace ConectMaster.Bancodedados
                 new UsuarioView { Id = 12, ViewId = 12, UsuarioId = 1 },
                 new UsuarioView { Id = 13, ViewId = 13, UsuarioId = 1 },
                 new UsuarioView { Id = 14, ViewId = 14, UsuarioId = 1 },
+                new UsuarioView { Id = 15, ViewId = 15, UsuarioId = 1 },
 
-                new UsuarioView { Id = 15, ViewId = 1, UsuarioId = 2 },
-                new UsuarioView { Id = 16, ViewId = 2, UsuarioId = 2 },
-                new UsuarioView { Id = 17, ViewId = 3, UsuarioId = 2 },
-                new UsuarioView { Id = 18, ViewId = 4, UsuarioId = 2 },
-                new UsuarioView { Id = 19, ViewId = 5, UsuarioId = 2 },
-                new UsuarioView { Id = 20, ViewId = 6, UsuarioId = 2 },
-                new UsuarioView { Id = 21, ViewId = 7, UsuarioId = 2 },
-                new UsuarioView { Id = 22, ViewId = 8, UsuarioId = 2 },
-                new UsuarioView { Id = 23, ViewId = 9, UsuarioId = 2 },
-                new UsuarioView { Id = 24, ViewId = 10, UsuarioId = 2 },
-                new UsuarioView { Id = 25, ViewId = 11, UsuarioId = 2 },
-                new UsuarioView { Id = 26, ViewId = 12, UsuarioId = 2 },
-                new UsuarioView { Id = 27, ViewId = 13, UsuarioId = 2 },
-                new UsuarioView { Id = 28, ViewId = 14, UsuarioId = 2 }
+                new UsuarioView { Id = 16, ViewId = 1, UsuarioId = 2 },
+                new UsuarioView { Id = 17, ViewId = 2, UsuarioId = 2 },
+                new UsuarioView { Id = 18, ViewId = 3, UsuarioId = 2 },
+                new UsuarioView { Id = 19, ViewId = 4, UsuarioId = 2 },
+                new UsuarioView { Id = 20, ViewId = 5, UsuarioId = 2 },
+                new UsuarioView { Id = 21, ViewId = 6, UsuarioId = 2 },
+                new UsuarioView { Id = 22, ViewId = 7, UsuarioId = 2 },
+                new UsuarioView { Id = 23, ViewId = 8, UsuarioId = 2 },
+                new UsuarioView { Id = 24, ViewId = 9, UsuarioId = 2 },
+                new UsuarioView { Id = 25, ViewId = 10, UsuarioId = 2 },
+                new UsuarioView { Id = 26, ViewId = 11, UsuarioId = 2 },
+                new UsuarioView { Id = 27, ViewId = 12, UsuarioId = 2 },
+                new UsuarioView { Id = 28, ViewId = 13, UsuarioId = 2 },
+                new UsuarioView { Id = 29, ViewId = 14, UsuarioId = 2 }
             );
 
         }
