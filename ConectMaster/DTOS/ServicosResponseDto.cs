@@ -21,6 +21,11 @@ namespace ConectMaster.DTOS
         public string? Categoria { get; set; }
         public int Prioridade { get; set; }
     }
+
+    public class AtualizarStatusDto
+    {
+        public string Status { get; set; } = string.Empty;
+    }
 }
 
 

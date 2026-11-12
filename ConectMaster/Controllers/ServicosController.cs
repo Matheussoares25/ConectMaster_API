@@ -172,6 +172,42 @@ namespace ConectMaster.Controllers
             }
         }
 
+        [HttpPatch("{id}/status")]
+        public async Task<IActionResult> AtualizarStatus(int id, AtualizarStatusDto dto)
+        {
+            if (!User.TemPermissao("Autorizar ou Negar OS"))
+                return Forbid();
+
+            try
+            {
+                var servico = await _context.Servicos.FindAsync(id);
+                if (servico == null) return NotFound();
+
+                servico.Status = dto.Status;
+                await _context.SaveChangesAsync();
+
+                try
+                {
+                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    {
+                        UsuarioId = User.GetId(),
+                        Acao = "Alterar status",
+                        Entidade = "Servico",
+                        EntidadeId = servico.Id,
+                        Detalhes = System.Text.Json.JsonSerializer.Serialize(new { servico.Id, servico.Status })
+                    });
+                    await _context.SaveChangesAsync();
+                }
+                catch { }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
