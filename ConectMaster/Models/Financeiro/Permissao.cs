@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
-namespace ConectMaster.Models
+namespace ConectMaster.Models.Financeiro
 {
-    public class Perfil
+    public class Permissao
     {
         [Key]
         public int Id { get; set; }

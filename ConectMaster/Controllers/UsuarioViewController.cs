@@ -1,7 +1,7 @@
 using ConectMaster.Bancodedados;
 using ConectMaster.DTOS;
 using ConectMaster.Helpers;
-using ConectMaster.Models;
+using ConectMaster.Models.Financeiro;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -131,45 +131,29 @@ namespace ConectMaster.Controllers
             }
         }
 
-            // Remove associação por viewId + usuarioId (evita precisar do id internamente)
-            [HttpDelete("{viewId}")]
-            public async Task<IActionResult> DeleteByKeys( int viewId, [FromBody] int usuarioId)
+        // Remove associação por viewId + usuarioId (evita precisar do id internamente)
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!User.TemPermissao("Apagar usuarioviws"))
+                return Forbid();
+
+            var item = await _context.UsuarioView.FindAsync(id);
+            if (item is null) return NotFound();
+
+            _context.UsuarioView.Remove(item);
+            _context.LogsAuditoria.Add(new LogAuditoria
             {
-                if (!User.TemPermissao("Apagar usuarioviws"))
-                    return Forbid();
+                UsuarioId = User.GetId(),
+                UsuarioName = User.GetName(),
+                Acao = "Excluir",
+                Entidade = "UsuarioView",
+                EntidadeId = id,
+                Detalhes = $"Vínculo de página {id} removido.",
+            });
 
-                try
-                {
-                    var item = await _context.UsuarioView
-                        .FirstOrDefaultAsync(x => x.ViewId == viewId && x.UsuarioId == usuarioId);
-
-                    if (item == null) return NotFound();
-
-                    var detalhes = System.Text.Json.JsonSerializer.Serialize(item);
-
-                    _context.UsuarioView.Remove(item);
-                    await _context.SaveChangesAsync();
-
-                    try
-                    {
-                        _context.LogsAuditoria.Add(new LogAuditoria
-                        {
-                            UsuarioId = User.GetId(),
-                            Acao = "Excluir",
-                            Entidade = "UsuarioView",
-                            EntidadeId = item.Id,
-                            Detalhes = detalhes
-                        });
-                        await _context.SaveChangesAsync();
-                    }
-                    catch { }
-
-                    return NoContent();
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(500, new { error = ex.Message });
-                }
-            }
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }

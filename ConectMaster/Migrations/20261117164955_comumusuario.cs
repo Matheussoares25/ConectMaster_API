@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ConectMaster.Migrations
 {
     /// <inheritdoc />
-    public partial class lowcase : Migration
+    public partial class comumusuario : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,7 @@ namespace ConectMaster.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Nome = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Descricao = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -41,24 +41,6 @@ namespace ConectMaster.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Estoques", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Formularios",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Nome = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    Descricao = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
-                    CamposJson = table.Column<string>(type: "text", nullable: false),
-                    Ativo = table.Column<bool>(type: "boolean", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DataAlteracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Formularios", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -147,17 +129,22 @@ namespace ConectMaster.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Nome = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Senha = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    Nome = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Senha = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Email = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Ramal = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: true),
                     Telefone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    Setor = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    DepartamentoId = table.Column<int>(type: "integer", nullable: true),
                     PerfilId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Usuarios_Departamentos_DepartamentoId",
+                        column: x => x.DepartamentoId,
+                        principalTable: "Departamentos",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Usuarios_Perfis_PerfilId",
                         column: x => x.PerfilId,
@@ -221,22 +208,29 @@ namespace ConectMaster.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Historicos",
+                name: "ChamadosCompras",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UsuarioId = table.Column<int>(type: "integer", nullable: false),
-                    TipoServico = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    idUsuario = table.Column<int>(type: "integer", nullable: false),
+                    Titulo = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Descricao = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
                     DataAbertura = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DataSolucao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    DataAlteracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DataFechamento = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Prioridade = table.Column<int>(type: "integer", nullable: false),
+                    Categoria = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Setor = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Historicos", x => x.Id);
+                    table.PrimaryKey("PK_ChamadosCompras", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Historicos_Usuarios_UsuarioId",
-                        column: x => x.UsuarioId,
+                        name: "FK_ChamadosCompras_Usuarios_idUsuario",
+                        column: x => x.idUsuario,
                         principalTable: "Usuarios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -332,11 +326,7 @@ namespace ConectMaster.Migrations
             migrationBuilder.InsertData(
                 table: "Perfis",
                 columns: new[] { "Id", "Name" },
-                values: new object[,]
-                {
-                    { 1, "Administrador" },
-                    { 2, "Lider" }
-                });
+                values: new object[] { 1, "Administrador" });
 
             migrationBuilder.InsertData(
                 table: "Permissoes",
@@ -347,38 +337,35 @@ namespace ConectMaster.Migrations
                     { 2, "Criar chamados" },
                     { 3, "Editar chamados" },
                     { 4, "Apagar chamados" },
-                    { 5, "Visualizar historicos" },
-                    { 6, "Editar historicos" },
-                    { 7, "Apagar historicos" },
-                    { 8, "Visualizar permissoes" },
-                    { 9, "Criar permissoes" },
-                    { 10, "Editar permissoes" },
-                    { 11, "Apagar permissoes" },
-                    { 12, "Visualizar perfis" },
-                    { 13, "Criar perfis" },
-                    { 14, "Editar perfis" },
-                    { 15, "Apagar perfis" },
-                    { 16, "Visualizar usuarios" },
-                    { 17, "Criar Usuario" },
-                    { 18, "Editar usuarios" },
-                    { 19, "Apagar usuarios" },
-                    { 20, "Visualizar perfilviews" },
-                    { 21, "Criar usuarioviews" },
-                    { 22, "Apagar perfilviews" },
-                    { 23, "Apagar usuarioviws" },
-                    { 24, "Visualizar views" },
-                    { 25, "Criar servico" },
-                    { 26, "Visualizar servicos" },
-                    { 27, "Autorizar ou Negar OS" },
-                    { 28, "Visualizar estoques" },
-                    { 29, "Visualizar formularios" },
-                    { 30, "Criar formularios" },
-                    { 31, "Editar formularios" },
-                    { 32, "Apagar formularios" },
-                    { 33, "Visualizar departamentos" },
-                    { 34, "Criar departamentos" },
-                    { 35, "Editar departamentos" },
-                    { 36, "Apagar departamentos" }
+                    { 5, "Visualizar permissoes" },
+                    { 6, "Criar permissoes" },
+                    { 7, "Editar permissoes" },
+                    { 8, "Apagar permissoes" },
+                    { 9, "Visualizar perfis" },
+                    { 10, "Criar perfis" },
+                    { 11, "Editar perfis" },
+                    { 12, "Apagar perfis" },
+                    { 13, "Visualizar usuarios" },
+                    { 14, "Criar Usuario" },
+                    { 15, "Editar usuarios" },
+                    { 16, "Apagar usuarios" },
+                    { 17, "Visualizar perfilviews" },
+                    { 18, "Criar usuarioviews" },
+                    { 19, "Apagar perfilviews" },
+                    { 20, "Apagar usuarioviws" },
+                    { 21, "Visualizar views" },
+                    { 22, "Criar servico" },
+                    { 23, "Visualizar servicos" },
+                    { 24, "Autorizar ou Negar OS" },
+                    { 25, "Visualizar estoques" },
+                    { 26, "Visualizar departamentos" },
+                    { 27, "Criar departamentos" },
+                    { 28, "Editar departamentos" },
+                    { 29, "Apagar departamentos" },
+                    { 30, "Abrir chamado Compras" },
+                    { 31, "Visualizar chamados Compras" },
+                    { 32, "Editar chamados Compras" },
+                    { 33, "Apagar chamados Compras" }
                 });
 
             migrationBuilder.InsertData(
@@ -387,8 +374,8 @@ namespace ConectMaster.Migrations
                 values: new object[,]
                 {
                     { 1, "visual.abrirchamado" },
-                    { 2, "visual.ordemservico" },
-                    { 3, "visual.historicochamados" },
+                    { 2, "visual.historicochamados" },
+                    { 3, "visual.ordemservico" },
                     { 4, "visual.painelcontrole" },
                     { 5, "visual.abriruber" },
                     { 6, "visual.geralusuarios" },
@@ -398,22 +385,23 @@ namespace ConectMaster.Migrations
                     { 10, "visual.configuracoes" },
                     { 11, "visual.servicosgeral" },
                     { 12, "visual.portaria" },
-                    { 13, "visual.formularios" },
-                    { 14, "visual.estoques" },
-                    { 15, "visual.departamentos" },
-                    { 16, "visual.adm" },
-                    { 17, "visual.compras" },
-                    { 18, "visual.ti" },
-                    { 19, "visual.sgdt" },
-                    { 20, "visual.representantes" },
-                    { 21, "visual.comercial" },
-                    { 22, "visual.im" },
-                    { 23, "visual.limpeza" },
-                    { 24, "visual.qualidade" },
-                    { 25, "visual.pcp" },
-                    { 26, "visual.fatum" },
-                    { 27, "visual.expedicao" },
-                    { 28, "visual.etoque" }
+                    { 13, "visual.estoques" },
+                    { 14, "visual.departamentos" },
+                    { 15, "visual.abrirchamadocompras" },
+                    { 16, "visual.historicochamadocompras" },
+                    { 17, "visual.adm" },
+                    { 18, "visual.compras" },
+                    { 19, "visual.ti" },
+                    { 20, "visual.sgdt" },
+                    { 21, "visual.representantes" },
+                    { 22, "visual.comercial" },
+                    { 23, "visual.im" },
+                    { 24, "visual.limpeza" },
+                    { 25, "visual.qualidade" },
+                    { 26, "visual.pcp" },
+                    { 27, "visual.fatum" },
+                    { 28, "visual.expedicao" },
+                    { 29, "visual.estoque" }
                 });
 
             migrationBuilder.InsertData(
@@ -425,84 +413,39 @@ namespace ConectMaster.Migrations
                     { 2, 1, 2 },
                     { 3, 1, 3 },
                     { 4, 1, 4 },
-                    { 5, 1, 5 },
-                    { 6, 1, 6 },
-                    { 7, 1, 7 },
-                    { 8, 1, 8 },
-                    { 9, 1, 9 },
-                    { 10, 1, 10 },
-                    { 11, 1, 11 },
-                    { 12, 1, 12 },
-                    { 13, 1, 13 },
-                    { 14, 1, 14 },
-                    { 15, 1, 15 },
-                    { 16, 1, 16 },
-                    { 17, 1, 17 },
-                    { 18, 1, 18 },
-                    { 19, 1, 19 },
-                    { 20, 1, 20 },
-                    { 21, 1, 21 },
-                    { 22, 1, 22 },
-                    { 23, 1, 23 },
-                    { 24, 1, 24 },
-                    { 25, 1, 25 },
-                    { 26, 1, 26 },
-                    { 27, 1, 27 },
-                    { 28, 1, 28 },
-                    { 29, 2, 1 },
-                    { 30, 2, 2 },
-                    { 31, 2, 3 },
-                    { 32, 2, 4 },
-                    { 33, 2, 5 },
-                    { 34, 2, 6 },
-                    { 35, 2, 7 },
-                    { 36, 2, 8 },
-                    { 37, 2, 9 },
-                    { 38, 2, 10 },
-                    { 39, 2, 11 },
-                    { 40, 2, 12 },
-                    { 41, 2, 13 },
-                    { 42, 2, 14 },
-                    { 43, 2, 15 },
-                    { 44, 2, 16 },
-                    { 45, 2, 17 },
-                    { 46, 2, 18 },
-                    { 47, 2, 19 },
-                    { 48, 2, 20 },
-                    { 49, 2, 21 },
-                    { 50, 2, 22 },
-                    { 51, 2, 23 },
-                    { 52, 2, 24 },
-                    { 53, 2, 25 },
-                    { 54, 2, 26 },
-                    { 55, 2, 27 },
-                    { 56, 2, 28 },
-                    { 57, 1, 29 },
-                    { 58, 1, 30 },
-                    { 59, 1, 31 },
-                    { 60, 1, 32 },
-                    { 61, 2, 29 },
-                    { 62, 2, 30 },
-                    { 63, 2, 31 },
-                    { 64, 2, 32 },
-                    { 69, 1, 33 },
-                    { 70, 1, 34 },
-                    { 71, 1, 35 },
-                    { 72, 1, 36 },
-                    { 73, 2, 33 },
-                    { 74, 2, 34 },
-                    { 75, 2, 35 },
-                    { 76, 2, 36 }
+                    { 8, 1, 5 },
+                    { 9, 1, 6 },
+                    { 10, 1, 7 },
+                    { 11, 1, 8 },
+                    { 12, 1, 9 },
+                    { 13, 1, 10 },
+                    { 14, 1, 11 },
+                    { 15, 1, 12 },
+                    { 16, 1, 13 },
+                    { 17, 1, 14 },
+                    { 18, 1, 15 },
+                    { 19, 1, 16 },
+                    { 20, 1, 17 },
+                    { 21, 1, 18 },
+                    { 22, 1, 19 },
+                    { 23, 1, 20 },
+                    { 24, 1, 21 },
+                    { 25, 1, 22 },
+                    { 26, 1, 23 },
+                    { 27, 1, 24 },
+                    { 28, 1, 25 },
+                    { 29, 1, 26 },
+                    { 30, 1, 27 },
+                    { 31, 1, 28 },
+                    { 32, 1, 29 },
+                    { 33, 1, 30 },
+                    { 34, 1, 31 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
-                columns: new[] { "Id", "Email", "Nome", "PerfilId", "Ramal", "Senha", "Setor", "Telefone" },
-                values: new object[,]
-                {
-                    { 1, "t@t", "Administrador", 1, null, "123", null, null },
-                    { 2, "f@f", "Cargo Lider", 2, null, "123", null, null }
-                });
+                columns: new[] { "Id", "DepartamentoId", "Email", "Nome", "PerfilId", "Ramal", "Senha", "Telefone" },
+                values: new object[] { 1, null, "t@t", "Administrador", 1, null, "AQAAAAIAAYagAAAAEBhxfQXBjzd7Zew0DoNJHGyZ87fJz7R+Rsuc9HydmTynN4zRgF1Yrp0TTRK33keI7g==", null });
 
             migrationBuilder.InsertData(
                 table: "UsuarioView",
@@ -537,34 +480,7 @@ namespace ConectMaster.Migrations
                     { 26, 1, 26 },
                     { 27, 1, 27 },
                     { 28, 1, 28 },
-                    { 29, 2, 1 },
-                    { 30, 2, 2 },
-                    { 31, 2, 3 },
-                    { 32, 2, 4 },
-                    { 33, 2, 5 },
-                    { 34, 2, 6 },
-                    { 35, 2, 7 },
-                    { 36, 2, 8 },
-                    { 37, 2, 9 },
-                    { 38, 2, 10 },
-                    { 39, 2, 11 },
-                    { 40, 2, 12 },
-                    { 41, 2, 13 },
-                    { 42, 2, 14 },
-                    { 43, 2, 15 },
-                    { 44, 2, 16 },
-                    { 45, 2, 17 },
-                    { 46, 2, 18 },
-                    { 47, 2, 19 },
-                    { 48, 2, 20 },
-                    { 49, 2, 21 },
-                    { 50, 2, 22 },
-                    { 51, 2, 23 },
-                    { 52, 2, 24 },
-                    { 53, 2, 25 },
-                    { 54, 2, 26 },
-                    { 55, 2, 27 },
-                    { 56, 2, 28 }
+                    { 29, 1, 29 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -573,14 +489,14 @@ namespace ConectMaster.Migrations
                 column: "idUsuario");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ChamadosCompras_idUsuario",
+                table: "ChamadosCompras",
+                column: "idUsuario");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EstoqueItens_EstoqueId",
                 table: "EstoqueItens",
                 column: "EstoqueId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Historicos_UsuarioId",
-                table: "Historicos",
-                column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PerfilPermissoes_PerfilId",
@@ -596,6 +512,11 @@ namespace ConectMaster.Migrations
                 name: "IX_Servicos_SolicitanteId",
                 table: "Servicos",
                 column: "SolicitanteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_DepartamentoId",
+                table: "Usuarios",
+                column: "DepartamentoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_PerfilId",
@@ -620,16 +541,10 @@ namespace ConectMaster.Migrations
                 name: "Chamados");
 
             migrationBuilder.DropTable(
-                name: "Departamentos");
+                name: "ChamadosCompras");
 
             migrationBuilder.DropTable(
                 name: "EstoqueItens");
-
-            migrationBuilder.DropTable(
-                name: "Formularios");
-
-            migrationBuilder.DropTable(
-                name: "Historicos");
 
             migrationBuilder.DropTable(
                 name: "LogsAuditoria");
@@ -654,6 +569,9 @@ namespace ConectMaster.Migrations
 
             migrationBuilder.DropTable(
                 name: "Views");
+
+            migrationBuilder.DropTable(
+                name: "Departamentos");
 
             migrationBuilder.DropTable(
                 name: "Perfis");

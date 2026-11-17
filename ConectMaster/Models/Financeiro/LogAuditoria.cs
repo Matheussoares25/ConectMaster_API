@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ConectMaster.Models
+namespace ConectMaster.Models.Financeiro
 {
     public class LogAuditoria
     {

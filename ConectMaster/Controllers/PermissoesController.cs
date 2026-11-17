@@ -5,6 +5,7 @@ using ConectMaster.Bancodedados;
 using ConectMaster.Models;
 using ConectMaster.Helpers;
 using ConectMaster.DTOS;
+using ConectMaster.Models.Financeiro;
 
 namespace ConectMaster.Controllers
 {

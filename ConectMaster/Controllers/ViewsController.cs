@@ -1,6 +1,6 @@
 using ConectMaster.Bancodedados;
 using ConectMaster.Helpers;
-using ConectMaster.Models;
+using ConectMaster.Models.Financeiro;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

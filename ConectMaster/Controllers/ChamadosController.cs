@@ -5,7 +5,8 @@ using ConectMaster.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using ConectMaster.Models.Financeiro;
+using ConectMaster.Models.TI;
 namespace ConectMaster.Controllers
 {
     [ApiController]
@@ -25,75 +26,67 @@ namespace ConectMaster.Controllers
         {
             if (!User.TemPermissao("Visualizar chamados"))
                 return Forbid();
-            try
-            {
-                var chamados = await _context.Chamados
-                    .Include(c => c.Usuario)
-                    .Select(c => new ChamadoResponse
-                    {
-                        Id = c.Id,
-                        Titulo = c.Titulo,
-                        Descricao = c.Descricao,
-                        Status = c.Status,
-                        DataAbertura = c.DataAbertura,
-                        DataAlteracao = c.DataAlteracao,
-                        DataFechamento = c.DataFechamento,
-                        Categoria = c.Categoria,
-                        Prioridade = c.Prioridade,
-                        Usuario = new UsuarioResponse
-                        {
-                            Id = c.Usuario.Id ?? 0,
-                            Nome = c.Usuario.Nome,
-                            Email = c.Usuario.Email,
-                            Setor = c.Usuario.Setor
-                        }
-                    })
-                    .ToListAsync();
 
-                return Ok(chamados);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { error = ex.Message });
-            }
+            var chamados = await _context.Chamados
+                .Select(c => new ChamadoResponse
+                {
+                    Id = c.Id,
+                    Titulo = c.Titulo,
+                    Descricao = c.Descricao,
+                    Status = c.Status,
+                    DataAbertura = c.DataAbertura,
+                    DataAlteracao = c.DataAlteracao,
+                    DataFechamento = c.DataFechamento,
+                    Categoria = c.Categoria,
+                    Prioridade = c.Prioridade,
+                    Setor = c.Setor,
+                    Email = c.Email,
+                    Usuario = c.Usuario == null ? null : new UsuarioResponse
+                    {
+                        Id = c.Usuario.Id,
+                        Nome = c.Usuario.Nome,
+                        Email = c.Usuario.Email,
+                        DepartamentoId = c.Usuario.DepartamentoId,
+                        DepartamentoNome = c.Usuario.Departamento != null ? c.Usuario.Departamento.Nome : null
+                    }
+                })
+                .ToListAsync();
+
+            return Ok(chamados);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<ChamadoResponse>> Get(int id)
         {
-            try
-            {
-                var item = await _context.Chamados
-                    .Include(c => c.Usuario)
-                    .Where(c => c.Id == id)
-                    .Select(c => new ChamadoResponse
+            var chamado = await _context.Chamados
+                .Where(c => c.Id == id)
+                .Select(c => new ChamadoResponse
+                {
+                    Id = c.Id,
+                    Titulo = c.Titulo,
+                    Descricao = c.Descricao,
+                    Status = c.Status,
+                    DataAbertura = c.DataAbertura,
+                    DataAlteracao = c.DataAlteracao,
+                    DataFechamento = c.DataFechamento,
+                    Categoria = c.Categoria,
+                    Prioridade = c.Prioridade,
+                    Setor = c.Setor,
+                    Email = c.Email,
+                    Usuario = c.Usuario == null ? null : new UsuarioResponse
                     {
-                        Id = c.Id,
-                        Titulo = c.Titulo,
-                        Descricao = c.Descricao,
-                        Status = c.Status,
-                        DataAbertura = c.DataAbertura,
-                        DataAlteracao = c.DataAlteracao,
-                        DataFechamento = c.DataFechamento,
-                        Categoria = c.Categoria,
-                        Prioridade = c.Prioridade,
-                        Usuario = new UsuarioResponse
-                        {
-                            Id = c.Usuario.Id ?? 0,
-                            Nome = c.Usuario.Nome,
-                            Email = c.Usuario.Email,
-                            Setor = c.Usuario.Setor
-                        }
-                    })
-                    .FirstOrDefaultAsync();
+                        Id = c.Usuario.Id,
+                        Nome = c.Usuario.Nome,
+                        Email = c.Usuario.Email,
+                        DepartamentoId = c.Usuario.DepartamentoId,
+                        DepartamentoNome = c.Usuario.Departamento != null ? c.Usuario.Departamento.Nome : null
+                    }
+                })
+                .FirstOrDefaultAsync();
 
-                if (item == null) return NotFound();
-                return item;
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { error = ex.Message });
-            }
+            if (chamado == null) return NotFound();
+            if (!User.TemPermissao("Visualizar chamados")) return Forbid();
+            return Ok(chamado);
         }
 
         [HttpGet("me")]
@@ -105,6 +98,7 @@ namespace ConectMaster.Controllers
                 var chamados = await _context.Chamados
                     .Where(c => c.idUsuario == userId)
                     .Include(c => c.Usuario)
+                    .ThenInclude(u => u.Departamento)
                     .Select(c => new ChamadoResponse
                     {
                         Id = c.Id,
@@ -116,11 +110,14 @@ namespace ConectMaster.Controllers
                         DataAbertura = c.DataAbertura,
                         DataAlteracao = c.DataAlteracao,
                         DataFechamento = c.DataFechamento,
+                        Setor = c.Setor,
+                        Email = c.Email,
                         Usuario = new UsuarioResponse
                         {
-                            Id = c.Usuario.Id ?? 0,
+                            Id = c.Usuario!.Id,
                             Nome = c.Usuario.Nome,
-                            Email = c.Usuario.Email
+                            Email = c.Usuario.Email,
+                            DepartamentoNome = c.Usuario.Departamento != null ? c.Usuario.Departamento.Nome : null
                         }
                     })
                     .ToListAsync();
@@ -185,7 +182,7 @@ namespace ConectMaster.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost()]
         public async Task<ActionResult<ChamadoResponse>> Post(ChamadoCriacaoDto dto)
         {
             if (!User.TemPermissao("Criar chamados"))
@@ -193,17 +190,19 @@ namespace ConectMaster.Controllers
 
             try
             {
-                var chamado = new chamado
+                var agora = DateTime.UtcNow;
+                var chamado = new Chamados_Ti
                 {
                     Titulo = dto.Titulo,
-                    Descricao = dto.Descricao,
+                    Descricao = dto.Descricao ?? string.Empty,
                     Categoria = dto.Categoria,
                     Prioridade = dto.Prioridade,
                     Status = dto.Status,
                     Setor = dto.Setor,
                     Email = dto.Email,
                     idUsuario = User.GetId(),
-                    DataAbertura = DateTime.UtcNow,
+                    DataAbertura = agora,
+                    DataAlteracao = agora
                 };
 
                 _context.Chamados.Add(chamado);
@@ -230,8 +229,10 @@ namespace ConectMaster.Controllers
                     Status = chamado.Status,
                     Categoria = chamado.Categoria,
                     Prioridade = chamado.Prioridade,
+                    Setor = chamado.Setor,
+                    Email = chamado.Email,
                     DataAbertura = chamado.DataAbertura,
-
+                    DataAlteracao = chamado.DataAlteracao
                 });
             }
             catch (Exception ex)
@@ -287,7 +288,7 @@ namespace ConectMaster.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             if (!User.TemPermissao("Apagar chamados"))
@@ -324,5 +325,6 @@ namespace ConectMaster.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
+
     }
 }

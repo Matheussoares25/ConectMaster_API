@@ -3,8 +3,10 @@ using ConectMaster.DTOS;
 using ConectMaster.Helpers;
 using ConectMaster.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ConectMaster.Models.Financeiro;
 
 namespace ConectMaster.Controllers
 {
@@ -14,42 +16,39 @@ namespace ConectMaster.Controllers
     public class UsuariosController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IPasswordHasher<Usuarios> _hasher;
 
-        public UsuariosController(AppDbContext context)
+        public UsuariosController(AppDbContext context, IPasswordHasher<Usuarios> hasher)
         {
             _context = context;
+            _hasher = hasher;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UsuarioResponse>>> Get()
+        public async Task<ActionResult<IEnumerable<UsuarioResponse>>> Get(CancellationToken ct)
         {
             if (!User.TemPermissao("Visualizar usuarios"))
                 return Forbid();
 
-            try
-            {
-                var usuariosComPerfis = await _context.Usuarios
-                    .Include(u => u.Perfil)
-                    .Select(u => new UsuarioResponse
-                    {
-                        Id = u.Id ?? 0,
-                        Nome = u.Nome,
-                        Email = u.Email,
-                        Ramal = u.Ramal,
-                        Telefone = u.Telefone,
-                        Setor = u.Setor,
-                        PerfilId = u.PerfilId
-                    })
-                    .ToListAsync();
+            var usuarios = await _context.Usuarios
+                .AsNoTracking()
+                .Select(u => new UsuarioResponse
+                {
+                    Id = u.Id,
+                    Nome = u.Nome,
+                    Email = u.Email,
+                    Ramal = u.Ramal,
+                    Telefone = u.Telefone,
+                    DepartamentoId = u.DepartamentoId,
+                    DepartamentoNome = u.Departamento != null ? u.Departamento.Nome : null,
+                    PerfilId = u.PerfilId,
+                    Perfil = u.Perfil != null
+                        ? new PerfilResumo { Id = u.Perfil.Id, Name = u.Perfil.Name }
+                        : null
+                })
+                .ToListAsync(ct);
 
-            
-
-                return Ok(usuariosComPerfis);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { error = ex.Message });
-            }
+            return Ok(usuarios);
         }
 
         [HttpGet("{id}")]
@@ -61,12 +60,12 @@ namespace ConectMaster.Controllers
                     .Where(u => u.Id == id)
                     .Select(u => new UsuarioResponse
                     {
-                        Id = u.Id ?? 0,
+                        Id = u.Id,
                         Nome = u.Nome,
                         Email = u.Email,
                         Ramal = u.Ramal,
                         Telefone = u.Telefone,
-                        Setor = u.Setor,
+                        DepartamentoId = u.DepartamentoId,
                         PerfilId = u.PerfilId
                     })
                     .FirstOrDefaultAsync();
@@ -80,108 +79,101 @@ namespace ConectMaster.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<UsuarioResponse>> Post(UsuarioDTO request)
+        public async Task<ActionResult<UsuarioResponse>> Post(UsuarioRequest request, CancellationToken ct)
         {
             if (!User.TemPermissao("Criar Usuario"))
                 return Forbid();
 
-            try
+            var emailNormalizado = request.Email.Trim().ToLowerInvariant();
+
+            if (await _context.Usuarios.AnyAsync(x => x.Email == emailNormalizado, ct))
+                return Conflict(new { error = "Email já cadastrado." });
+
+            if (string.IsNullOrWhiteSpace(request.Senha))
+                return BadRequest(new { error = "Senha é obrigatória." });
+
+            var usuario = new Usuarios
             {
-                var usuarioExistente = await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == request.Email);
-                if (usuarioExistente != null) 
-                    return BadRequest(new { error = "Email já cadastrado" });
+                Nome = request.Nome.Trim(),
+                Email = emailNormalizado,
+                Ramal = request.Ramal,
+                Telefone = request.Telefone,
+                DepartamentoId = request.DepartamentoId,
+                PerfilId = request.PerfilId,
+            };
+            usuario.Senha = _hasher.HashPassword(usuario, request.Senha);
 
-                var usuario = new Usuarios
-                {
-                    Nome = request.Nome,
-                    Email = request.Email,
-                    Ramal = request.Ramal,
-                    Telefone = request.Telefone,
-                    Setor = request.Setor,
-                    PerfilId = request.PerfilId
-                };
+            _context.Usuarios.Add(usuario);
 
-                _context.Usuarios.Add(usuario);
-                await _context.SaveChangesAsync();
-
-                try
-                {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
-                    {
-                        UsuarioId = User.GetId(),
-                        UsuarioName = User.GetName(),
-                        Acao = "Criar",
-                        Entidade = "Usuario",
-                        EntidadeId = usuario.Id,
-                        Detalhes = System.Text.Json.JsonSerializer.Serialize(request)
-                    });
-                    await _context.SaveChangesAsync();
-                }
-                catch { }
-
-                return CreatedAtAction(nameof(Get), new { id = usuario.Id }, new UsuarioResponse
-                {
-                    Id = usuario.Id ?? 0,
-                    Nome = usuario.Nome,
-                    Email = usuario.Email,
-                    Ramal = usuario.Ramal,
-                    Telefone = usuario.Telefone,
-                    Setor = usuario.Setor,
-                    PerfilId = usuario.PerfilId
-                });
-            }
-            catch (Exception ex)
+            // Auditoria na mesma transação do cadastro
+            _context.LogsAuditoria.Add(new LogAuditoria
             {
-                return StatusCode(500, new { error = ex.Message });
-            }
+                UsuarioId = User.GetId(),
+                UsuarioName = User.GetName(),
+                Acao = "Criar",
+                Entidade = "Usuario",
+                EntidadeId = usuario.Id,   // ainda é 0 aqui, ver abaixo
+                Detalhes = $"Usuário '{usuario.Nome}' criado.",   // não serializa o request, pois contém a senha
+            });
+
+            await _context.SaveChangesAsync(ct);
+
+            return CreatedAtAction(nameof(Get), new { id = usuario.Id }, new UsuarioResponse
+            {
+                Id = usuario.Id,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
+                Ramal = usuario.Ramal,
+                Telefone = usuario.Telefone,
+                DepartamentoId = usuario.DepartamentoId,
+                PerfilId = usuario.PerfilId,
+            });
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, UsuarioDTO request)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Put(int id, UsuarioRequest request, CancellationToken ct)
         {
             if (!User.TemPermissao("Editar usuarios"))
                 return Forbid();
 
-            try
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id == id, ct);
+            if (usuario is null)
+                return NotFound();
+
+            var emailNormalizado = request.Email.Trim().ToLowerInvariant();
+
+            if (await _context.Usuarios.AnyAsync(x => x.Email == emailNormalizado && x.Id != id, ct))
+                return Conflict(new { error = "Email já cadastrado." });
+
+            usuario.Nome = request.Nome.Trim();
+            usuario.Email = emailNormalizado;
+            usuario.Ramal = request.Ramal;
+            usuario.Telefone = request.Telefone;
+            usuario.DepartamentoId = request.DepartamentoId;
+            usuario.PerfilId = request.PerfilId;
+
+            // Só troca a senha se o campo foi preenchido
+            if (!string.IsNullOrWhiteSpace(request.Senha))
+                usuario.Senha = _hasher.HashPassword(usuario, request.Senha);
+
+            await using var tx = await _context.Database.BeginTransactionAsync(ct);
+
+            _context.LogsAuditoria.Add(new LogAuditoria
             {
-                var usuarioBanco = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id == id);
+                UsuarioId = User.GetId(),
+                UsuarioName = User.GetName(),
+                Acao = "Editar",
+                Entidade = "Usuario",
+                EntidadeId = id,
+                // Sem o request serializado: ele contém a senha
+                Detalhes = $"Usuário '{usuario.Nome}' (id {id}) atualizado."
+                    + (string.IsNullOrWhiteSpace(request.Senha) ? "" : " Senha alterada."),
+            });
 
-                if (usuarioBanco == null) return NotFound();
+            await _context.SaveChangesAsync(ct);   // grava usuário e log juntos
+            await tx.CommitAsync(ct);
 
-                var usuarioExistente = await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == request.Email && x.Id != id);
-
-                if (usuarioExistente != null) return BadRequest(new { error = "Email já cadastrado" });
-
-                usuarioBanco.Nome = request.Nome;
-                usuarioBanco.Email = request.Email;
-                usuarioBanco.Ramal = request.Ramal;
-                usuarioBanco.Telefone = request.Telefone;
-                usuarioBanco.Setor = request.Setor;
-                usuarioBanco.PerfilId = request.PerfilId;
-
-                await _context.SaveChangesAsync();
-
-                try
-                {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
-                    {
-                        UsuarioId = User.GetId(),
-                        UsuarioName = User.GetName(),
-                        Acao = "Editar",
-                        Entidade = "Usuario",
-                        EntidadeId = id,
-                        Detalhes = System.Text.Json.JsonSerializer.Serialize(request)
-                    });
-                    await _context.SaveChangesAsync();
-                }
-                catch { }
-
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { error = ex.Message });
-            }
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -195,14 +187,23 @@ namespace ConectMaster.Controllers
                 var item = await _context.Usuarios.FindAsync(id);
                 if (item == null) return NotFound();
 
-                var detalhes = System.Text.Json.JsonSerializer.Serialize(item);
+                var detalhes = System.Text.Json.JsonSerializer.Serialize(new
+                {
+                    item.Id,
+                    item.Nome,
+                    item.Email,
+                    item.Ramal,
+                    item.Telefone,
+                    item.DepartamentoId,
+                    item.PerfilId
+                });
 
                 _context.Usuarios.Remove(item);
                 await _context.SaveChangesAsync();
 
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
                         UsuarioId = User.GetId(),
                         Acao = "Excluir",

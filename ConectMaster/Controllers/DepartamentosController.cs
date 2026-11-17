@@ -5,6 +5,7 @@ using ConectMaster.Bancodedados;
 using ConectMaster.Models;
 using ConectMaster.Helpers;
 using ConectMaster.DTOS;
+using ConectMaster.Models.Financeiro;
 
 namespace ConectMaster.Controllers
 {
@@ -29,7 +30,7 @@ namespace ConectMaster.Controllers
                     .Select(d => new DepartamentoDto.DepartamentoResponse
                     {
                         Id = d.Id,
-                        Name = d.Name,
+                        Nome = d.Nome,
                         Descricao = d.Descricao,
                         DataCriacao = d.DataCriacao
                     })
@@ -56,7 +57,7 @@ namespace ConectMaster.Controllers
                 return Ok(new DepartamentoDto.DepartamentoResponse
                 {
                     Id = departamento.Id,
-                    Name = departamento.Name,
+                    Nome = departamento.Nome,
                     Descricao = departamento.Descricao,
                     DataCriacao = departamento.DataCriacao
                 });
@@ -75,15 +76,15 @@ namespace ConectMaster.Controllers
 
             try
             {
-                var exists = await _context.Departamentos.AnyAsync(d => d.Name == dto.Name);
+                var exists = await _context.Departamentos.AnyAsync(d => d.Nome == dto.Nome);
                 if (exists)
                     return Conflict(new { error = "Departamento com este nome já existe" });
 
                 var departamento = new Departamento
                 {
-                    Name = dto.Name,
+                    Nome = dto.Nome,
                     Descricao = dto.Descricao,
-                    DataCriacao = DateTime.Now
+                    DataCriacao = DateTime.UtcNow
                 };
 
                 _context.Departamentos.Add(departamento);
@@ -106,7 +107,7 @@ namespace ConectMaster.Controllers
                 return CreatedAtAction(nameof(GetById), new { id = departamento.Id }, new DepartamentoDto.DepartamentoResponse
                 {
                     Id = departamento.Id,
-                    Name = departamento.Name,
+                    Nome = departamento.Nome,
                     Descricao = departamento.Descricao,
                     DataCriacao = departamento.DataCriacao
                 });
@@ -130,11 +131,11 @@ namespace ConectMaster.Controllers
                 if (departamento == null)
                     return NotFound(new { error = "Departamento não encontrado" });
 
-                var exists = await _context.Departamentos.AnyAsync(d => d.Name == dto.Name && d.Id != id);
+                var exists = await _context.Departamentos.AnyAsync(d => d.Nome == dto.Nome && d.Id != id);
                 if (exists)
                     return Conflict(new { error = "Departamento com este nome já existe" });
 
-                departamento.Name = dto.Name;
+                departamento.Nome = dto.Nome;
                 departamento.Descricao = dto.Descricao;
 
                 _context.Departamentos.Update(departamento);
@@ -186,7 +187,7 @@ namespace ConectMaster.Controllers
                         Acao = "Excluir",
                         Entidade = "Departamento",
                         EntidadeId = id,
-                        Detalhes = $"Departamento: {departamento.Name}"
+                        Detalhes = $"Departamento: {departamento.Nome}"
                     });
                     await _context.SaveChangesAsync();
                 }

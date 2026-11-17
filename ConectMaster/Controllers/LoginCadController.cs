@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 namespace ConectMaster.Controllers
 {
@@ -17,11 +18,13 @@ namespace ConectMaster.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
+        private readonly IPasswordHasher<Usuarios> _hasher;
 
-        public LoginCadController(AppDbContext context, IConfiguration config)
+        public LoginCadController(AppDbContext context, IConfiguration config, IPasswordHasher<Usuarios> hasher)
         {
             _context = context;
             _config = config;
+            _hasher = hasher;
         }
 
         [HttpPost]
@@ -31,11 +34,33 @@ namespace ConectMaster.Controllers
         {
             try
             {
-                var user = await _context.Usuarios.Include(u => u.Perfil).FirstOrDefaultAsync(u => u.Email == req.Email);
-                if (user == null) return NotFound(new { error = "Usuário com este email não encontrado", message = "Usuário não encontrado" });
+                var user = await _context.Usuarios
+    .Include(u => u.Perfil)
+    .Include(u => u.Departamento)
+    .FirstOrDefaultAsync(u => u.Email == req.Email);
+                if (user == null || string.IsNullOrEmpty(req.Senha))
+                    return Unauthorized(new { error = "E-mail ou senha inválidos." });
 
-                // Senha em texto por enquanto (substituir por hash em produção)
-                if (user.Senha != req.Senha) return Unauthorized(new { error = "Credenciais inválidas", message = "Senha incorreta" });
+                if (!IsIdentityPasswordHash(user.Senha))
+                {
+                    if (!string.Equals(user.Senha, req.Senha, StringComparison.Ordinal))
+                        return Unauthorized(new { error = "E-mail ou senha inválidos." });
+
+                    user.Senha = _hasher.HashPassword(user, req.Senha);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    var resultadoSenha = _hasher.VerifyHashedPassword(user, user.Senha, req.Senha);
+                    if (resultadoSenha == PasswordVerificationResult.Failed)
+                        return Unauthorized(new { error = "E-mail ou senha inválidos." });
+
+                    if (resultadoSenha == PasswordVerificationResult.SuccessRehashNeeded)
+                    {
+                        user.Senha = _hasher.HashPassword(user, req.Senha);
+                        await _context.SaveChangesAsync();
+                    }
+                }
 
                 // carregar permissões do perfil
                 var permissoes = await _context.PerfilPermissoes
@@ -54,12 +79,13 @@ namespace ConectMaster.Controllers
 
                 var resultUser = new UsuarioRespostaDto
                 {
-                    Id = user.Id ?? 0,
+                    Id = user.Id,
                     Nome = user.Nome,
                     Email = user.Email,
                     Ramal = user.Ramal,
                     Telefone = user.Telefone,
-                    Setor = user.Setor,
+                    DepartamentoId = user.DepartamentoId,
+                    DepartamentoNome = user.Departamento?.Nome,
                     Perfil = user.Perfil?.Name,
                     Views = views
                 };
@@ -74,6 +100,20 @@ namespace ConectMaster.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { error = ex.Message, message = "Erro ao autenticar" });
+            }
+        }
+
+        private static bool IsIdentityPasswordHash(string storedPassword)
+        {
+            try
+            {
+                var hashBytes = Convert.FromBase64String(storedPassword);
+                return hashBytes.Length >= 49 && hashBytes[0] == 0
+                    || hashBytes.Length >= 61 && hashBytes[0] == 1;
+            }
+            catch (FormatException)
+            {
+                return false;
             }
         }
 

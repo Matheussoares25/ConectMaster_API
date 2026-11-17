@@ -1,9 +1,12 @@
-using Microsoft.EntityFrameworkCore;
 using ConectMaster.Bancodedados;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Text;
+using ConectMaster.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,18 +72,18 @@ builder.Services.AddAuthorization();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddSingleton<IPasswordHasher<Usuarios>, PasswordHasher<Usuarios>>();
 
 
 // ---- só agora o build ----
 var app = builder.Build();
 
 // Executa migrations pendentes
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//    db.Database.Migrate();
+//}
 
 if (app.Environment.IsDevelopment())
 {

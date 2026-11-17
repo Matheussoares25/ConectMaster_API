@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ConectMaster.Models
+namespace ConectMaster.Models.Financeiro
 {
     public class Departamento
     {
@@ -9,7 +9,7 @@ namespace ConectMaster.Models
 
         [Required]
         [MaxLength(100)]
-        public string Name { get; set; }
+        public string Nome { get; set; }
 
         [MaxLength(500)]
         public string Descricao { get; set; }

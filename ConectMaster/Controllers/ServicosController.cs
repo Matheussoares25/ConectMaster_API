@@ -2,6 +2,7 @@ using ConectMaster.Bancodedados;
 using ConectMaster.DTOS;
 using ConectMaster.Helpers;
 using ConectMaster.Models;
+using ConectMaster.Models.Financeiro;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -152,7 +153,7 @@ namespace ConectMaster.Controllers
 
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
                         UsuarioId = User.GetId(),
                         Acao = "Editar",
@@ -188,7 +189,7 @@ namespace ConectMaster.Controllers
 
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
                         UsuarioId = User.GetId(),
                         Acao = "Alterar status",
@@ -223,7 +224,7 @@ namespace ConectMaster.Controllers
 
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
                         UsuarioId = User.GetId(),
                         Acao = "Excluir",

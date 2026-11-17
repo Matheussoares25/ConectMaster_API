@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ConectMaster.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261112182126_lowcase")]
-    partial class lowcase
+    [Migration("20261117182717_comprascomautorização")]
+    partial class comprascomautorização
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace ConectMaster.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ConectMaster.Models.Departamento", b =>
+            modelBuilder.Entity("ConectMaster.Models.Compras.Chamados_Compras", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,22 +33,65 @@ namespace ConectMaster.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<bool>("Aprovado")
+                        .HasColumnType("boolean");
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Categoria")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<DateTime>("DataAbertura")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataAlteracao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DataAprovacao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DataFechamento")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<int>("Prioridade")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Setor")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("idUsuario")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("standby")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Departamentos");
+                    b.HasIndex("idUsuario");
+
+                    b.ToTable("ChamadosCompras");
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Estoque", b =>
@@ -121,71 +164,33 @@ namespace ConectMaster.Migrations
                     b.ToTable("EstoqueItens");
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.Formulario", b =>
+            modelBuilder.Entity("ConectMaster.Models.Financeiro.Departamento", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("CamposJson")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("DataAlteracao")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Descricao")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Formularios");
+                    b.ToTable("Departamentos");
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.Historico", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DataAbertura")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DataSolucao")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("TipoServico")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Historicos");
-                });
-
-            modelBuilder.Entity("ConectMaster.Models.LogAuditoria", b =>
+            modelBuilder.Entity("ConectMaster.Models.Financeiro.LogAuditoria", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -225,7 +230,7 @@ namespace ConectMaster.Migrations
                     b.ToTable("LogsAuditoria");
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.Perfil", b =>
+            modelBuilder.Entity("ConectMaster.Models.Financeiro.Perfil", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -247,15 +252,10 @@ namespace ConectMaster.Migrations
                         {
                             Id = 1,
                             Name = "Administrador"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Lider"
                         });
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.PerfilPermissao", b =>
+            modelBuilder.Entity("ConectMaster.Models.Financeiro.PerfilPermissao", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -304,415 +304,169 @@ namespace ConectMaster.Migrations
                         },
                         new
                         {
-                            Id = 5,
-                            PerfilId = 1,
-                            PermissaoId = 5
-                        },
-                        new
-                        {
-                            Id = 6,
-                            PerfilId = 1,
-                            PermissaoId = 6
-                        },
-                        new
-                        {
-                            Id = 7,
-                            PerfilId = 1,
-                            PermissaoId = 7
-                        },
-                        new
-                        {
                             Id = 8,
                             PerfilId = 1,
-                            PermissaoId = 8
+                            PermissaoId = 5
                         },
                         new
                         {
                             Id = 9,
                             PerfilId = 1,
-                            PermissaoId = 9
+                            PermissaoId = 6
                         },
                         new
                         {
                             Id = 10,
                             PerfilId = 1,
-                            PermissaoId = 10
+                            PermissaoId = 7
                         },
                         new
                         {
                             Id = 11,
                             PerfilId = 1,
-                            PermissaoId = 11
+                            PermissaoId = 8
                         },
                         new
                         {
                             Id = 12,
                             PerfilId = 1,
-                            PermissaoId = 12
+                            PermissaoId = 9
                         },
                         new
                         {
                             Id = 13,
                             PerfilId = 1,
-                            PermissaoId = 13
+                            PermissaoId = 10
                         },
                         new
                         {
                             Id = 14,
                             PerfilId = 1,
-                            PermissaoId = 14
+                            PermissaoId = 11
                         },
                         new
                         {
                             Id = 15,
                             PerfilId = 1,
-                            PermissaoId = 15
+                            PermissaoId = 12
                         },
                         new
                         {
                             Id = 16,
                             PerfilId = 1,
-                            PermissaoId = 16
+                            PermissaoId = 13
                         },
                         new
                         {
                             Id = 17,
                             PerfilId = 1,
-                            PermissaoId = 17
+                            PermissaoId = 14
                         },
                         new
                         {
                             Id = 18,
                             PerfilId = 1,
-                            PermissaoId = 18
+                            PermissaoId = 15
                         },
                         new
                         {
                             Id = 19,
                             PerfilId = 1,
-                            PermissaoId = 19
+                            PermissaoId = 16
                         },
                         new
                         {
                             Id = 20,
                             PerfilId = 1,
-                            PermissaoId = 20
+                            PermissaoId = 17
                         },
                         new
                         {
                             Id = 21,
                             PerfilId = 1,
-                            PermissaoId = 21
+                            PermissaoId = 18
                         },
                         new
                         {
                             Id = 22,
                             PerfilId = 1,
-                            PermissaoId = 22
+                            PermissaoId = 19
                         },
                         new
                         {
                             Id = 23,
                             PerfilId = 1,
-                            PermissaoId = 23
+                            PermissaoId = 20
                         },
                         new
                         {
                             Id = 24,
                             PerfilId = 1,
-                            PermissaoId = 24
+                            PermissaoId = 21
                         },
                         new
                         {
                             Id = 25,
                             PerfilId = 1,
-                            PermissaoId = 25
+                            PermissaoId = 22
                         },
                         new
                         {
                             Id = 26,
                             PerfilId = 1,
-                            PermissaoId = 26
+                            PermissaoId = 23
                         },
                         new
                         {
                             Id = 27,
                             PerfilId = 1,
-                            PermissaoId = 27
+                            PermissaoId = 24
                         },
                         new
                         {
                             Id = 28,
                             PerfilId = 1,
-                            PermissaoId = 28
-                        },
-                        new
-                        {
-                            Id = 57,
-                            PerfilId = 1,
-                            PermissaoId = 29
-                        },
-                        new
-                        {
-                            Id = 58,
-                            PerfilId = 1,
-                            PermissaoId = 30
-                        },
-                        new
-                        {
-                            Id = 59,
-                            PerfilId = 1,
-                            PermissaoId = 31
-                        },
-                        new
-                        {
-                            Id = 60,
-                            PerfilId = 1,
-                            PermissaoId = 32
-                        },
-                        new
-                        {
-                            Id = 69,
-                            PerfilId = 1,
-                            PermissaoId = 33
-                        },
-                        new
-                        {
-                            Id = 70,
-                            PerfilId = 1,
-                            PermissaoId = 34
-                        },
-                        new
-                        {
-                            Id = 71,
-                            PerfilId = 1,
-                            PermissaoId = 35
-                        },
-                        new
-                        {
-                            Id = 72,
-                            PerfilId = 1,
-                            PermissaoId = 36
-                        },
-                        new
-                        {
-                            Id = 29,
-                            PerfilId = 2,
-                            PermissaoId = 1
-                        },
-                        new
-                        {
-                            Id = 30,
-                            PerfilId = 2,
-                            PermissaoId = 2
-                        },
-                        new
-                        {
-                            Id = 31,
-                            PerfilId = 2,
-                            PermissaoId = 3
-                        },
-                        new
-                        {
-                            Id = 32,
-                            PerfilId = 2,
-                            PermissaoId = 4
-                        },
-                        new
-                        {
-                            Id = 33,
-                            PerfilId = 2,
-                            PermissaoId = 5
-                        },
-                        new
-                        {
-                            Id = 34,
-                            PerfilId = 2,
-                            PermissaoId = 6
-                        },
-                        new
-                        {
-                            Id = 35,
-                            PerfilId = 2,
-                            PermissaoId = 7
-                        },
-                        new
-                        {
-                            Id = 36,
-                            PerfilId = 2,
-                            PermissaoId = 8
-                        },
-                        new
-                        {
-                            Id = 37,
-                            PerfilId = 2,
-                            PermissaoId = 9
-                        },
-                        new
-                        {
-                            Id = 38,
-                            PerfilId = 2,
-                            PermissaoId = 10
-                        },
-                        new
-                        {
-                            Id = 39,
-                            PerfilId = 2,
-                            PermissaoId = 11
-                        },
-                        new
-                        {
-                            Id = 40,
-                            PerfilId = 2,
-                            PermissaoId = 12
-                        },
-                        new
-                        {
-                            Id = 41,
-                            PerfilId = 2,
-                            PermissaoId = 13
-                        },
-                        new
-                        {
-                            Id = 42,
-                            PerfilId = 2,
-                            PermissaoId = 14
-                        },
-                        new
-                        {
-                            Id = 43,
-                            PerfilId = 2,
-                            PermissaoId = 15
-                        },
-                        new
-                        {
-                            Id = 44,
-                            PerfilId = 2,
-                            PermissaoId = 16
-                        },
-                        new
-                        {
-                            Id = 45,
-                            PerfilId = 2,
-                            PermissaoId = 17
-                        },
-                        new
-                        {
-                            Id = 46,
-                            PerfilId = 2,
-                            PermissaoId = 18
-                        },
-                        new
-                        {
-                            Id = 47,
-                            PerfilId = 2,
-                            PermissaoId = 19
-                        },
-                        new
-                        {
-                            Id = 48,
-                            PerfilId = 2,
-                            PermissaoId = 20
-                        },
-                        new
-                        {
-                            Id = 49,
-                            PerfilId = 2,
-                            PermissaoId = 21
-                        },
-                        new
-                        {
-                            Id = 50,
-                            PerfilId = 2,
-                            PermissaoId = 22
-                        },
-                        new
-                        {
-                            Id = 51,
-                            PerfilId = 2,
-                            PermissaoId = 23
-                        },
-                        new
-                        {
-                            Id = 52,
-                            PerfilId = 2,
-                            PermissaoId = 24
-                        },
-                        new
-                        {
-                            Id = 53,
-                            PerfilId = 2,
                             PermissaoId = 25
                         },
                         new
                         {
-                            Id = 54,
-                            PerfilId = 2,
+                            Id = 29,
+                            PerfilId = 1,
                             PermissaoId = 26
                         },
                         new
                         {
-                            Id = 55,
-                            PerfilId = 2,
+                            Id = 30,
+                            PerfilId = 1,
                             PermissaoId = 27
                         },
                         new
                         {
-                            Id = 56,
-                            PerfilId = 2,
+                            Id = 31,
+                            PerfilId = 1,
                             PermissaoId = 28
                         },
                         new
                         {
-                            Id = 61,
-                            PerfilId = 2,
+                            Id = 32,
+                            PerfilId = 1,
                             PermissaoId = 29
                         },
                         new
                         {
-                            Id = 62,
-                            PerfilId = 2,
+                            Id = 33,
+                            PerfilId = 1,
                             PermissaoId = 30
                         },
                         new
                         {
-                            Id = 63,
-                            PerfilId = 2,
+                            Id = 34,
+                            PerfilId = 1,
                             PermissaoId = 31
-                        },
-                        new
-                        {
-                            Id = 64,
-                            PerfilId = 2,
-                            PermissaoId = 32
-                        },
-                        new
-                        {
-                            Id = 73,
-                            PerfilId = 2,
-                            PermissaoId = 33
-                        },
-                        new
-                        {
-                            Id = 74,
-                            PerfilId = 2,
-                            PermissaoId = 34
-                        },
-                        new
-                        {
-                            Id = 75,
-                            PerfilId = 2,
-                            PermissaoId = 35
-                        },
-                        new
-                        {
-                            Id = 76,
-                            PerfilId = 2,
-                            PermissaoId = 36
                         });
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.Permissao", b =>
+            modelBuilder.Entity("ConectMaster.Models.Financeiro.Permissao", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -753,166 +507,156 @@ namespace ConectMaster.Migrations
                         new
                         {
                             Id = 5,
-                            Name = "Visualizar historicos"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Editar historicos"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Apagar historicos"
-                        },
-                        new
-                        {
-                            Id = 8,
                             Name = "Visualizar permissoes"
                         },
                         new
                         {
-                            Id = 9,
+                            Id = 6,
                             Name = "Criar permissoes"
                         },
                         new
                         {
-                            Id = 10,
+                            Id = 7,
                             Name = "Editar permissoes"
                         },
                         new
                         {
-                            Id = 11,
+                            Id = 8,
                             Name = "Apagar permissoes"
                         },
                         new
                         {
-                            Id = 12,
+                            Id = 9,
                             Name = "Visualizar perfis"
                         },
                         new
                         {
-                            Id = 13,
+                            Id = 10,
                             Name = "Criar perfis"
                         },
                         new
                         {
-                            Id = 14,
+                            Id = 11,
                             Name = "Editar perfis"
                         },
                         new
                         {
-                            Id = 15,
+                            Id = 12,
                             Name = "Apagar perfis"
                         },
                         new
                         {
-                            Id = 16,
+                            Id = 13,
                             Name = "Visualizar usuarios"
                         },
                         new
                         {
-                            Id = 17,
+                            Id = 14,
                             Name = "Criar Usuario"
                         },
                         new
                         {
-                            Id = 18,
+                            Id = 15,
                             Name = "Editar usuarios"
                         },
                         new
                         {
-                            Id = 19,
+                            Id = 16,
                             Name = "Apagar usuarios"
                         },
                         new
                         {
-                            Id = 20,
+                            Id = 17,
                             Name = "Visualizar perfilviews"
                         },
                         new
                         {
-                            Id = 21,
+                            Id = 18,
                             Name = "Criar usuarioviews"
                         },
                         new
                         {
-                            Id = 22,
+                            Id = 19,
                             Name = "Apagar perfilviews"
                         },
                         new
                         {
-                            Id = 23,
+                            Id = 20,
                             Name = "Apagar usuarioviws"
                         },
                         new
                         {
-                            Id = 24,
+                            Id = 21,
                             Name = "Visualizar views"
                         },
                         new
                         {
-                            Id = 25,
+                            Id = 22,
                             Name = "Criar servico"
                         },
                         new
                         {
-                            Id = 26,
+                            Id = 23,
                             Name = "Visualizar servicos"
                         },
                         new
                         {
-                            Id = 27,
+                            Id = 24,
                             Name = "Autorizar ou Negar OS"
                         },
                         new
                         {
-                            Id = 28,
+                            Id = 25,
                             Name = "Visualizar estoques"
                         },
                         new
                         {
-                            Id = 29,
-                            Name = "Visualizar formularios"
-                        },
-                        new
-                        {
-                            Id = 30,
-                            Name = "Criar formularios"
-                        },
-                        new
-                        {
-                            Id = 31,
-                            Name = "Editar formularios"
-                        },
-                        new
-                        {
-                            Id = 32,
-                            Name = "Apagar formularios"
-                        },
-                        new
-                        {
-                            Id = 33,
+                            Id = 26,
                             Name = "Visualizar departamentos"
                         },
                         new
                         {
-                            Id = 34,
+                            Id = 27,
                             Name = "Criar departamentos"
                         },
                         new
                         {
-                            Id = 35,
+                            Id = 28,
                             Name = "Editar departamentos"
                         },
                         new
                         {
-                            Id = 36,
+                            Id = 29,
                             Name = "Apagar departamentos"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Name = "Abrir chamado Compras"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Name = "Visualizar chamados Compras"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Name = "Editar chamados Compras"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Name = "Apagar chamados Compras"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Name = "Aprovar chamados e cotacao Compras"
                         });
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.Servico", b =>
+            modelBuilder.Entity("ConectMaster.Models.Financeiro.Servico", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1047,7 +791,7 @@ namespace ConectMaster.Migrations
                     b.ToTable("Servicos");
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.UsuarioView", b =>
+            modelBuilder.Entity("ConectMaster.Models.Financeiro.UsuarioView", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1241,235 +985,12 @@ namespace ConectMaster.Migrations
                         new
                         {
                             Id = 29,
-                            UsuarioId = 2,
-                            ViewId = 1
-                        },
-                        new
-                        {
-                            Id = 30,
-                            UsuarioId = 2,
-                            ViewId = 2
-                        },
-                        new
-                        {
-                            Id = 31,
-                            UsuarioId = 2,
-                            ViewId = 3
-                        },
-                        new
-                        {
-                            Id = 32,
-                            UsuarioId = 2,
-                            ViewId = 4
-                        },
-                        new
-                        {
-                            Id = 33,
-                            UsuarioId = 2,
-                            ViewId = 5
-                        },
-                        new
-                        {
-                            Id = 34,
-                            UsuarioId = 2,
-                            ViewId = 6
-                        },
-                        new
-                        {
-                            Id = 35,
-                            UsuarioId = 2,
-                            ViewId = 7
-                        },
-                        new
-                        {
-                            Id = 36,
-                            UsuarioId = 2,
-                            ViewId = 8
-                        },
-                        new
-                        {
-                            Id = 37,
-                            UsuarioId = 2,
-                            ViewId = 9
-                        },
-                        new
-                        {
-                            Id = 38,
-                            UsuarioId = 2,
-                            ViewId = 10
-                        },
-                        new
-                        {
-                            Id = 39,
-                            UsuarioId = 2,
-                            ViewId = 11
-                        },
-                        new
-                        {
-                            Id = 40,
-                            UsuarioId = 2,
-                            ViewId = 12
-                        },
-                        new
-                        {
-                            Id = 41,
-                            UsuarioId = 2,
-                            ViewId = 13
-                        },
-                        new
-                        {
-                            Id = 42,
-                            UsuarioId = 2,
-                            ViewId = 14
-                        },
-                        new
-                        {
-                            Id = 43,
-                            UsuarioId = 2,
-                            ViewId = 15
-                        },
-                        new
-                        {
-                            Id = 44,
-                            UsuarioId = 2,
-                            ViewId = 16
-                        },
-                        new
-                        {
-                            Id = 45,
-                            UsuarioId = 2,
-                            ViewId = 17
-                        },
-                        new
-                        {
-                            Id = 46,
-                            UsuarioId = 2,
-                            ViewId = 18
-                        },
-                        new
-                        {
-                            Id = 47,
-                            UsuarioId = 2,
-                            ViewId = 19
-                        },
-                        new
-                        {
-                            Id = 48,
-                            UsuarioId = 2,
-                            ViewId = 20
-                        },
-                        new
-                        {
-                            Id = 49,
-                            UsuarioId = 2,
-                            ViewId = 21
-                        },
-                        new
-                        {
-                            Id = 50,
-                            UsuarioId = 2,
-                            ViewId = 22
-                        },
-                        new
-                        {
-                            Id = 51,
-                            UsuarioId = 2,
-                            ViewId = 23
-                        },
-                        new
-                        {
-                            Id = 52,
-                            UsuarioId = 2,
-                            ViewId = 24
-                        },
-                        new
-                        {
-                            Id = 53,
-                            UsuarioId = 2,
-                            ViewId = 25
-                        },
-                        new
-                        {
-                            Id = 54,
-                            UsuarioId = 2,
-                            ViewId = 26
-                        },
-                        new
-                        {
-                            Id = 55,
-                            UsuarioId = 2,
-                            ViewId = 27
-                        },
-                        new
-                        {
-                            Id = 56,
-                            UsuarioId = 2,
-                            ViewId = 28
+                            UsuarioId = 1,
+                            ViewId = 29
                         });
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.Usuarios", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<string>("Nome")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int?>("PerfilId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Ramal")
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
-
-                    b.Property<string>("Senha")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("Setor")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Telefone")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PerfilId");
-
-                    b.ToTable("Usuarios");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "t@t",
-                            Nome = "Administrador",
-                            PerfilId = 1,
-                            Senha = "123"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "f@f",
-                            Nome = "Cargo Lider",
-                            PerfilId = 2,
-                            Senha = "123"
-                        });
-                });
-
-            modelBuilder.Entity("ConectMaster.Models.Views", b =>
+            modelBuilder.Entity("ConectMaster.Models.Financeiro.Views", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1495,12 +1016,12 @@ namespace ConectMaster.Migrations
                         new
                         {
                             Id = 2,
-                            Name = "visual.ordemservico"
+                            Name = "visual.historicochamados"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "visual.historicochamados"
+                            Name = "visual.ordemservico"
                         },
                         new
                         {
@@ -1550,86 +1071,91 @@ namespace ConectMaster.Migrations
                         new
                         {
                             Id = 13,
-                            Name = "visual.formularios"
-                        },
-                        new
-                        {
-                            Id = 14,
                             Name = "visual.estoques"
                         },
                         new
                         {
-                            Id = 15,
+                            Id = 14,
                             Name = "visual.departamentos"
                         },
                         new
                         {
+                            Id = 15,
+                            Name = "visual.abrirchamadocompras"
+                        },
+                        new
+                        {
                             Id = 16,
-                            Name = "visual.adm"
+                            Name = "visual.historicochamadocompras"
                         },
                         new
                         {
                             Id = 17,
-                            Name = "visual.compras"
+                            Name = "visual.adm"
                         },
                         new
                         {
                             Id = 18,
-                            Name = "visual.ti"
+                            Name = "visual.compras"
                         },
                         new
                         {
                             Id = 19,
-                            Name = "visual.sgdt"
+                            Name = "visual.ti"
                         },
                         new
                         {
                             Id = 20,
-                            Name = "visual.representantes"
+                            Name = "visual.sgdt"
                         },
                         new
                         {
                             Id = 21,
-                            Name = "visual.comercial"
+                            Name = "visual.representantes"
                         },
                         new
                         {
                             Id = 22,
-                            Name = "visual.im"
+                            Name = "visual.comercial"
                         },
                         new
                         {
                             Id = 23,
-                            Name = "visual.limpeza"
+                            Name = "visual.im"
                         },
                         new
                         {
                             Id = 24,
-                            Name = "visual.qualidade"
+                            Name = "visual.limpeza"
                         },
                         new
                         {
                             Id = 25,
-                            Name = "visual.pcp"
+                            Name = "visual.qualidade"
                         },
                         new
                         {
                             Id = 26,
-                            Name = "visual.fatum"
+                            Name = "visual.pcp"
                         },
                         new
                         {
                             Id = 27,
-                            Name = "visual.expedicao"
+                            Name = "visual.fatum"
                         },
                         new
                         {
                             Id = 28,
-                            Name = "visual.etoque"
+                            Name = "visual.expedicao"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Name = "visual.estoque"
                         });
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.chamado", b =>
+            modelBuilder.Entity("ConectMaster.Models.TI.Chamados_Ti", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1689,6 +1215,73 @@ namespace ConectMaster.Migrations
                     b.ToTable("Chamados");
                 });
 
+            modelBuilder.Entity("Usuarios", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("DepartamentoId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int?>("PerfilId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Ramal")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Telefone")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartamentoId");
+
+                    b.HasIndex("PerfilId");
+
+                    b.ToTable("Usuarios");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "t@t",
+                            Nome = "Administrador",
+                            PerfilId = 1,
+                            Senha = "AQAAAAIAAYagAAAAEBhxfQXBjzd7Zew0DoNJHGyZ87fJz7R+Rsuc9HydmTynN4zRgF1Yrp0TTRK33keI7g=="
+                        });
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.Compras.Chamados_Compras", b =>
+                {
+                    b.HasOne("Usuarios", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("idUsuario")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("ConectMaster.Models.EstoqueItem", b =>
                 {
                     b.HasOne("ConectMaster.Models.Estoque", "Estoque")
@@ -1700,26 +1293,15 @@ namespace ConectMaster.Migrations
                     b.Navigation("Estoque");
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.Historico", b =>
+            modelBuilder.Entity("ConectMaster.Models.Financeiro.PerfilPermissao", b =>
                 {
-                    b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("ConectMaster.Models.PerfilPermissao", b =>
-                {
-                    b.HasOne("ConectMaster.Models.Perfil", "Perfil")
+                    b.HasOne("ConectMaster.Models.Financeiro.Perfil", "Perfil")
                         .WithMany()
                         .HasForeignKey("PerfilId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConectMaster.Models.Permissao", "Permissao")
+                    b.HasOne("ConectMaster.Models.Financeiro.Permissao", "Permissao")
                         .WithMany()
                         .HasForeignKey("PermissaoId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1730,9 +1312,9 @@ namespace ConectMaster.Migrations
                     b.Navigation("Permissao");
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.Servico", b =>
+            modelBuilder.Entity("ConectMaster.Models.Financeiro.Servico", b =>
                 {
-                    b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
+                    b.HasOne("Usuarios", "Usuario")
                         .WithMany()
                         .HasForeignKey("SolicitanteId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1741,15 +1323,15 @@ namespace ConectMaster.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.UsuarioView", b =>
+            modelBuilder.Entity("ConectMaster.Models.Financeiro.UsuarioView", b =>
                 {
-                    b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
+                    b.HasOne("Usuarios", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConectMaster.Models.Views", "View")
+                    b.HasOne("ConectMaster.Models.Financeiro.Views", "View")
                         .WithMany()
                         .HasForeignKey("ViewId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1760,24 +1342,30 @@ namespace ConectMaster.Migrations
                     b.Navigation("View");
                 });
 
-            modelBuilder.Entity("ConectMaster.Models.Usuarios", b =>
+            modelBuilder.Entity("ConectMaster.Models.TI.Chamados_Ti", b =>
                 {
-                    b.HasOne("ConectMaster.Models.Perfil", "Perfil")
-                        .WithMany()
-                        .HasForeignKey("PerfilId");
-
-                    b.Navigation("Perfil");
-                });
-
-            modelBuilder.Entity("ConectMaster.Models.chamado", b =>
-                {
-                    b.HasOne("ConectMaster.Models.Usuarios", "Usuario")
+                    b.HasOne("Usuarios", "Usuario")
                         .WithMany()
                         .HasForeignKey("idUsuario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Usuarios", b =>
+                {
+                    b.HasOne("ConectMaster.Models.Financeiro.Departamento", "Departamento")
+                        .WithMany()
+                        .HasForeignKey("DepartamentoId");
+
+                    b.HasOne("ConectMaster.Models.Financeiro.Perfil", "Perfil")
+                        .WithMany()
+                        .HasForeignKey("PerfilId");
+
+                    b.Navigation("Departamento");
+
+                    b.Navigation("Perfil");
                 });
 #pragma warning restore 612, 618
         }

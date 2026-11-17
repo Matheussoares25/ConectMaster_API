@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace ConectMaster.Models
+namespace ConectMaster.Models.TI
 {
-    public class chamado
+    public class Chamados_Ti
     {
         [Key]
         public int Id { get; set; }

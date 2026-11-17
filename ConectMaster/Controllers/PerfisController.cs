@@ -5,6 +5,7 @@ using ConectMaster.Bancodedados;
 using ConectMaster.Models;
 using ConectMaster.Helpers;
 using ConectMaster.DTOS;
+using ConectMaster.Models.Financeiro;
 
 namespace ConectMaster.Controllers
 {
@@ -130,7 +131,7 @@ namespace ConectMaster.Controllers
 
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
                         UsuarioId = User.GetId(),
                         UsuarioName = User.GetName(),
@@ -173,7 +174,7 @@ namespace ConectMaster.Controllers
 
             try
             {
-                _context.LogsAuditoria.Add(new Models.LogAuditoria
+                _context.LogsAuditoria.Add(new LogAuditoria
                 {
                     UsuarioId = User.GetId(),
                     UsuarioName = User.GetName(),
@@ -207,7 +208,7 @@ namespace ConectMaster.Controllers
 
                 try
                 {
-                    _context.LogsAuditoria.Add(new Models.LogAuditoria
+                    _context.LogsAuditoria.Add(new LogAuditoria
                     {
                         UsuarioId = User.GetId(),
                         UsuarioName = User.GetName(),

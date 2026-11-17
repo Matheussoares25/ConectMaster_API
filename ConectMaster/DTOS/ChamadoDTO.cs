@@ -18,20 +18,22 @@ namespace ConectMaster.DTOS
         [MaxLength(2000)]
         public string? Descricao { get; set; }
 
-        [Required]
         [MaxLength(50)]
         public string Categoria { get; set; } = string.Empty;
 
-        [Required]
-        public int Prioridade { get; set; }
+        public int Prioridade { get; set; } = 1;
 
-        public string Setor {  get; set; } = string.Empty;
+        [Range(1, int.MaxValue)]
+        public int TipoChamadoId { get; set; } = 1;
+
+        public string Setor { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(50)]
         public string Status { get; set; } = "Aberto";
 
-        public string Email { get; set; }
+        [Required, EmailAddress, MaxLength(150)]
+        public string Email { get; set; } = string.Empty;
 
     }
 
@@ -42,6 +44,10 @@ namespace ConectMaster.DTOS
         public string? Descricao { get; set; }
         public string Categoria { get; set; } = string.Empty;
         public int Prioridade { get; set; }
+        public int TipoChamadoId { get; set; }
+        public string TipoChamadoNome { get; set; } = string.Empty;
+        public string Setor { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public DateTime DataAbertura { get; set; }
         public DateTime? DataAlteracao { get; set; }

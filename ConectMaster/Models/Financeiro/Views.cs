@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-namespace ConectMaster.Models
+using System.ComponentModel.DataAnnotations;
+
+namespace ConectMaster.Models.Financeiro
 {
-    public class Permissao
+    public class Views
     {
         [Key]
         public int Id { get; set; }
