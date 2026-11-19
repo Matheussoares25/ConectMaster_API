@@ -22,6 +22,120 @@ namespace ConectMaster.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("ConectMaster.Models.Adversos.Acesso.Acesso", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Cnh")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Data_entrada")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("Data_saida")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Despachante")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("Duracao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool?>("Liberado")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Motorista")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Numero_nf")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Observacao")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Placa")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Quantidade")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Servico")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Telefone_motorista")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Transportadora")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Veiculo")
+                        .HasColumnType("integer");
+
+                    b.Property<bool?>("Veiculo_aberto")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("Verificado")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Veiculo");
+
+                    b.ToTable("Acessos");
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.Adversos.Acesso.Veiculos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Modelo")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Veiculos");
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.Compras.AnexoChamadoCompras", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChamadoComprasId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte[]>("Conteudo")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<DateTime>("DataUpload")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NomeOriginal")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChamadoComprasId");
+
+                    b.ToTable("AnexosChamadosCompras");
+                });
+
             modelBuilder.Entity("ConectMaster.Models.Compras.Chamados_Compras", b =>
                 {
                     b.Property<int>("Id")
@@ -460,6 +574,24 @@ namespace ConectMaster.Migrations
                             Id = 34,
                             PerfilId = 1,
                             PermissaoId = 31
+                        },
+                        new
+                        {
+                            Id = 35,
+                            PerfilId = 1,
+                            PermissaoId = 35
+                        },
+                        new
+                        {
+                            Id = 36,
+                            PerfilId = 1,
+                            PermissaoId = 36
+                        },
+                        new
+                        {
+                            Id = 37,
+                            PerfilId = 1,
+                            PermissaoId = 37
                         });
                 });
 
@@ -650,6 +782,21 @@ namespace ConectMaster.Migrations
                         {
                             Id = 34,
                             Name = "Aprovar chamados e cotacao Compras"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Name = "Inserir veiculo"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Name = "Editar veiculo"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Name = "Apagar veiculo"
                         });
                 });
 
@@ -1149,6 +1296,11 @@ namespace ConectMaster.Migrations
                         {
                             Id = 29,
                             Name = "visual.estoque"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Name = "visual.portaria"
                         });
                 });
 
@@ -1266,6 +1418,26 @@ namespace ConectMaster.Migrations
                             PerfilId = 1,
                             Senha = "AQAAAAIAAYagAAAAEBhxfQXBjzd7Zew0DoNJHGyZ87fJz7R+Rsuc9HydmTynN4zRgF1Yrp0TTRK33keI7g=="
                         });
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.Adversos.Acesso.Acesso", b =>
+                {
+                    b.HasOne("ConectMaster.Models.Adversos.Acesso.Veiculos", "Veiculos")
+                        .WithMany()
+                        .HasForeignKey("Veiculo");
+
+                    b.Navigation("Veiculos");
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.Compras.AnexoChamadoCompras", b =>
+                {
+                    b.HasOne("ConectMaster.Models.Compras.Chamados_Compras", "Chamado")
+                        .WithMany()
+                        .HasForeignKey("ChamadoComprasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chamado");
                 });
 
             modelBuilder.Entity("ConectMaster.Models.Compras.Chamados_Compras", b =>

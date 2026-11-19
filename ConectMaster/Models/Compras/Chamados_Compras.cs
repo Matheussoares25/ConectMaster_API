@@ -33,6 +33,7 @@ namespace ConectMaster.Models.Compras
 
         public int Prioridade { get; set; } = 1;
 
+        
         [MaxLength(100)]
         public string Categoria { get; set; } = string.Empty;
 
@@ -44,5 +45,8 @@ namespace ConectMaster.Models.Compras
 
         [MaxLength(50)]
         public string Status { get; set; } = "Aberto";
+
+
+
     }
 }

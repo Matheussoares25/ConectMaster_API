@@ -18,7 +18,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString);
 });
 
-// Configuração do CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactPolicy", policy =>
@@ -26,7 +25,8 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins(
                 "http://localhost:5173",
-                "https://conect-master.vercel.app")
+                "https://conect-master.vercel.app",
+                "https://conect-master-git-featurecompras-matheussoares25s-projects.vercel.app")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -79,11 +79,11 @@ builder.Services.AddSingleton<IPasswordHasher<Usuarios>, PasswordHasher<Usuarios
 var app = builder.Build();
 
 // Executa migrations pendentes
-//using (var scope = app.Services.CreateScope())
-//{
-//    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//    db.Database.Migrate();
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 if (app.Environment.IsDevelopment())
 {

@@ -3,6 +3,7 @@ using ConectMaster.Models;
 using ConectMaster.Models.TI;
 using ConectMaster.Models.Compras;
 using ConectMaster.Models.Financeiro;
+using ConectMaster.Models.Adversos.Acesso;
 
 namespace ConectMaster.Bancodedados
 {
@@ -16,6 +17,7 @@ namespace ConectMaster.Bancodedados
         public DbSet<Usuarios> Usuarios { get; set; }
         public DbSet<Chamados_Ti> Chamados { get; set; }
         public DbSet<Chamados_Compras> ChamadosCompras { get; set; }
+        public DbSet<AnexoChamadoCompras> AnexosChamadosCompras { get; set; }
 
         public DbSet<Servico> Servicos { get; set; }
 
@@ -28,6 +30,8 @@ namespace ConectMaster.Bancodedados
         public DbSet<Estoque> Estoques { get; set; }
         public DbSet<EstoqueItem> EstoqueItens { get; set; }
         public DbSet<Departamento> Departamentos { get; set; }
+        public DbSet<Acesso> Acessos { get; set; }
+        public DbSet<Veiculos> Veiculos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -72,7 +76,8 @@ namespace ConectMaster.Bancodedados
                 new Views { Id = 26, Name = "visual.pcp" },
                 new Views { Id = 27, Name = "visual.fatum" },
                 new Views { Id = 28, Name = "visual.expedicao" },
-                new Views { Id = 29, Name = "visual.estoque" }
+                new Views { Id = 29, Name = "visual.estoque" },
+                new Views { Id = 30, Name = "visual.portaria" }
 
 
             );
@@ -122,7 +127,10 @@ namespace ConectMaster.Bancodedados
                 new Permissao { Id = 31, Name = "Visualizar chamados Compras" },
                 new Permissao { Id = 32, Name = "Editar chamados Compras" },
                 new Permissao { Id = 33, Name = "Apagar chamados Compras" },
-                new Permissao { Id = 34, Name = "Aprovar chamados e cotacao Compras" }
+                new Permissao { Id = 34, Name = "Aprovar chamados e cotacao Compras" },
+                new Permissao { Id = 35, Name = "Inserir veiculo" },
+                new Permissao { Id = 36, Name = "Editar veiculo" },
+                new Permissao { Id = 37, Name = "Apagar veiculo" }
             );
 
             // Seed perfil Administrador
@@ -168,7 +176,10 @@ namespace ConectMaster.Bancodedados
                 new PerfilPermissao { Id = 31, PerfilId = 1, PermissaoId = 28 },
                 new PerfilPermissao { Id = 32, PerfilId = 1, PermissaoId = 29 },
                 new PerfilPermissao { Id = 33, PerfilId = 1, PermissaoId = 30 },
-                new PerfilPermissao { Id = 34, PerfilId = 1, PermissaoId = 31 }
+                new PerfilPermissao { Id = 34, PerfilId = 1, PermissaoId = 31 },
+                new PerfilPermissao { Id = 35, PerfilId = 1, PermissaoId = 35 },
+                new PerfilPermissao { Id = 36, PerfilId = 1, PermissaoId = 36 },
+                new PerfilPermissao { Id = 37, PerfilId = 1, PermissaoId = 37 }
             );
 
 

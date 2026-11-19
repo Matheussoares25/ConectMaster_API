@@ -22,6 +22,80 @@ namespace ConectMaster.Controllers
             _context = context;
         }
 
+        [HttpPost("{id:int}/upload")]
+        [Consumes("multipart/form-data")]
+        [RequestSizeLimit(10_500_000)]
+        public async Task<IActionResult> Upload(int id, [FromForm] IFormFile? arquivo)
+        {
+            var chamado = await _context.ChamadosCompras.FindAsync(id);
+            if (chamado == null) return NotFound();
+
+            var podeAnexar = User.TemPermissao("Editar chamados Compras") ||
+                (User.TemPermissao("Abrir chamado Compras") && chamado.idUsuario == User.GetId());
+            if (!podeAnexar)
+                return Forbid();
+
+            if (arquivo == null || arquivo.Length == 0)
+                return BadRequest(new { error = "Envie um arquivo XLS ou XLSX não vazio no campo 'arquivo'." });
+
+            const long tamanhoMaximo = 10 * 1024 * 1024;
+            if (arquivo.Length > tamanhoMaximo)
+                return BadRequest(new { error = "O arquivo não pode exceder 10 MB." });
+
+            var nomeOriginal = Path.GetFileName(arquivo.FileName);
+            var extensao = Path.GetExtension(nomeOriginal);
+            if (!string.Equals(extensao, ".xls", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(extensao, ".xlsx", StringComparison.OrdinalIgnoreCase))
+                return BadRequest(new { error = "Somente arquivos com extensão .xls ou .xlsx são permitidos." });
+
+            if (nomeOriginal.Length > 255)
+                return BadRequest(new { error = "O nome do arquivo não pode exceder 255 caracteres." });
+
+            await using var memoryStream = new MemoryStream();
+            await arquivo.CopyToAsync(memoryStream);
+
+            var anexo = new AnexoChamadoCompras
+            {
+                ChamadoComprasId = chamado.Id,
+                NomeOriginal = nomeOriginal,
+                Conteudo = memoryStream.ToArray(),
+                DataUpload = DateTime.UtcNow
+            };
+
+            _context.AnexosChamadosCompras.Add(anexo);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                chamadoId = chamado.Id,
+                arquivoId = anexo.Id,
+                nomeOriginal = anexo.NomeOriginal
+            });
+        }
+
+        [HttpGet("{id:int}/arquivos/{arquivoId:int}")]
+        public async Task<IActionResult> Download(int id, int arquivoId)
+        {
+            var anexo = await _context.AnexosChamadosCompras
+                .Include(item => item.Chamado)
+                .FirstOrDefaultAsync(item => item.Id == arquivoId && item.ChamadoComprasId == id);
+
+            if (anexo == null || anexo.Chamado == null)
+                return NotFound();
+
+            var chamado = anexo.Chamado;
+            var podeVisualizar = User.TemPermissao("Visualizar chamados Compras") ||
+                User.TemPermissao("Editar chamados Compras") ||
+                (User.TemPermissao("Abrir chamado Compras") && chamado.idUsuario == User.GetId());
+            if (!podeVisualizar)
+                return Forbid();
+
+            var contentType = string.Equals(Path.GetExtension(anexo.NomeOriginal), ".xlsx", StringComparison.OrdinalIgnoreCase)
+                ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                : "application/vnd.ms-excel";
+            return File(anexo.Conteudo, contentType, anexo.NomeOriginal);
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ChamadoComprasResponse>>> Get()
         {
@@ -62,6 +136,50 @@ namespace ConectMaster.Controllers
                 .ToListAsync();
 
             return Ok(chamados.Select(MapearResposta));
+        }
+
+        [HttpGet("standby")]
+        public async Task<ActionResult<IEnumerable<ChamadoComprasResponse>>> Standby()
+        {
+            if (!User.TemPermissao("Visualizar chamados Compras"))
+                return Forbid();
+
+            var chamados = await _context.ChamadosCompras
+                .Where(chamado => chamado.standby == true)
+                .Include(chamado => chamado.Usuario)
+                    .ThenInclude(usuario => usuario!.Departamento)
+                .ToListAsync();
+
+            var chamadosIds = chamados.Select(chamado => chamado.Id).ToList();
+            var anexos = await _context.AnexosChamadosCompras
+                .Where(anexo => chamadosIds.Contains(anexo.ChamadoComprasId))
+                .Select(anexo => new
+                {
+                    anexo.Id,
+                    anexo.ChamadoComprasId,
+                    anexo.NomeOriginal,
+                    anexo.DataUpload
+                })
+                .ToListAsync();
+
+            var anexosPorChamado = anexos.GroupBy(anexo => anexo.ChamadoComprasId)
+                .ToDictionary(grupo => grupo.Key, grupo => grupo.ToList());
+            var respostas = chamados.Select(MapearResposta).ToList();
+            foreach (var resposta in respostas)
+            {
+                if (!anexosPorChamado.TryGetValue(resposta.Id, out var arquivos))
+                    continue;
+
+                resposta.Arquivos = arquivos.Select(arquivo => new AnexoChamadoComprasResponse
+                {
+                    Id = arquivo.Id,
+                    NomeOriginal = arquivo.NomeOriginal,
+                    DataUpload = arquivo.DataUpload,
+                    RotaDownload = $"/api/ChamadosCompras/{resposta.Id}/arquivos/{arquivo.Id}"
+                }).ToList();
+            }
+
+            return Ok(respostas);
         }
 
         [HttpPost]
@@ -142,46 +260,50 @@ namespace ConectMaster.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id:int}/aprovar")]
-        public async Task<IActionResult> Aprovar(int id)
-        {
-            if (!User.TemPermissao("Aprovar chamados e cotacao Compras"))
-                return Forbid();
-
-            var chamado = await _context.ChamadosCompras.FindAsync(id);
-            if (chamado == null) return NotFound();
-
-            var aprovadoAnteriormente = chamado.Aprovado;
-            var standbyAnterior = chamado.standby;
-            chamado.DataAprovacao = DateTime.UtcNow;
-            chamado.Aprovado = false;
-            chamado.standby = false;
-            await _context.SaveChangesAsync();
-            await RegistrarLogAsync("Aprovar", chamado.Id, new
-            {
-                Antes = new { Aprovado = aprovadoAnteriormente, Standby = standbyAnterior },
-                Depois = new { chamado.Aprovado, Standby = chamado.standby, chamado.DataAprovacao }
-            });
-            return NoContent();
-        }
-
         [HttpPatch("{id:int}/standby")]
-        public async Task<IActionResult> Standby(int id)
+        public async Task<IActionResult> Standby(int id, [FromBody] string action)
         {
-            if (!User.TemPermissao("Editar chamados Compras"))
-                return Forbid();
-            var chamado = await _context.ChamadosCompras.FindAsync(id);
-            if (chamado == null) return NotFound();
-
-            var standbyAnterior = chamado.standby;
-            chamado.standby = true;
-            await _context.SaveChangesAsync();
-            await RegistrarLogAsync("Colocar em standby", chamado.Id, new
+            if(action == "standby")
             {
-                Antes = new { Standby = standbyAnterior },
-                Depois = new { Standby = chamado.standby }
-            });
-            return NoContent();
+                if (!User.TemPermissao("Editar chamados Compras"))
+                    return Forbid();
+                var chamado = await _context.ChamadosCompras.FindAsync(id);
+                if (chamado == null) return NotFound();
+
+                var standbyAnterior = chamado.standby;
+                chamado.standby = true;
+                await _context.SaveChangesAsync();
+                await RegistrarLogAsync("Colocar em standby", chamado.Id, new
+                {
+                    Antes = new { Standby = standbyAnterior },
+                    Depois = new { Standby = chamado.standby }
+                });
+                return NoContent();
+            }
+            if(action.ToLower() == "aprovar")
+            {
+                if (!User.TemPermissao("Aprovar chamados e cotacao Compras"))
+                    return Forbid();
+
+                var chamado = await _context.ChamadosCompras.FindAsync(id);
+                if (chamado == null) return NotFound();
+
+                var aprovadoAnteriormente = chamado.Aprovado;
+                var standbyAnterior = chamado.standby;
+                chamado.DataAprovacao = DateTime.UtcNow;
+                chamado.Aprovado = true;
+                chamado.standby = false;
+                await _context.SaveChangesAsync();
+                await RegistrarLogAsync("Aprovar", chamado.Id, new
+                {
+                    Antes = new { Aprovado = aprovadoAnteriormente, Standby = standbyAnterior },
+                    Depois = new { chamado.Aprovado, Standby = chamado.standby, chamado.DataAprovacao }
+                });
+                return NoContent();
+            }
+
+            return BadRequest(new { error = "Ação inválida. Use 'aprovar' ou 'standby'." });
+
         }
 
         [HttpDelete("{id:int}")]

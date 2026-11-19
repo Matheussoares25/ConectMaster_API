@@ -51,6 +51,15 @@ namespace ConectMaster.DTOS
         public DateTime? DataAlteracao { get; set; }
         public DateTime? DataFechamento { get; set; }
         public UsuarioResponse? Usuario { get; set; }
+        public List<AnexoChamadoComprasResponse> Arquivos { get; set; } = new();
+    }
+
+    public sealed class AnexoChamadoComprasResponse
+    {
+        public int Id { get; set; }
+        public string NomeOriginal { get; set; } = string.Empty;
+        public DateTime DataUpload { get; set; }
+        public string RotaDownload { get; set; } = string.Empty;
     }
 }
 

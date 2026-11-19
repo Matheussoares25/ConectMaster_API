@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ConectMaster.Migrations
 {
     /// <inheritdoc />
-    public partial class comumusuario : Migration
+    public partial class acessos : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -86,6 +86,19 @@ namespace ConectMaster.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Permissoes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Veiculos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Modelo = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Veiculos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,6 +192,40 @@ namespace ConectMaster.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Acessos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Verificado = table.Column<bool>(type: "boolean", nullable: true),
+                    Observacao = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    Liberado = table.Column<bool>(type: "boolean", nullable: true),
+                    Data_entrada = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Despachante = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Data_saida = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Servico = table.Column<string>(type: "text", nullable: true),
+                    Transportadora = table.Column<string>(type: "text", nullable: true),
+                    Motorista = table.Column<string>(type: "text", nullable: true),
+                    Cnh = table.Column<string>(type: "text", nullable: true),
+                    Placa = table.Column<string>(type: "text", nullable: true),
+                    Veiculo = table.Column<int>(type: "integer", nullable: true),
+                    Veiculo_aberto = table.Column<bool>(type: "boolean", nullable: true),
+                    Numero_nf = table.Column<string>(type: "text", nullable: true),
+                    Quantidade = table.Column<string>(type: "text", nullable: true),
+                    Duracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Telefone_motorista = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Acessos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Acessos_Veiculos_Veiculo",
+                        column: x => x.Veiculo,
+                        principalTable: "Veiculos",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Chamados",
                 columns: table => new
                 {
@@ -219,6 +266,9 @@ namespace ConectMaster.Migrations
                     DataAbertura = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DataAlteracao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DataFechamento = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    DataAprovacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Aprovado = table.Column<bool>(type: "boolean", nullable: false),
+                    standby = table.Column<bool>(type: "boolean", nullable: false),
                     Prioridade = table.Column<int>(type: "integer", nullable: false),
                     Categoria = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Setor = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
@@ -313,6 +363,28 @@ namespace ConectMaster.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "AnexosChamadosCompras",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ChamadoComprasId = table.Column<int>(type: "integer", nullable: false),
+                    NomeOriginal = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Conteudo = table.Column<byte[]>(type: "bytea", nullable: false),
+                    DataUpload = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AnexosChamadosCompras", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AnexosChamadosCompras_ChamadosCompras_ChamadoComprasId",
+                        column: x => x.ChamadoComprasId,
+                        principalTable: "ChamadosCompras",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Estoques",
                 columns: new[] { "Id", "Ativo", "Nome" },
@@ -365,7 +437,11 @@ namespace ConectMaster.Migrations
                     { 30, "Abrir chamado Compras" },
                     { 31, "Visualizar chamados Compras" },
                     { 32, "Editar chamados Compras" },
-                    { 33, "Apagar chamados Compras" }
+                    { 33, "Apagar chamados Compras" },
+                    { 34, "Aprovar chamados e cotacao Compras" },
+                    { 35, "Inserir veiculo" },
+                    { 36, "Editar veiculo" },
+                    { 37, "Apagar veiculo" }
                 });
 
             migrationBuilder.InsertData(
@@ -401,7 +477,8 @@ namespace ConectMaster.Migrations
                     { 26, "visual.pcp" },
                     { 27, "visual.fatum" },
                     { 28, "visual.expedicao" },
-                    { 29, "visual.estoque" }
+                    { 29, "visual.estoque" },
+                    { 30, "visual.portaria" }
                 });
 
             migrationBuilder.InsertData(
@@ -439,7 +516,10 @@ namespace ConectMaster.Migrations
                     { 31, 1, 28 },
                     { 32, 1, 29 },
                     { 33, 1, 30 },
-                    { 34, 1, 31 }
+                    { 34, 1, 31 },
+                    { 35, 1, 35 },
+                    { 36, 1, 36 },
+                    { 37, 1, 37 }
                 });
 
             migrationBuilder.InsertData(
@@ -482,6 +562,16 @@ namespace ConectMaster.Migrations
                     { 28, 1, 28 },
                     { 29, 1, 29 }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Acessos_Veiculo",
+                table: "Acessos",
+                column: "Veiculo");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AnexosChamadosCompras_ChamadoComprasId",
+                table: "AnexosChamadosCompras",
+                column: "ChamadoComprasId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Chamados_idUsuario",
@@ -538,10 +628,13 @@ namespace ConectMaster.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Chamados");
+                name: "Acessos");
 
             migrationBuilder.DropTable(
-                name: "ChamadosCompras");
+                name: "AnexosChamadosCompras");
+
+            migrationBuilder.DropTable(
+                name: "Chamados");
 
             migrationBuilder.DropTable(
                 name: "EstoqueItens");
@@ -559,16 +652,22 @@ namespace ConectMaster.Migrations
                 name: "UsuarioView");
 
             migrationBuilder.DropTable(
+                name: "Veiculos");
+
+            migrationBuilder.DropTable(
+                name: "ChamadosCompras");
+
+            migrationBuilder.DropTable(
                 name: "Estoques");
 
             migrationBuilder.DropTable(
                 name: "Permissoes");
 
             migrationBuilder.DropTable(
-                name: "Usuarios");
+                name: "Views");
 
             migrationBuilder.DropTable(
-                name: "Views");
+                name: "Usuarios");
 
             migrationBuilder.DropTable(
                 name: "Departamentos");
