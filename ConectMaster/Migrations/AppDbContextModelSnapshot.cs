@@ -592,6 +592,54 @@ namespace ConectMaster.Migrations
                             Id = 37,
                             PerfilId = 1,
                             PermissaoId = 37
+                        },
+                        new
+                        {
+                            Id = 38,
+                            PerfilId = 1,
+                            PermissaoId = 38
+                        },
+                        new
+                        {
+                            Id = 39,
+                            PerfilId = 1,
+                            PermissaoId = 39
+                        },
+                        new
+                        {
+                            Id = 40,
+                            PerfilId = 1,
+                            PermissaoId = 40
+                        },
+                        new
+                        {
+                            Id = 41,
+                            PerfilId = 1,
+                            PermissaoId = 41
+                        },
+                        new
+                        {
+                            Id = 42,
+                            PerfilId = 1,
+                            PermissaoId = 42
+                        },
+                        new
+                        {
+                            Id = 43,
+                            PerfilId = 1,
+                            PermissaoId = 43
+                        },
+                        new
+                        {
+                            Id = 44,
+                            PerfilId = 1,
+                            PermissaoId = 44
+                        },
+                        new
+                        {
+                            Id = 45,
+                            PerfilId = 1,
+                            PermissaoId = 45
                         });
                 });
 
@@ -797,6 +845,46 @@ namespace ConectMaster.Migrations
                         {
                             Id = 37,
                             Name = "Apagar veiculo"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Name = "Visualizar emails"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Name = "Criar emails"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Name = "Editar emails"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Name = "Apagar emails"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Name = "Visualizar DpMoveis"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Name = "Criar DpMoveis"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Name = "Editar DpMoveis"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Name = "Apagar DpMoveis"
                         });
                 });
 
@@ -1131,6 +1219,30 @@ namespace ConectMaster.Migrations
                             Id = 29,
                             UsuarioId = 1,
                             ViewId = 29
+                        },
+                        new
+                        {
+                            Id = 30,
+                            UsuarioId = 1,
+                            ViewId = 30
+                        },
+                        new
+                        {
+                            Id = 31,
+                            UsuarioId = 1,
+                            ViewId = 31
+                        },
+                        new
+                        {
+                            Id = 32,
+                            UsuarioId = 1,
+                            ViewId = 32
+                        },
+                        new
+                        {
+                            Id = 33,
+                            UsuarioId = 1,
+                            ViewId = 33
                         });
                 });
 
@@ -1165,142 +1277,157 @@ namespace ConectMaster.Migrations
                         new
                         {
                             Id = 3,
-                            Name = "visual.ordemservico"
+                            Name = "visual.emailsti"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "visual.painelcontrole"
+                            Name = "visual.ordemservico"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "visual.abriruber"
+                            Name = "visual.painelcontrole"
                         },
                         new
                         {
                             Id = 6,
-                            Name = "visual.geralusuarios"
+                            Name = "visual.abriruber"
                         },
                         new
                         {
                             Id = 7,
-                            Name = "visual.permissoes"
+                            Name = "visual.geralusuarios"
                         },
                         new
                         {
                             Id = 8,
-                            Name = "visual.relatorios"
+                            Name = "visual.permissoes"
                         },
                         new
                         {
                             Id = 9,
-                            Name = "visual.logs"
+                            Name = "visual.relatorios"
                         },
                         new
                         {
                             Id = 10,
-                            Name = "visual.configuracoes"
+                            Name = "visual.logs"
                         },
                         new
                         {
                             Id = 11,
-                            Name = "visual.servicosgeral"
+                            Name = "visual.configuracoes"
                         },
                         new
                         {
                             Id = 12,
-                            Name = "visual.portaria"
+                            Name = "visual.servicosgeral"
                         },
                         new
                         {
                             Id = 13,
-                            Name = "visual.estoques"
+                            Name = "visual.portaria"
                         },
                         new
                         {
                             Id = 14,
-                            Name = "visual.departamentos"
+                            Name = "visual.estoques"
                         },
                         new
                         {
                             Id = 15,
-                            Name = "visual.abrirchamadocompras"
+                            Name = "visual.departamentos"
                         },
                         new
                         {
                             Id = 16,
-                            Name = "visual.historicochamadocompras"
+                            Name = "visual.abrirchamadocompras"
                         },
                         new
                         {
                             Id = 17,
-                            Name = "visual.adm"
+                            Name = "visual.historicochamadocompras"
                         },
                         new
                         {
                             Id = 18,
-                            Name = "visual.compras"
+                            Name = "visual.historicostandby"
                         },
                         new
                         {
                             Id = 19,
-                            Name = "visual.ti"
+                            Name = "visual.adm"
                         },
                         new
                         {
                             Id = 20,
-                            Name = "visual.sgdt"
+                            Name = "visual.compras"
                         },
                         new
                         {
                             Id = 21,
-                            Name = "visual.representantes"
+                            Name = "visual.ti"
                         },
                         new
                         {
                             Id = 22,
-                            Name = "visual.comercial"
+                            Name = "visual.sgdt"
                         },
                         new
                         {
                             Id = 23,
-                            Name = "visual.im"
+                            Name = "visual.representantes"
                         },
                         new
                         {
                             Id = 24,
-                            Name = "visual.limpeza"
+                            Name = "visual.comercial"
                         },
                         new
                         {
                             Id = 25,
-                            Name = "visual.qualidade"
+                            Name = "visual.im"
                         },
                         new
                         {
                             Id = 26,
-                            Name = "visual.pcp"
+                            Name = "visual.limpeza"
                         },
                         new
                         {
                             Id = 27,
-                            Name = "visual.fatum"
+                            Name = "visual.qualidade"
                         },
                         new
                         {
                             Id = 28,
-                            Name = "visual.expedicao"
+                            Name = "visual.pcp"
                         },
                         new
                         {
                             Id = 29,
-                            Name = "visual.estoque"
+                            Name = "visual.fatum"
                         },
                         new
                         {
                             Id = 30,
+                            Name = "visual.expedicao"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Name = "visual.estoque"
+                        },
+                        new
+                        {
+                            Id = 32,
                             Name = "visual.portaria"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Name = "visual.dpmoveis"
                         });
                 });
 
@@ -1362,6 +1489,70 @@ namespace ConectMaster.Migrations
                     b.HasIndex("idUsuario");
 
                     b.ToTable("Chamados");
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.TI.DpMoveis", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Aparelho")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<byte[]>("ConteudoTermoPdf")
+                        .HasColumnType("bytea");
+
+                    b.Property<DateTime>("DataDoTermo")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Departamento")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("NomeArquivoTermo")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Responsavel")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DpMoveis");
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.TI.Emails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Departamentoid")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Responsavel")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Departamentoid");
+
+                    b.ToTable("Emails");
                 });
 
             modelBuilder.Entity("Usuarios", b =>
@@ -1520,6 +1711,17 @@ namespace ConectMaster.Migrations
                         .IsRequired();
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("ConectMaster.Models.TI.Emails", b =>
+                {
+                    b.HasOne("ConectMaster.Models.Financeiro.Departamento", "Departamento")
+                        .WithMany()
+                        .HasForeignKey("Departamentoid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Departamento");
                 });
 
             modelBuilder.Entity("Usuarios", b =>

@@ -326,7 +326,5 @@ namespace ConectMaster.Controllers
             }
         }
 
-        
-
     }
 }

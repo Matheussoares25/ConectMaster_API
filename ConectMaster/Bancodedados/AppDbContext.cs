@@ -32,6 +32,8 @@ namespace ConectMaster.Bancodedados
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Acesso> Acessos { get; set; }
         public DbSet<Veiculos> Veiculos { get; set; }
+        public DbSet<Emails> Emails { get; set; }
+        public DbSet<DpMoveis> DpMoveis { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,43 +45,43 @@ namespace ConectMaster.Bancodedados
                 //Ti
                 new Views { Id = 1, Name = "visual.abrirchamado" },
                 new Views { Id = 2, Name = "visual.historicochamados" },
+                new Views { Id = 3, Name = "visual.emailsti" },
 
-
-                new Views { Id = 3, Name = "visual.ordemservico" }, 
-                new Views { Id = 4, Name = "visual.painelcontrole" },
-                new Views { Id = 5, Name = "visual.abriruber" },
-                new Views { Id = 6, Name = "visual.geralusuarios" },
-                new Views { Id = 7, Name = "visual.permissoes" },
-                new Views { Id = 8, Name = "visual.relatorios" },
-                new Views { Id = 9, Name = "visual.logs"},
-                new Views { Id = 10, Name = "visual.configuracoes" },
-                new Views { Id = 11, Name = "visual.servicosgeral"},
-                new Views { Id = 12, Name = "visual.portaria"},
-                new Views { Id = 13, Name = "visual.estoques"},
-                new Views { Id = 14, Name = "visual.departamentos" },
+                new Views { Id = 4, Name = "visual.ordemservico" },
+                new Views { Id = 5, Name = "visual.painelcontrole" },
+                new Views { Id = 6, Name = "visual.abriruber" },
+                new Views { Id = 7, Name = "visual.geralusuarios" },
+                new Views { Id = 8, Name = "visual.permissoes" },
+                new Views { Id = 9, Name = "visual.relatorios" },
+                new Views { Id = 10, Name = "visual.logs"},
+                new Views { Id = 11, Name = "visual.configuracoes" },
+                new Views { Id = 12, Name = "visual.servicosgeral"},
+                new Views { Id = 13, Name = "visual.portaria"},
+                new Views { Id = 14, Name = "visual.estoques"},
+                new Views { Id = 15, Name = "visual.departamentos" },
 
                 //compras
-                new Views { Id = 15, Name = "visual.abrirchamadocompras"},
-                new Views { Id = 16, Name = "visual.historicochamadocompras"},
+                new Views { Id = 16, Name = "visual.abrirchamadocompras"},
+                new Views { Id = 17, Name = "visual.historicochamadocompras"},
+                new Views { Id = 18, Name = "visual.historicostandby" },
 
 
                 // Views dos departamentos
-                new Views { Id = 17, Name = "visual.adm"},
-                new Views { Id = 18, Name = "visual.compras" },
-                new Views { Id = 19, Name = "visual.ti" },
-                new Views { Id = 20, Name = "visual.sgdt" },
-                new Views { Id = 21, Name = "visual.representantes" },
-                new Views { Id = 22, Name = "visual.comercial" }, 
-                new Views { Id = 23, Name = "visual.im" },
-                new Views { Id = 24, Name = "visual.limpeza" },
-                new Views { Id = 25, Name = "visual.qualidade" },
-                new Views { Id = 26, Name = "visual.pcp" },
-                new Views { Id = 27, Name = "visual.fatum" },
-                new Views { Id = 28, Name = "visual.expedicao" },
-                new Views { Id = 29, Name = "visual.estoque" },
-                new Views { Id = 30, Name = "visual.portaria" }
-
-
+                new Views { Id = 19, Name = "visual.adm"},
+                new Views { Id = 20, Name = "visual.compras" },
+                new Views { Id = 21, Name = "visual.ti" },
+                new Views { Id = 22, Name = "visual.sgdt" },
+                new Views { Id = 23, Name = "visual.representantes" },
+                new Views { Id = 24, Name = "visual.comercial" }, 
+                new Views { Id = 25, Name = "visual.im" },
+                new Views { Id = 26, Name = "visual.limpeza" },
+                new Views { Id = 27, Name = "visual.qualidade" },
+                new Views { Id = 28, Name = "visual.pcp" },
+                new Views { Id = 29, Name = "visual.fatum" },
+                new Views { Id = 30, Name = "visual.expedicao" },
+                new Views { Id = 31, Name = "visual.estoque" },
+                new Views { Id = 32, Name = "visual.portaria" },
+                new Views { Id = 33, Name = "visual.dpmoveis" }
             );
 
 
@@ -130,7 +132,15 @@ namespace ConectMaster.Bancodedados
                 new Permissao { Id = 34, Name = "Aprovar chamados e cotacao Compras" },
                 new Permissao { Id = 35, Name = "Inserir veiculo" },
                 new Permissao { Id = 36, Name = "Editar veiculo" },
-                new Permissao { Id = 37, Name = "Apagar veiculo" }
+                new Permissao { Id = 37, Name = "Apagar veiculo" },
+                new Permissao { Id = 38, Name = "Visualizar emails" },
+                new Permissao { Id = 39, Name = "Criar emails" },
+                new Permissao { Id = 40, Name = "Editar emails" },
+                new Permissao { Id = 41, Name = "Apagar emails" },
+                new Permissao { Id = 42, Name = "Visualizar DpMoveis" },
+                new Permissao { Id = 43, Name = "Criar DpMoveis" },
+                new Permissao { Id = 44, Name = "Editar DpMoveis" },
+                new Permissao { Id = 45, Name = "Apagar DpMoveis" }
             );
 
             // Seed perfil Administrador
@@ -179,7 +189,15 @@ namespace ConectMaster.Bancodedados
                 new PerfilPermissao { Id = 34, PerfilId = 1, PermissaoId = 31 },
                 new PerfilPermissao { Id = 35, PerfilId = 1, PermissaoId = 35 },
                 new PerfilPermissao { Id = 36, PerfilId = 1, PermissaoId = 36 },
-                new PerfilPermissao { Id = 37, PerfilId = 1, PermissaoId = 37 }
+                new PerfilPermissao { Id = 37, PerfilId = 1, PermissaoId = 37 },
+                new PerfilPermissao { Id = 38, PerfilId = 1, PermissaoId = 38 },
+                new PerfilPermissao { Id = 39, PerfilId = 1, PermissaoId = 39 },
+                new PerfilPermissao { Id = 40, PerfilId = 1, PermissaoId = 40 },
+                new PerfilPermissao { Id = 41, PerfilId = 1, PermissaoId = 41 },
+                new PerfilPermissao { Id = 42, PerfilId = 1, PermissaoId = 42 },
+                new PerfilPermissao { Id = 43, PerfilId = 1, PermissaoId = 43 },
+                new PerfilPermissao { Id = 44, PerfilId = 1, PermissaoId = 44 },
+                new PerfilPermissao { Id = 45, PerfilId = 1, PermissaoId = 45 }
             );
 
 
@@ -218,7 +236,11 @@ namespace ConectMaster.Bancodedados
                 new UsuarioView { Id = 26, ViewId = 26, UsuarioId = 1 },
                 new UsuarioView { Id = 27, ViewId = 27, UsuarioId = 1 },
                 new UsuarioView { Id = 28, ViewId = 28, UsuarioId = 1 },
-                new UsuarioView { Id = 29, ViewId = 29, UsuarioId = 1 }
+                new UsuarioView { Id = 29, ViewId = 29, UsuarioId = 1 },
+                new UsuarioView { Id = 30, ViewId = 30, UsuarioId = 1 },
+                new UsuarioView { Id = 31, ViewId = 31, UsuarioId = 1 },
+                new UsuarioView { Id = 32, ViewId = 32, UsuarioId = 1 },
+                new UsuarioView { Id = 33, ViewId = 33, UsuarioId = 1 }
             );
 
         }

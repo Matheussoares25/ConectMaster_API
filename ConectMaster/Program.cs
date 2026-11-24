@@ -79,11 +79,11 @@ builder.Services.AddSingleton<IPasswordHasher<Usuarios>, PasswordHasher<Usuarios
 var app = builder.Build();
 
 // Executa migrations pendentes
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//    db.Database.Migrate();
+//}
 
 if (app.Environment.IsDevelopment())
 {
